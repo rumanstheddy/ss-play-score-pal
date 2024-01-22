@@ -6,7 +6,7 @@ module.exports = new mongoose.Schema(
     gameId: { type: ObjectId, ref: "GameModel", required: true },
     rating: { type: Number, required: true },
     review: { type: String },
-    recommended: {
+    isRecommended: {
       type: String,
       enum: ["Yes", "OnSale", "No"],
       required: true,
