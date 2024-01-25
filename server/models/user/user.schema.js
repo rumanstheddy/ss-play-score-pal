@@ -7,9 +7,6 @@ module.exports = new mongoose.Schema(
     email: { type: String, required: true },
     password: { type: String, required: true },
     userType: { type: String, enum: ["User", "Admin"], default: "User" },
-    playScores: [
-      { type: mongoose.SchemaTypes.ObjectId, ref: "PlayScoreModel" },
-    ],
     isSSreviewer: { type: Boolean, default: false },
   },
   { collection: "User" }
