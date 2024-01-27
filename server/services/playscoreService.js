@@ -1,7 +1,7 @@
 const playScoreModel = require("../models/playscore/playscore.model");
+const playscoreSchema = require("../models/playscore/playscore.schema");
 
-const getPlayScore = async (id) =>
-  await playScoreModel.findOne({ _id: id });
+const getPlayScore = async (id) => await playScoreModel.findOne({ _id: id });
 
 const getAllPlayScores = async () => playScoreModel.find();
 
@@ -26,6 +26,11 @@ const updatePlayScore = async (psId, playScore) => {
 };
 
 const deletePlayScore = async (id) => playScoreModel.deleteOne({ _id: id });
+
+// Mongoose Middleware
+playscoreSchema.post("save", (doc) => {
+  console.log("Playscore succesfully created!", doc);
+});
 
 module.exports = {
   createPlayScore,

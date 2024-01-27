@@ -1,4 +1,5 @@
 const gameModel = require("../models/game/game.model");
+const gameSchema = require("../models/game/game.schema");
 
 const getGame = async (id) => await gameModel.findOne({ _id: id });
 
@@ -19,6 +20,11 @@ const updateGame = async (id, game) =>
   await gameModel.updateOne({ _id: id, $set: { ...game } });
 
 const deleteGame = async (id) => await gameModel.deleteOne({ _id: id });
+
+// Mongoose Middleware
+gameSchema.post("save", function (doc) {
+  console.log("Created a new game entry!", doc);
+});
 
 module.exports = {
   getGame,
