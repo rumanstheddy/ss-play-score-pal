@@ -1,5 +1,6 @@
 const userModel = require("../models/user/user.model");
 const userSchema = require("../models/user/user.schema");
+const bcrypt = require("bcrypt");
 
 // const getUserByEmail = async (email) =>
 //   await userModel.findOne({ email: email });
@@ -27,7 +28,13 @@ const updateUser = async (email, user) =>
 const deleteUser = async (id) => await userModel.deleteOne({ _id: id });
 
 // Mongoose Middleware
-userSchema.post("save", function (doc) {
+userSchema.pre("pre", async (next) => {
+  const salt = await bcrypt.genSalt();
+  this.password = await bcrypt.hash(this.password, salt);
+  next();
+});
+
+userSchema.post("save", (doc) => {
   console.log("Created a new user!", doc);
 });
 
