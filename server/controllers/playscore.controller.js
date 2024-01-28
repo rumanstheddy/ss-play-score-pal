@@ -44,11 +44,11 @@ module.exports.playscore_post = async (req, res) => {
 
 module.exports.playscore_put = async (req, res) => {
   try {
-    const updatedPlayscore = await playscoreService.updatePlayScore(
+    const updatedPS = await playscoreService.updatePlayScore(
       req.params._id,
       req.playscore
     );
-    res.json(updatedPlayscore);
+    res.json(updatedPS);
   } catch (error) {
     // TODO todo: error handling
     console.log(error.message);
@@ -57,10 +57,8 @@ module.exports.playscore_put = async (req, res) => {
 
 module.exports.playscore_delete = async (req, res) => {
   try {
-    const deletedPlayscore = await playscoreService.deletePlayScore(
-      req.params._id
-    );
-    res.json(deletedPlayscore);
+    const deletedPS = await playscoreService.deletePlayScore(req.params._id);
+    res.json(deletedPS);
   } catch (error) {
     // TODO todo: error handling
     console.log(error.message);

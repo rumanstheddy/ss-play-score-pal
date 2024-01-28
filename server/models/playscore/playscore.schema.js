@@ -8,8 +8,8 @@ module.exports = new mongoose.Schema(
     rating: {
       type: Number,
       required: true,
-      min: [0, "The value cannot be lesser than 0"],
-      max: [10, "The value cannot be greater than 10"],
+      min: [0, "The rating cannot be lesser than 0"],
+      max: [10, "The rating cannot be greater than 10"],
     },
     review: String,
     isRecommended: {
