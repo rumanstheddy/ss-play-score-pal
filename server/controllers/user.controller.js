@@ -12,7 +12,7 @@ module.exports.users_get = async (req, res) => {
 
 module.exports.user_get = async (req, res) => {
   try {
-    const user = await userService.getUser(req.params._id);
+    const user = await userService.getUser(req.params.id);
     res.json(user);
   } catch (error) {
     // TODO todo: error handling
@@ -54,7 +54,7 @@ module.exports.user_post = async (req, res) => {
 
 module.exports.user_put = async (req, res) => {
   try {
-    const updatedUser = await userService.updateUser(req.params._id, req.user);
+    const updatedUser = await userService.updateUser(req.params.id, req.user);
     res.json(updatedUser);
   } catch (error) {
     // TODO todo: error handling
@@ -64,7 +64,7 @@ module.exports.user_put = async (req, res) => {
 
 module.exports.user_delete = async (req, res) => {
   try {
-    const deletedUser = await userService.deleteUser(req.params._id);
+    const deletedUser = await userService.deleteUser(req.params.id);
     res.json(deletedUser);
   } catch (error) {
     // TODO todo: error handling

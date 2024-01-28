@@ -45,7 +45,7 @@ module.exports.playscore_post = async (req, res) => {
 module.exports.playscore_put = async (req, res) => {
   try {
     const updatedPS = await playscoreService.updatePlayScore(
-      req.params._id,
+      req.params.id,
       req.playscore
     );
     res.json(updatedPS);
@@ -57,7 +57,7 @@ module.exports.playscore_put = async (req, res) => {
 
 module.exports.playscore_delete = async (req, res) => {
   try {
-    const deletedPS = await playscoreService.deletePlayScore(req.params._id);
+    const deletedPS = await playscoreService.deletePlayScore(req.params.id);
     res.json(deletedPS);
   } catch (error) {
     // TODO todo: error handling
