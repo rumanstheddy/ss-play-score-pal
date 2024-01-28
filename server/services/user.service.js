@@ -22,8 +22,8 @@ const searchUser = async (searchQuery) => {
 
 const createUser = async (user) => await userModel.create(user);
 
-const updateUser = async (email, user) =>
-  await userModel.updateOne({ email: email }, { $set: { ...user } });
+const updateUser = async (id, user) =>
+  await userModel.updateOne({ _id: id }, { $set: { ...user } });
 
 const deleteUser = async (id) => await userModel.deleteOne({ _id: id });
 
