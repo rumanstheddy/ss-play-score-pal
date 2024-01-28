@@ -1,6 +1,28 @@
 const playscoreService = require("../services/playscore.service");
 
-// ! Create get methods for playscore (users and games)
+module.exports.playscores_for_user_get = async (req, res) => {
+  try {
+    const playscores = await playscoreService.getPlayScoresByUserId(
+      req.params.userId
+    );
+    res.json(playscores);
+  } catch (error) {
+    // TODO todo: error handling
+    console.log(error.message);
+  }
+};
+
+module.exports.playscores_for_game_get = async (req, res) => {
+  try {
+    const playscores = await playscoreService.getPlayScoresByGameId(
+      req.params.gameId
+    );
+    res.json(playscores);
+  } catch (error) {
+    // TODO todo: error handling
+    console.log(error.message);
+  }
+};
 
 module.exports.playscore_post = async (req, res) => {
   try {
