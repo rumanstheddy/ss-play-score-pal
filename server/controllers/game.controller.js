@@ -12,7 +12,7 @@ module.exports.games_get = async (req, res) => {
 
 module.exports.game_get = async (req, res) => {
   try {
-    const game = await gameService.getGame(req.params._id);
+    const game = await gameService.getGame(req.params.id);
     res.json(game);
   } catch (error) {
     // TODO todo: error handling
@@ -54,7 +54,7 @@ module.exports.game_post = async (req, res) => {
 
 module.exports.game_put = async (req, res) => {
   try {
-    const updatedGame = await gameService.updateGame(req.params._id, req.game);
+    const updatedGame = await gameService.updateGame(req.params.id, req.game);
     res.json(updatedGame);
   } catch (error) {
     // TODO todo: error handling
@@ -64,7 +64,7 @@ module.exports.game_put = async (req, res) => {
 
 module.exports.game_delete = async (req, res) => {
   try {
-    const deletedGame = await gameService.deleteGame(req.params._id);
+    const deletedGame = await gameService.deleteGame(req.params.id);
     res.json(deletedGame);
   } catch (error) {
     // TODO todo: error handling
