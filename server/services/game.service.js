@@ -3,6 +3,8 @@ const gameSchema = require("../models/game/game.schema");
 
 const getGame = async (id) => await gameModel.findOne({ _id: id });
 
+const getGames = async () => await gameModel.find();
+
 const searchGame = async (searchQuery) => {
   const regexSearch = new RegExp(searchQuery, i);
   return await gameModel.find({
@@ -28,6 +30,7 @@ gameSchema.post("save", function (doc) {
 
 module.exports = {
   getGame,
+  getGames,
   searchGame,
   createGame,
   updateGame,

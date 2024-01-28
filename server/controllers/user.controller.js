@@ -3,7 +3,7 @@ const userService = require("../services/user.service");
 module.exports.users_get = async (req, res) => {
   try {
     const users = await userService.getAllUsers();
-    return res.json(users);
+    res.json(users);
   } catch (error) {
     // TODO todo: error handling
     console.log(error.message);
