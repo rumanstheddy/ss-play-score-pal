@@ -17,6 +17,7 @@ module.exports = new mongoose.Schema(
       enum: ["Yes", "OnSale", "No"],
       required: true,
     },
+    datePosted: new Date(),
   },
   { collection: "PlayScore" }
 );

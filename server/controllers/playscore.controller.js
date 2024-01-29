@@ -32,6 +32,7 @@ module.exports.playscore_post = async (req, res) => {
       rating: req.rating,
       review: req.review,
       isRecommended: req.isRecommended,
+      datePosted: req.datePosted,
     };
 
     const createdPS = await playscoreService.createPlayScore(playscore);
