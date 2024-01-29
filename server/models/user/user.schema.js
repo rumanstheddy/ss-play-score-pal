@@ -17,11 +17,11 @@ module.exports = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: [true, "Please enter a password"],
+      required: true,
       minlength: [6, "Your password should be at least 6 characters in length"],
     },
     userType: { type: String, enum: ["User", "Admin"], default: "User" },
-    isSSreviewer: { type: Boolean, default: false },
+    isVerified: { type: Boolean, default: false },
   },
   { collection: "User" }
 );

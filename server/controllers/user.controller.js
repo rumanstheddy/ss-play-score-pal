@@ -1,5 +1,24 @@
 const userService = require("../services/user.service");
 
+const handleErrors = (err) => {
+  if (err.code && err.code === 11000) {
+    return "An account with that e-mail address already exists.";
+  }
+
+  let errorObj = [];
+
+  Object.values(err.errors).forEach((child) => {
+    const obj = {
+      field: child.properties.path,
+      message: child.properties.message,
+    };
+
+    errorObj.push(obj);
+  });
+
+  return errorObj;
+};
+
 module.exports.users_get = async (req, res) => {
   try {
     const users = await userService.getAllUsers();
@@ -41,14 +60,14 @@ module.exports.user_post = async (req, res) => {
       email: req.body.email,
       password: req.body.password,
       userType: req.body.userType,
-      isSSreviewer: req.body.isSSreviewer,
+      isVerified: req.body.isVerified,
     };
 
     const createdUser = await userService.createUser(user);
     res.json(createdUser);
-  } catch (error) {
-    // TODO todo: error handling
-    console.log(error.message);
+  } catch (err) {
+    const errorMsg = handleErrors(err);
+    res.json(errorMsg);
   }
 };
 
@@ -56,9 +75,11 @@ module.exports.user_put = async (req, res) => {
   try {
     const updatedUser = await userService.updateUser(req.params.id, req.body);
     res.json(updatedUser);
-  } catch (error) {
-    // TODO todo: error handling
-    console.log(error.message);
+  } catch (err) {
+    // TODO: password hashing after updating
+    // todo: password validation after updating
+    const errorMsg = handleErrors(err);
+    res.json(errorMsg);
   }
 };
 
