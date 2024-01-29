@@ -1,6 +1,4 @@
 const userModel = require("../models/user/user.model");
-const userSchema = require("../models/user/user.schema");
-const bcrypt = require("bcrypt");
 
 // const getUserByEmail = async (email) =>
 //   await userModel.findOne({ email: email });
