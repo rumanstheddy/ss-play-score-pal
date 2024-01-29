@@ -76,7 +76,6 @@ module.exports.user_put = async (req, res) => {
     const updatedUser = await userService.updateUser(req.params.id, req.body);
     res.json(updatedUser);
   } catch (err) {
-    // TODO: password hashing after updating
     // todo: password validation after updating
     const errorMsg = handleErrors(err);
     res.json(errorMsg);
