@@ -1,5 +1,9 @@
 require("dotenv").config();
 
+const gameRoutes = require("./routes/game.routes");
+const userRoutes = require("./routes/user.routes");
+const playscoreRoutes = require("./routes/playscore.routes");
+
 const express = require("express");
 const { default: mongoose } = require("mongoose");
 
@@ -10,9 +14,14 @@ mongoose.connect(process.env.DB_URL);
 
 const db = mongoose.connection;
 
-db.on("error", (error) => console.log(error));
-db.on("open", () => console.log("Connected to Db"));
-
 const port = process.env.PORT;
 
-app.listen(port, () => console.log(`Server started, listening on ${port}`));
+db.on("error", (error) => console.log(error));
+db.on("open", () => app.listen(port));
+db.on("open", () =>
+  console.log(`Connected to Db, server started at ${port}`)
+);
+
+app.use(gameRoutes);
+app.use(userRoutes);
+app.use(playscoreRoutes);

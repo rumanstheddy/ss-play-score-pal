@@ -1,4 +1,4 @@
-require("dotenv");
+require("dotenv").config();
 const jwt = require("jsonwebtoken");
 
 const userService = require("../services/user.service");
@@ -27,8 +27,7 @@ module.exports.signup = async (req, res) => {
     const createdUser = await userService.createUser(user);
     const token = createToken(createdUser._id);
     res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge });
-
-    res.json(signedUpUser);
+    res.status(200).json({ user: createdUser._id });
   } catch (error) {
     // TODO: handle error message
     console.log(error.message);
@@ -50,9 +49,9 @@ module.exports.login = async (req, res) => {
 
 // module.exports = (app) => {
 //   app.get("/set-cookies", (req, res) => {
-//     // res.setHeader("set-cookie", "newUser=true");
+// res.setHeader("set-cookie", "newUser=true");
 //     res.cookie("newUser", true);
-//     // ! Need to set secure true for https only connection
+// ! Need to set secure true for https only connection
 //     res.cookie("isEmployee", false, {
 //       maxAge: 1000 * 60 * 60 * 24,
 //       httpOnly: true,

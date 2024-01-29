@@ -8,7 +8,7 @@ module.exports = new mongoose.Schema(
     },
     developer: String,
     publisher: String,
-    releaseDate: new Date(),
+    releaseDate: Date,
     summary: {
       type: String,
       required: [true, "Please enter a summary for the game"],
