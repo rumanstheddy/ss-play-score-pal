@@ -1,13 +1,18 @@
 const mongoose = require("mongoose");
-const { isEmail } = require("validator");
+const { isEmail, isAlphanumeric, isAlpha } = require("validator");
 
 module.exports = new mongoose.Schema(
   {
     firstName: {
       type: String,
       required: [true, "Please enter your First Name"],
+      validate: [isAlphanumeric, "Your First Name has to be alphanumeric"],
     },
-    lastName: { type: String, required: [true, "Please enter your Last Name"] },
+    lastName: {
+      type: String,
+      required: [true, "Please enter your Last Name"],
+      validate: [isAlphanumeric, "Your Last Name has to be alphanumeric"],
+    },
     email: {
       type: String,
       required: [true, "Please enter an e-mail address"],

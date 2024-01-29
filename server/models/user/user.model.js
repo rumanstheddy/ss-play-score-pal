@@ -16,6 +16,8 @@ userSchema.pre("save", async function (next) {
 // Mongoose Middleware for hashing the password before updating an entry
 userSchema.pre("updateOne", async function (next) {
   try {
+    this.options.runValidators = true;
+
     const update = this.getUpdate().$set;
     if (update.password) {
       console.log(update);
