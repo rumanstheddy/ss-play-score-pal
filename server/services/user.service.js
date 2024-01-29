@@ -27,17 +27,6 @@ const updateUser = async (id, user) =>
 
 const deleteUser = async (id) => await userModel.deleteOne({ _id: id });
 
-// Mongoose Middleware
-userSchema.pre("pre", async (next) => {
-  const salt = await bcrypt.genSalt();
-  this.password = await bcrypt.hash(this.password, salt);
-  next();
-});
-
-userSchema.post("save", (doc) => {
-  console.log("Created a new user!", doc);
-});
-
 module.exports = {
   getUser,
   createUser,

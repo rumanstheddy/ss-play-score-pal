@@ -36,12 +36,12 @@ module.exports.game_search_get = async (req, res) => {
 module.exports.game_post = async (req, res) => {
   try {
     const game = {
-      name: req.name,
-      developer: req.developer,
-      publisher: req.publisher,
-      releaseDate: req.releaseDate,
-      summary: req.summary,
-      genre: req.genre,
+      name: req.body.name,
+      developer: req.body.developer,
+      publisher: req.body.publisher,
+      releaseDate: req.body.releaseDate,
+      summary: req.body.summary,
+      genre: req.body.genre,
     };
 
     const createdGame = await gameService.createGame(game);
@@ -54,7 +54,7 @@ module.exports.game_post = async (req, res) => {
 
 module.exports.game_put = async (req, res) => {
   try {
-    const updatedGame = await gameService.updateGame(req.params.id, req.game);
+    const updatedGame = await gameService.updateGame(req.params.id, req.body);
     res.json(updatedGame);
   } catch (error) {
     // TODO todo: error handling

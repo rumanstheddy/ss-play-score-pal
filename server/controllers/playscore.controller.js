@@ -27,12 +27,12 @@ module.exports.playscores_for_game_get = async (req, res) => {
 module.exports.playscore_post = async (req, res) => {
   try {
     const playscore = {
-      gameId: req.gameId,
-      userId: req.userId,
-      rating: req.rating,
-      review: req.review,
-      isRecommended: req.isRecommended,
-      datePosted: req.datePosted,
+      gameId: req.body.gameId,
+      userId: req.body.userId,
+      rating: req.body.rating,
+      review: req.body.review,
+      isRecommended: req.body.isRecommended,
+      datePosted: req.body.datePosted,
     };
 
     const createdPS = await playscoreService.createPlayScore(playscore);
@@ -47,7 +47,7 @@ module.exports.playscore_put = async (req, res) => {
   try {
     const updatedPS = await playscoreService.updatePlayScore(
       req.params.id,
-      req.playscore
+      req.body
     );
     res.json(updatedPS);
   } catch (error) {

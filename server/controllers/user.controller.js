@@ -36,12 +36,12 @@ module.exports.user_search_get = async (req, res) => {
 module.exports.user_post = async (req, res) => {
   try {
     const user = {
-      firstName: req.firstName,
-      lastName: req.lastName,
-      email: req.email,
-      password: req.password,
-      userType: req.userType,
-      isSSreviewer: req.isSSreviewer,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      email: req.body.email,
+      password: req.body.password,
+      userType: req.body.userType,
+      isSSreviewer: req.body.isSSreviewer,
     };
 
     const createdUser = await userService.createUser(user);
@@ -54,7 +54,7 @@ module.exports.user_post = async (req, res) => {
 
 module.exports.user_put = async (req, res) => {
   try {
-    const updatedUser = await userService.updateUser(req.params.id, req.user);
+    const updatedUser = await userService.updateUser(req.params.id, req.body);
     res.json(updatedUser);
   } catch (error) {
     // TODO todo: error handling
