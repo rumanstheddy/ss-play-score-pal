@@ -1,17 +1,19 @@
 const mongoose = require("mongoose");
-const { isEmail, isAlphanumeric } = require("validator");
+const { isEmail } = require("validator");
+
+const isNotEmpty = (str) => !(!str || /^\s*$/.test(str));
 
 module.exports = new mongoose.Schema(
   {
     firstName: {
       type: String,
       required: [true, "Please enter your First Name"],
-      validate: [isAlphanumeric, "Your First Name has to be alphanumeric"],
+      validate: [isNotEmpty, "Your First Name cannot be empty"],
     },
     lastName: {
       type: String,
       required: [true, "Please enter your Last Name"],
-      validate: [isAlphanumeric, "Your Last Name has to be alphanumeric"],
+      validate: [isNotEmpty, "Your Last Name cannot be empty"],
     },
     email: {
       type: String,
