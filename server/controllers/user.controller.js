@@ -36,17 +36,17 @@ module.exports.users_get = async (req, res) => {
     res.status(200).json(users);
   } catch (error) {
     console.log(error.message);
-    res.status(500).send("Server ran into an issue");
+    res.status(500).send({ error: "Internal Server Error" });
   }
 };
 
 module.exports.user_get = async (req, res) => {
   try {
     const user = await userService.getUser(req.params.id);
-    res.status(200).json(user);
+    res.status(201).json(user);
   } catch (err) {
     const errorMsg = handleErrors(err);
-    res.status(404).json(errorMsg);
+    res.status(400).json({ error: errorMsg });
   }
 };
 
@@ -58,8 +58,8 @@ module.exports.user_search_get = async (req, res) => {
 
     res.status(200).json(searchResult);
   } catch (err) {
-    const errorMsg = handleErrors(err);
-    res.status(404).json(errorMsg);
+    console.log(err.message);
+    res.status(500).send({ error: "Internal Server Error" });
   }
 };
 
@@ -75,10 +75,10 @@ module.exports.user_post = async (req, res) => {
     };
 
     const createdUser = await userService.createUser(user);
-    res.status(200).json(createdUser);
+    res.status(201).json(createdUser);
   } catch (err) {
     const errorMsg = handleErrors(err);
-    res.status(400).json(errorMsg);
+    res.status(400).json({ error: errorMsg });
   }
 };
 
@@ -89,7 +89,7 @@ module.exports.user_put = async (req, res) => {
   } catch (err) {
     // console.log(err);
     const errorMsg = handleErrors(err);
-    res.status(404).json(errorMsg);
+    res.status(404).json({ error: errorMsg });
   }
 };
 
@@ -99,6 +99,6 @@ module.exports.user_delete = async (req, res) => {
     res.status(200).json(deletedUser);
   } catch (err) {
     const errorMsg = handleErrors(err);
-    res.status(404).json(errorMsg);
+    res.status(404).json({ error: errorMsg });
   }
 };

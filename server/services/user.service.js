@@ -15,20 +15,13 @@ const getAllUsers = async () => await userModel.find();
 
 const searchUser = async (searchQuery) => {
   const regexSearch = new RegExp(searchQuery, "i");
-  const result = await userModel.find({
+  return await userModel.find({
     $or: [
       { firstName: regexSearch },
       { lastName: regexSearch },
       { email: regexSearch },
     ],
   });
-
-  if (result.length === 0)
-    throw new Error(
-      `Could not find any results for the value: '${searchQuery}'`
-    );
-
-  return result;
 };
 
 const createUser = async (user) => await userModel.create(user);
