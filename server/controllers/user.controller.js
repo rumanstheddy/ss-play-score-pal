@@ -39,7 +39,7 @@ module.exports.users_get = async (req, res) => {
 module.exports.user_get = async (req, res) => {
   try {
     const user = await userService.getUser(req.params.id);
-    res.status(201).json(user);
+    res.status(200).json(user);
   } catch (err) {
     const errorMsg = handleErrors(err);
     res.status(400).json({ error: errorMsg });

@@ -8,8 +8,6 @@ playScoreSchema.index({ gameId: 1, userId: 1 }, { unique: true });
 // Also adds a new field to the schema to show the entry was edited
 playScoreSchema.pre("updateOne", async function (next) {
   this.options.runValidators = true;
-  // console.log(this.set);
-  // this.set({ dateEdited: new Date() });
   next();
 });
 

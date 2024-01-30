@@ -39,7 +39,7 @@ module.exports.games_get = async (req, res) => {
 module.exports.game_get = async (req, res) => {
   try {
     const game = await gameService.getGame(req.params.id);
-    res.json(game);
+    res.status(200).json(game);
   } catch (err) {
     const errorMsg = handleErrors(err);
     res.status(400).json({ error: errorMsg });
@@ -52,9 +52,8 @@ module.exports.game_search_get = async (req, res) => {
       req.params.keyword.toLocaleLowerCase()
     );
 
-    res.json(searchResult);
+    res.status(200).json(searchResult);
   } catch (err) {
-    console.log(err.message);
     res.status(500).send({ error: "Internal Server Error" });
   }
 };
@@ -83,7 +82,6 @@ module.exports.game_put = async (req, res) => {
     const updatedGame = await gameService.updateGame(req.params.id, req.body);
     res.status(200).json(updatedGame);
   } catch (err) {
-    // console.log(err);
     const errorMsg = handleErrors(err);
     res.status(404).json({ error: errorMsg });
   }

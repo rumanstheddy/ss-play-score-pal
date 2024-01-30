@@ -19,7 +19,7 @@ const port = process.env.PORT;
 db.on("error", (error) => console.log(error));
 db.on("open", () => app.listen(port));
 db.on("open", () =>
-  console.log(`Connected to Db, server started at ${port}`)
+  console.log(`Connected to Db, server started at port: ${port}`)
 );
 
 app.use(gameRoutes);

@@ -1,19 +1,23 @@
 const { ObjectId } = require("mongodb");
 const mongoose = require("mongoose");
 
+const isNotEmpty = (str) => !(!str || /^\s*$/.test(str));
+
 module.exports = new mongoose.Schema(
   {
     gameId: {
       type: ObjectId,
       ref: "GameModel",
-      required: true,
+      required: [true, "A valid gameId is required."],
       immutable: true,
+      validate: [isNotEmpty, "gameId cannot be empty"],
     },
     userId: {
       type: ObjectId,
       ref: "UserModel",
-      required: true,
+      required: [true, "A valid userId is required."],
       immutable: true,
+      validate: [isNotEmpty, "userId cannot be empty"],
     },
     rating: {
       type: Number,
