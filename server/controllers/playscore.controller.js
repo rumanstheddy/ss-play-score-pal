@@ -24,6 +24,16 @@ module.exports.playscores_for_game_get = async (req, res) => {
   }
 };
 
+module.exports.playscore_get = async (req, res) => {
+  try {
+    const playscore = await playscoreService.getPlayScore(req.params.id);
+    res.json(playscore);
+  } catch (error) {
+    // TODO todo: error handling
+    console.log(error.message);
+  }
+};
+
 module.exports.playscore_post = async (req, res) => {
   try {
     const playscore = {

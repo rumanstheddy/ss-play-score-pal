@@ -15,14 +15,18 @@ const createPlayScore = async (playScore) =>
   await playScoreModel.create(playScore);
 
 const updatePlayScore = async (psId, playScore) => {
-  return await playScoreModel.updateOne({
-    _id: psId,
-    $set: {
-      rating: playScore.rating,
-      review: playScore.review,
-      isRecommended: playScore.isRecommended,
+  return await playScoreModel.updateOne(
+    {
+      _id: psId,
     },
-  });
+    {
+      $set: {
+        rating: playScore.rating,
+        review: playScore.review,
+        isRecommended: playScore.isRecommended,
+      },
+    }
+  );
 };
 
 const deletePlayScore = async (id) => playScoreModel.deleteOne({ _id: id });

@@ -30,10 +30,6 @@ userSchema.pre("updateOne", async function (next) {
   }
 });
 
-userSchema.post("save", function (doc) {
-  console.log("Created a new user!", doc);
-});
-
 userSchema.statics.login = async function (email, password) {
   const user = await this.findOne({ email });
   if (user) {

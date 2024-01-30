@@ -3,8 +3,18 @@ const mongoose = require("mongoose");
 
 module.exports = new mongoose.Schema(
   {
-    gameId: { type: ObjectId, ref: "GameModel", required: true },
-    userId: { type: ObjectId, ref: "UserModel", required: true },
+    gameId: {
+      type: ObjectId,
+      ref: "GameModel",
+      required: true,
+      immutable: true,
+    },
+    userId: {
+      type: ObjectId,
+      ref: "UserModel",
+      required: true,
+      immutable: true,
+    },
     rating: {
       type: Number,
       required: true,
@@ -17,7 +27,7 @@ module.exports = new mongoose.Schema(
       enum: ["Yes", "OnSale", "No"],
       required: true,
     },
-    datePosted: Date,
   },
+  { timestamps: true },
   { collection: "PlayScore" }
 );
