@@ -6,7 +6,7 @@ Welcome to SS Playscore Pal - a platform for rating, reviewing, and recommending
 
 ## Tech Stack
 
-- **Frontend**: [React](https://reactjs.org/)
+- **Frontend**: [Next.js](https://nextjs.org/)
 - **Backend**: [Node.js](https://nodejs.org/), [Express](https://expressjs.com/), [MongoDB](https://www.mongodb.com/)
 
 ## License
