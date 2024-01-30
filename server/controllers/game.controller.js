@@ -1,12 +1,38 @@
 const gameService = require("../services/game.service");
 
+const handleErrors = (err) => {
+  if (err.code && err.code === 11000) {
+    return "That game entry you've entered already exists.";
+  }
+
+  if (err.message && err.message.includes("Cast to ObjectId failed")) {
+    return `No game found with Id: ${err.value}`;
+  }
+
+  if (err.message && err.message.includes("No game found")) {
+    return err.message;
+  }
+
+  let errorObj = [];
+
+  Object.values(err.errors).forEach((child) => {
+    const obj = {
+      field: child.properties.path,
+      message: child.properties.message,
+    };
+
+    errorObj.push(obj);
+  });
+
+  return errorObj;
+};
+
 module.exports.games_get = async (req, res) => {
   try {
-    const games = await gameService.getGames();
-    res.json(games);
+    const games = await gameService.getAllGames();
+    res.status(200).json(games);
   } catch (error) {
-    // TODO todo: error handling
-    console.log(error.message);
+    res.status(500).send({ error: "Internal Server Error" });
   }
 };
 
@@ -14,9 +40,9 @@ module.exports.game_get = async (req, res) => {
   try {
     const game = await gameService.getGame(req.params.id);
     res.json(game);
-  } catch (error) {
-    // TODO todo: error handling
-    console.log(error.message);
+  } catch (err) {
+    const errorMsg = handleErrors(err);
+    res.status(400).json({ error: errorMsg });
   }
 };
 
@@ -27,9 +53,9 @@ module.exports.game_search_get = async (req, res) => {
     );
 
     res.json(searchResult);
-  } catch (error) {
-    // TODO todo: error handling
-    console.log(error.message);
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).send({ error: "Internal Server Error" });
   }
 };
 
@@ -45,20 +71,21 @@ module.exports.game_post = async (req, res) => {
     };
 
     const createdGame = await gameService.createGame(game);
-    res.json(createdGame);
-  } catch (error) {
-    // TODO todo: error handling
-    console.log(error.message);
+    res.status(201).json(createdGame);
+  } catch (err) {
+    const errorMsg = handleErrors(err);
+    res.status(400).json({ error: errorMsg });
   }
 };
 
 module.exports.game_put = async (req, res) => {
   try {
     const updatedGame = await gameService.updateGame(req.params.id, req.body);
-    res.json(updatedGame);
-  } catch (error) {
-    // TODO todo: error handling
-    console.log(error.message);
+    res.status(200).json(updatedGame);
+  } catch (err) {
+    // console.log(err);
+    const errorMsg = handleErrors(err);
+    res.status(404).json({ error: errorMsg });
   }
 };
 
@@ -66,8 +93,8 @@ module.exports.game_delete = async (req, res) => {
   try {
     const deletedGame = await gameService.deleteGame(req.params.id);
     res.json(deletedGame);
-  } catch (error) {
-    // TODO todo: error handling
-    console.log(error.message);
+  } catch (err) {
+    const errorMsg = handleErrors(err);
+    res.status(404).json({ error: errorMsg });
   }
 };

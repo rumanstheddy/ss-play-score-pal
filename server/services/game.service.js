@@ -1,12 +1,17 @@
 const gameModel = require("../models/game/game.model");
-const gameSchema = require("../models/game/game.schema");
 
-const getGame = async (id) => await gameModel.findOne({ _id: id });
+const getGame = async (id) => {
+  const result = await gameModel.findOne({ _id: id });
 
-const getGames = async () => await gameModel.find();
+  if (result === null) throw new Error(`No game found with Id: ${id}`);
+
+  return result;
+};
+
+const getAllGames = async () => await gameModel.find();
 
 const searchGame = async (searchQuery) => {
-  const regexSearch = new RegExp(searchQuery, i);
+  const regexSearch = new RegExp(searchQuery, "i");
   return await gameModel.find({
     $or: [
       { name: regexSearch },
@@ -19,18 +24,20 @@ const searchGame = async (searchQuery) => {
 const createGame = async (game) => await gameModel.create(game);
 
 const updateGame = async (id, game) =>
-  await gameModel.updateOne({ _id: id, $set: { ...game } });
+  await gameModel.updateOne({ _id: id }, { $set: { ...game } });
 
-const deleteGame = async (id) => await gameModel.deleteOne({ _id: id });
+const deleteGame = async (id) => {
+  const result = await gameModel.deleteOne({ _id: id });
 
-// Mongoose Middleware
-gameSchema.post("save", function (doc) {
-  console.log("Created a new game entry!", doc);
-});
+  if (result.deletedCount === 0)
+    throw new Error(`No game found with Id: ${id}`);
+
+  return result;
+};
 
 module.exports = {
   getGame,
-  getGames,
+  getAllGames,
   searchGame,
   createGame,
   updateGame,

@@ -9,10 +9,7 @@ const handleErrors = (err) => {
     return `No user found with Id: ${err.value}`;
   }
 
-  if (
-    err.message &&
-    (err.message.includes("No user found") || err.message.includes("results"))
-  ) {
+  if (err.message && err.message.includes("No user found")) {
     return err.message;
   }
 
@@ -35,7 +32,6 @@ module.exports.users_get = async (req, res) => {
     const users = await userService.getAllUsers();
     res.status(200).json(users);
   } catch (error) {
-    console.log(error.message);
     res.status(500).send({ error: "Internal Server Error" });
   }
 };

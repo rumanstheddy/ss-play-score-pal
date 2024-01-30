@@ -1,19 +1,27 @@
 const mongoose = require("mongoose");
+const { isDate } = require("validator");
+
+const isNotEmpty = (str) => !(!str || /^\s*$/.test(str));
 
 module.exports = new mongoose.Schema(
   {
     name: {
       type: String,
+      unique: true,
       required: [true, "Please enter the name of the game"],
     },
     developer: String,
     publisher: String,
-    releaseDate: Date,
+    releaseDate: {
+      type: Date,
+      validate: [isDate, "Please enter an appropriate date"],
+    },
     summary: {
       type: String,
-      required: [true, "Please enter a summary for the game"],
+      required: true,
+      validate: [isNotEmpty, "The summary cannot be empty"],
     },
-    genre: [String],
+    genre: [{ type: String }],
   },
   { collection: "Game" }
 );
