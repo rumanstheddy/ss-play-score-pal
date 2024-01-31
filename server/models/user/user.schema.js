@@ -30,5 +30,6 @@ module.exports = new mongoose.Schema(
     userType: { type: String, enum: ["User", "Admin"], default: "User" },
     isVerified: { type: Boolean, default: false },
   },
+  { timestamps: { createdAt: true, updatedAt: false } },
   { collection: "User" }
 );
