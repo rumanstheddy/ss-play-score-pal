@@ -1,5 +1,10 @@
-import Image from "next/image";
+import Login from "./pages/login";
 
 export default function Home() {
-  return <div className="start">SS Playscore Pal</div>;
+  return (
+    <div className="start">
+      <h1>SS Playscore Pal</h1>
+      <Login />
+    </div>
+  );
 }
