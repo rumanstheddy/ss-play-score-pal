@@ -43,7 +43,7 @@ module.exports.login = async (req, res) => {
     res.status(200).json({ user: user._id });
   } catch (error) {
     // TODO: handle error message
-    res.status(400).json({});
+    res.status(400).json({ error: error });
   }
 };
 
