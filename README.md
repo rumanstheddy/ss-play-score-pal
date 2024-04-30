@@ -12,7 +12,3 @@ Welcome to SS Playscore Pal - a platform for rating, reviewing, and recommending
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
-
----
-
-Happy gaming and coding! 🎮✨
