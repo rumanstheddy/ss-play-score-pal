@@ -49,12 +49,14 @@ module.exports.login = async (req, res) => {
 
 // module.exports = (app) => {
 //   app.get("/set-cookies", (req, res) => {
-// res.setHeader("set-cookie", "newUser=true");
+//     res.setHeader("set-cookie", "newUser=true");
 //     res.cookie("newUser", true);
-// ! Need to set secure true for https only connection
 //     res.cookie("isEmployee", false, {
 //       maxAge: 1000 * 60 * 60 * 24,
+// ** The cookie cannot be accessed now using JS
 //       httpOnly: true,
+// ** The cookie can only be accessed on https connections only
+//       secure: true,
 //     });
 //   });
 // };
