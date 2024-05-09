@@ -11,4 +11,4 @@ playScoreSchema.pre("updateOne", async function (next) {
   next();
 });
 
-module.exports = mongoose.model("PlayScoreModel", playScoreSchema);
+module.exports = mongoose.model("PlayScoreModel", playScoreSchema, "playscores");

@@ -3,6 +3,7 @@ require("dotenv").config();
 const gameRoutes = require("./routes/game.routes");
 const userRoutes = require("./routes/user.routes");
 const playscoreRoutes = require("./routes/playscore.routes");
+const authRoutes = require("./routes/auth.routes");
 
 const express = require("express");
 const { default: mongoose } = require("mongoose");
@@ -25,3 +26,4 @@ db.on("open", () =>
 app.use(gameRoutes);
 app.use(userRoutes);
 app.use(playscoreRoutes);
+app.use(authRoutes);

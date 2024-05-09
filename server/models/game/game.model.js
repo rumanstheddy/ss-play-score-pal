@@ -8,4 +8,4 @@ gameSchema.pre("updateOne", async function (next) {
   next();
 });
 
-module.exports = mongoose.model("GameModel", gameSchema);
+module.exports = mongoose.model("GameModel", gameSchema, "games");
