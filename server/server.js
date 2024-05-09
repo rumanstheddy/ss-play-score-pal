@@ -11,6 +11,9 @@ const { default: mongoose } = require("mongoose");
 const app = express();
 app.use(express.json());
 
+const cors = require("cors");
+app.use(cors());
+
 mongoose.connect(process.env.DB_URL);
 
 const db = mongoose.connection;
