@@ -13,6 +13,28 @@ const createToken = (id) => {
   });
 };
 
+const handleErrors = (err) => {
+  if (err.code && err.code === 11000) {
+    return "An account with that e-mail address already exists.";
+  }
+
+  if (err.message && err.message.includes("incorrect")) {
+    return "The email address or password you entered is incorrect. Please try again.";
+  }
+
+  let errorObj = [];
+
+  Object.values(err.errors).forEach((child) => {
+    const obj = {
+      field: child.properties.path,
+      message: child.properties.message,
+    };
+    errorObj.push(obj);
+  });
+
+  return errorObj;
+};
+
 module.exports.signup = async (req, res) => {
   try {
     const user = {
@@ -27,10 +49,10 @@ module.exports.signup = async (req, res) => {
     const createdUser = await userService.createUser(user);
     const token = createToken(createdUser._id);
     res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge });
-    res.status(200).json({ user: createdUser._id });
+    res.status(201).json({ user: createdUser._id });
   } catch (error) {
-    // TODO: handle error message
-    console.log(error.message);
+    const errMsg = handleErrors(error);
+    res.status(400).json({ error: errMsg });
   }
 };
 
@@ -42,8 +64,8 @@ module.exports.login = async (req, res) => {
     res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge });
     res.status(200).json({ user: user._id });
   } catch (error) {
-    // TODO: handle error message
-    res.status(400).json({ error: error });
+    const errMsg = handleErrors(error);
+    res.status(401).json({ error: errMsg });
   }
 };
 
