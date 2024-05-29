@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { SessionProvider } from "next-auth/react";
-import { Session } from "next-auth";
+import { NextAuthProvider } from "../../pages/api/auth/NextAuthProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -13,16 +12,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-  session,
 }: Readonly<{
   children: React.ReactNode;
-  session: Session;
 }>) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        {/* //* Adding SessionProvider to the app to access Next Auth */}
-        <SessionProvider session={session}>{children}</SessionProvider>
+        {/* //* Adding context to Root component from an external provider class: NextAuthProvider */}
+        <NextAuthProvider>{children}</NextAuthProvider>
       </body>
     </html>
   );
