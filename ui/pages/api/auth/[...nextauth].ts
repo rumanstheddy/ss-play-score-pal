@@ -22,9 +22,15 @@ export const authOptions: NextAuthOptions = {
         // e.g. return { id: 1, name: 'J Smith', email: 'jsmith@example.com' }
         // You can also use the `req` object to obtain additional parameters
         // (i.e., the request IP address)
-        const res = await fetch("/your/endpoint", {
+
+        const { username, password } = credentials as Record<
+          "username" | "password",
+          string
+        >;
+
+        const res = await fetch("http://localhost:4000/login", {
           method: "POST",
-          body: JSON.stringify(credentials),
+          body: JSON.stringify({ username, password }),
           headers: { "Content-Type": "application/json" },
         });
         const user = await res.json();
@@ -38,6 +44,10 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
+
+  session: {
+    strategy: "jwt",
+  },
 };
 
 export default NextAuth(authOptions);
