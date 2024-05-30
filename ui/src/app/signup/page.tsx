@@ -58,7 +58,7 @@ export default function Signup() {
           Login
         </Link>
         <XCircleIcon
-          className="size-4 inline-block ml-3 mb-0.5 hover:cursor-pointer"
+          className="size-4 inline-block ml-3 mb-0.5 hover:cursor-pointer hover:text-gray-200"
           onClick={() => setIsSignupSuccess(false)}
         />
       </div>
@@ -78,7 +78,7 @@ export default function Signup() {
           <input
             name="input_fName"
             type="text"
-            className="text-black rounded-lg placeholder:pl-2"
+            className="text-black rounded-lg placeholder:pl-0.5 pl-2"
             placeholder="Enter your First Name"
             value={fName}
             onChange={(e) => setFname(e.target.value)}
@@ -91,7 +91,7 @@ export default function Signup() {
           <input
             name="input_lName"
             type="text"
-            className="text-black rounded-lg placeholder:pl-2"
+            className="text-black rounded-lg placeholder:pl-0.5 pl-2"
             placeholder="Enter your Last Name"
             value={lName}
             onChange={(e) => setLname(e.target.value)}
@@ -104,7 +104,7 @@ export default function Signup() {
           <input
             name="input_email"
             type="email"
-            className="text-black rounded-lg placeholder:pl-2"
+            className="text-black rounded-lg placeholder:pl-0.5 pl-2"
             placeholder="Enter your email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -117,7 +117,7 @@ export default function Signup() {
           <input
             name="input_pw"
             type="password"
-            className="text-black rounded-lg placeholder:pl-2"
+            className="text-black rounded-lg placeholder:pl-0.5 pl-2"
             placeholder="Enter a password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
