@@ -12,7 +12,7 @@ export const authOptions: NextAuthOptions = {
       // e.g. domain, username, password, 2FA token, etc.
       // You can pass any HTML attribute to the <input> tag through the object.
       credentials: {
-        username: { label: "Username", type: "text", placeholder: "jsmith" },
+        email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
@@ -23,20 +23,21 @@ export const authOptions: NextAuthOptions = {
         // You can also use the `req` object to obtain additional parameters
         // (i.e., the request IP address)
 
-        const { username, password } = credentials as Record<
-          "username" | "password",
+        const { email, password } = credentials as Record<
+          "email" | "password",
           string
         >;
 
         const res = await fetch("http://localhost:4000/login", {
           method: "POST",
-          body: JSON.stringify({ username, password }),
+          body: JSON.stringify({ email, password }),
           headers: { "Content-Type": "application/json" },
         });
         const user = await res.json();
 
         // If no error and we have user data, return it
         if (res.ok && user) {
+          console.log("Everything is OK!");
           return user;
         }
         // Return null if user data could not be retrieved

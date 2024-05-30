@@ -1,32 +1,22 @@
 "use client";
 
+import { signIn } from "next-auth/react";
 import { useState } from "react";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const login_POST = async () => {
-    const body = {
+  const onSubmit = async () => {
+
+    const result = await signIn("credentials", {
       email: email,
       password: password,
-    };
-
-    const response = await fetch("http://localhost:4000/login", {
-      method: "POST",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
+      redirect: true,
+      callbackUrl: "/",
     });
 
-    return response.json();
-  };
-
-  const login = async () => {
-    const data = await login_POST();
-    console.log(data);
+    console.log(result);
   };
 
   return (
@@ -57,7 +47,7 @@ export default function Login() {
       <button
         className="rounded-lg bg-white py-3 px-6 text-center align-middle text-black mt-3"
         type="button"
-        onClick={() => login()}
+        onClick={() => onSubmit()}
       >
         Login
       </button>

@@ -8,7 +8,7 @@ export default function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const signup_POST = async () => {
+  const signUp = async () => {
     const body = {
       firstName: fName,
       lastName: lName,
@@ -28,8 +28,8 @@ export default function Signup() {
     return response.json();
   };
 
-  const signup = async () => {
-    const data = await signup_POST();
+  const onSubmit = async () => {
+    const data = await signUp();
     console.log(data);
   };
 
@@ -83,7 +83,7 @@ export default function Signup() {
       <button
         className="rounded-lg bg-white py-3 px-6 text-center align-middle text-black mt-3"
         type="button"
-        onClick={() => signup()}
+        onClick={() => onSubmit()}
       >
         Sign Up
       </button>
