@@ -3,6 +3,7 @@
 import { useState } from "react";
 import InputField from "@/components/InputField";
 import PopUpMsg from "@/components/PopUpMsg";
+import Link from "next/link";
 
 export default function Signup(): React.ReactElement {
   const [fName, setFname]: [string, (fName: string) => void] =
@@ -119,6 +120,14 @@ export default function Signup(): React.ReactElement {
           >
             Sign Up
           </button>
+        </div>
+        <div className="flex flex-col">
+          <Link
+            href="/"
+            className="text-center mt-4 text-blue-500 hover:underline hover:text-blue-700"
+          >
+            Home
+          </Link>
         </div>
       </div>
     </div>

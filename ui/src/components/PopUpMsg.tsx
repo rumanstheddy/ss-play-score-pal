@@ -23,7 +23,7 @@ export default function PopUpMsg({
       {message}
       <Link
         href={link}
-        className="pl-2 text-blue-600 hover:underline hover:text-blue-800"
+        className="pl-2 text-blue-600 hover:underline hover:text-blue-700"
       >
         Login
       </Link>

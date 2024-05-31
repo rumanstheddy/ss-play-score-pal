@@ -1,6 +1,8 @@
 "use client";
 
+import InputField from "@/components/InputField";
 import { signIn } from "next-auth/react";
+import Link from "next/link";
 import { useState } from "react";
 
 export default function Login() {
@@ -20,37 +22,45 @@ export default function Login() {
 
   return (
     <div className="flex justify-center min-h-screen">
-      <div className=" flex-col content-center">
-        <h1 className="text-4xl">Login</h1>
-        <label htmlFor="input_email" className="inline-block">
-          Email:
-        </label>
-        <input
-          name="input_email"
-          type="email"
-          className="block text-black"
-          placeholder="Enter your email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <label htmlFor="input_pw" className="inline-block">
-          Password:
-        </label>
-        <input
-          name="input_pw"
-          type="password"
-          className="block text-black"
-          placeholder="Enter your password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button
-          className="rounded-lg bg-white py-3 px-6 text-center align-middle text-black mt-3"
-          type="button"
-          onClick={() => onSubmit()}
-        >
-          Login
-        </button>
+      <div className="content-center">
+        <h1 className="text-4xl text-center mb-3">Login</h1>
+        <div className="flex flex-col">
+          <InputField
+            input={email}
+            label="Email:"
+            name="input_email"
+            type="email"
+            placeholder="Enter your email"
+            setInput={setEmail}
+          />
+        </div>
+        <div className="flex flex-col">
+          <InputField
+            name="input_pw"
+            label="Password:"
+            type="password"
+            placeholder="Enter a password"
+            input={password}
+            setInput={setPassword}
+          />
+        </div>
+        <div className="flex justify-center">
+          <button
+            className="rounded-lg bg-white py-3 px-6 text-center align-middle text-black mt-5"
+            type="button"
+            onClick={() => onSubmit()}
+          >
+            Login
+          </button>
+        </div>
+        <div className="flex flex-col">
+          <Link
+            href="/"
+            className="text-center mt-4 text-blue-500 hover:underline hover:text-blue-600"
+          >
+            Home
+          </Link>
+        </div>
       </div>
     </div>
   );
