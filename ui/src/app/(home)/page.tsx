@@ -2,24 +2,24 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="flex justify-center min-h-screen">
-      <div className=" flex-col content-center">
-        <h1 className="text-4xl text-white mb-5 text-center">
-          SS Playscore Pal
-        </h1>
+    <div className="flex flex-col justify-center min-h-screen">
+      <h1 className="text-4xl text-white mb-5 text-center">SS Playscore Pal</h1>
+      <span className="text-center">
         <Link
-          className="block text-blue-500 hover:text-blue-700 text-center hover:underline"
+          className=" text-blue-500 hover:text-blue-700 text-center hover:underline"
           href="/signup"
         >
           Sign Up
         </Link>
+      </span>
+      <span className="text-center">
         <Link
-          className="block text-blue-500 hover:text-blue-700 text-center hover:underline"
+          className=" text-blue-500 hover:text-blue-700 text-center hover:underline"
           href="/login"
         >
           Login
         </Link>
-      </div>
+      </span>
     </div>
   );
 }

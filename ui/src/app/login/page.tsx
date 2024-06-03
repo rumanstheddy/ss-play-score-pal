@@ -6,8 +6,10 @@ import Link from "next/link";
 import { useState } from "react";
 
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail]: [string, (email: string) => void] =
+    useState<string>("");
+  const [password, setPassword]: [string, (password: string) => void] =
+    useState<string>("");
 
   const onSubmit = async () => {
     const result = await signIn("credentials", {
@@ -54,12 +56,14 @@ export default function Login() {
           </button>
         </div>
         <div className="flex flex-col">
-          <Link
-            href="/"
-            className="text-center mt-4 text-blue-500 hover:underline hover:text-blue-600"
-          >
-            Home
-          </Link>
+          <span className="text-center mt-4">
+            <Link
+              href="/"
+              className=" text-blue-500 hover:underline hover:text-blue-600"
+            >
+              Home
+            </Link>
+          </span>
         </div>
       </div>
     </div>

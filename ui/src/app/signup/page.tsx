@@ -21,8 +21,15 @@ export default function Signup(): React.ReactElement {
 
   const successMsgStr: string = "You've registered successfully!";
 
+  interface IsignupBody {
+    firstName: string;
+    lastName: string;
+    email: string;
+    password : string;
+  }
+
   const signUp = async (): Promise<Response> => {
-    const body: object = {
+    const body: IsignupBody = {
       firstName: fName,
       lastName: lName,
       email: email,
@@ -122,12 +129,14 @@ export default function Signup(): React.ReactElement {
           </button>
         </div>
         <div className="flex flex-col">
-          <Link
-            href="/"
-            className="text-center mt-4 text-blue-500 hover:underline hover:text-blue-700"
-          >
-            Home
-          </Link>
+          <span className="text-center mt-4">
+            <Link
+              href="/"
+              className=" text-blue-500 hover:underline hover:text-blue-700"
+            >
+              Home
+            </Link>
+          </span>
         </div>
       </div>
     </div>
