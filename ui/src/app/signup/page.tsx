@@ -3,7 +3,7 @@
 import { useState } from "react";
 import InputField from "@/components/InputField";
 import PopUpMsg from "@/components/PopUpMsg";
-import Link from "next/link";
+import TextLink from "@/components/TextLink";
 
 export default function Signup(): React.ReactElement {
   const [fName, setFname]: [string, (fName: string) => void] =
@@ -25,7 +25,7 @@ export default function Signup(): React.ReactElement {
     firstName: string;
     lastName: string;
     email: string;
-    password : string;
+    password: string;
   }
 
   const signUp = async (): Promise<Response> => {
@@ -129,14 +129,12 @@ export default function Signup(): React.ReactElement {
           </button>
         </div>
         <div className="flex flex-col">
-          <span className="text-center mt-4">
-            <Link
-              href="/"
-              className=" text-blue-500 hover:underline hover:text-blue-700"
-            >
-              Home
-            </Link>
-          </span>
+          <TextLink
+            link="/"
+            spanStyle="text-center mt-4"
+            linkStyle=" text-blue-500 hover:underline hover:text-blue-700"
+            text="Back"
+          />
         </div>
       </div>
     </div>

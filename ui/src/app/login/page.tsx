@@ -1,11 +1,11 @@
 "use client";
 
 import InputField from "@/components/InputField";
+import TextLink from "@/components/TextLink";
 import { signIn } from "next-auth/react";
-import Link from "next/link";
 import { useState } from "react";
 
-export default function Login() {
+export default function Login(): React.ReactElement {
   const [email, setEmail]: [string, (email: string) => void] =
     useState<string>("");
   const [password, setPassword]: [string, (password: string) => void] =
@@ -56,14 +56,12 @@ export default function Login() {
           </button>
         </div>
         <div className="flex flex-col">
-          <span className="text-center mt-4">
-            <Link
-              href="/"
-              className=" text-blue-500 hover:underline hover:text-blue-600"
-            >
-              Home
-            </Link>
-          </span>
+          <TextLink
+            link="/"
+            spanStyle="text-center mt-4"
+            linkStyle="text-blue-500 hover:underline hover:text-blue-700"
+            text="Back"
+          />
         </div>
       </div>
     </div>
