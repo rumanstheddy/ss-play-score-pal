@@ -37,7 +37,6 @@ export const authOptions: NextAuthOptions = {
 
         // If no error and we have user data, return it
         if (res.ok && user) {
-          console.log("Everything is OK!");
           return user;
         }
         // Return null if user data could not be retrieved
@@ -45,6 +44,17 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
+
+  callbacks: {
+    async jwt({ token, user }) {
+      user && (token.user = user);
+      return token;
+    },
+    async session({ session, token }) {
+      session.user = token.user;
+      return session;
+    },
+  },
 
   session: {
     strategy: "jwt",
