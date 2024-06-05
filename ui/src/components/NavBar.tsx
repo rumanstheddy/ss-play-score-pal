@@ -2,11 +2,7 @@ import { signOut } from "next-auth/react";
 import Link from "next/link";
 import React from "react";
 
-interface InavBarProps {
-  name: string;
-}
-
-export default function NavBar({ name }: InavBarProps): React.ReactElement {
+export default function NavBar({ name }: { name: string }): React.ReactElement {
   return (
     <div className="fixed top-0 w-screen bg-gray-800 h-12">
       <div className="flex flex-col justify-center h-12">
