@@ -19,7 +19,7 @@ export default function Login(): React.ReactElement {
       callbackUrl: "/",
     });
 
-    console.log(result);
+    console.log("result: ", result);
   };
 
   return (

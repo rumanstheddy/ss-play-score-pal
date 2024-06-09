@@ -6,16 +6,17 @@ import React from "react";
 
 export default function HomeView() {
   const { data: session } = useSession();
-  const welcomeMsg = session?.user ? "Welcome " + session.user.firstName +"!" : "";
+  const welcomeMsg = session?.user
+    ? "Welcome " + session.user.firstName + "!"
+    : "SS Playscore Pal";
   console.log(session);
 
   return (
     <>
       <div className="flex flex-col justify-center min-h-screen">
-        {session?.user ? <NavBar name={session.user.firstName} /> : <></>}
-        <h1 className="text-4xl text-white text-center mb-4">
-          {session?.user ? welcomeMsg : "SS Playscore Pal"}
-        </h1>
+        <NavBar name={session?.user ? session.user.firstName : ""} />
+        <h1 className="text-4xl text-white text-center mb-4">{welcomeMsg}</h1>
+        {/** //TODO: Use a search bar here */}
         {session?.user ? (
           <></>
         ) : (
