@@ -46,7 +46,7 @@ export default function Login(): React.ReactElement {
             setInput={setPassword}
           />
         </div>
-        <div className="flex justify-center">
+        <div className="">
           <button
             className="rounded-lg bg-white py-3 px-6 text-center align-middle text-black mt-5"
             type="button"
