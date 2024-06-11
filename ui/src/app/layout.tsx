@@ -17,7 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={inter.className + " bg-black"}>
         {/* //* Adding context to Root component from an external provider class: NextAuthProvider */}
         <NextAuthProvider>{children}</NextAuthProvider>
       </body>

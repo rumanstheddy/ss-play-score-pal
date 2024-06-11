@@ -4,6 +4,7 @@ import { useState } from "react";
 import InputField from "@/components/InputField";
 import PopUpMsg from "@/components/PopUpMsg";
 import TextLink from "@/components/TextLink";
+import { Button } from "@/components/ui/button";
 
 export default function Signup(): React.ReactElement {
   const [fName, setFname]: [string, (fName: string) => void] =
@@ -77,7 +78,9 @@ export default function Signup(): React.ReactElement {
     <div className="flex justify-center min-h-screen">
       <div className="content-center">
         {displaySuccessMsg()}
-        <h1 className="text-4xl text-center mb-4">Sign Up</h1>
+        <h1 className="scroll-m-20 pb-2 text-4xl font-semibold tracking-tight first:mt-0 text text-center mb-3">
+          Sign Up
+        </h1>
         <div className="flex flex-col">
           <InputField
             name="input_fName"
@@ -119,14 +122,14 @@ export default function Signup(): React.ReactElement {
           />
         </div>
         <div className="flex justify-center">
-          <button
+          <Button
             className="rounded-lg bg-white py-3 px-6 text-center 
-            align-middle text-black mt-5"
+            align-middle text-black mt-6 hover:bg-slate-400"
             type="button"
             onClick={() => onSubmit()}
           >
             Sign Up
-          </button>
+          </Button>
         </div>
         <div className="flex flex-col">
           <TextLink

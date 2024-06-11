@@ -2,6 +2,7 @@
 
 import InputField from "@/components/InputField";
 import TextLink from "@/components/TextLink";
+import { Button } from "@/components/ui/button";
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 
@@ -25,7 +26,9 @@ export default function Login(): React.ReactElement {
   return (
     <div className="flex justify-center min-h-screen">
       <div className="content-center">
-        <h1 className="text-4xl text-center mb-3">Login</h1>
+        <h1 className="scroll-m-20 pb-2 text-4xl font-semibold tracking-tight first:mt-0 text text-center mb-3">
+          Login
+        </h1>
         <div className="flex flex-col">
           <InputField
             input={email}
@@ -46,14 +49,14 @@ export default function Login(): React.ReactElement {
             setInput={setPassword}
           />
         </div>
-        <div className="">
-          <button
-            className="rounded-lg bg-white py-3 px-6 text-center align-middle text-black mt-5"
+        <div className="flex flex-row justify-center">
+          <Button
+            className="rounded-lg bg-white py-3 px-6 text-center text-black mt-6 hover:bg-slate-400"
             type="button"
             onClick={() => onSubmit()}
           >
             Login
-          </button>
+          </Button>
         </div>
         <div className="flex flex-col">
           <TextLink
