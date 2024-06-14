@@ -16,7 +16,10 @@ export default function HomeView() {
   return (
     <>
       <div className="flex flex-col justify-center min-h-screen">
-        <NavBar name={session?.user ? session.user.firstName : ""} />
+        <NavBar
+          name={session?.user ? session.user.firstName : ""}
+          isLoggedIn={session && session.user}
+        />
         <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl text text-center mb-4">
           {welcomeMsg}
         </h1>
