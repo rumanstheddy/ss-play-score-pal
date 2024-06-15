@@ -3,8 +3,8 @@ import Link from "next/link";
 import React from "react";
 
 interface InavBarProps {
-  name?: string;
-  isLoggedIn: boolean;
+  name?: string | null | undefined;
+  isLoggedIn: boolean | null;
 }
 
 export default function NavBar({
