@@ -20,7 +20,7 @@ export default function Login(): React.ReactElement {
       callbackUrl: "/",
     });
 
-    console.log("result: ", result);
+    if (result?.error) console.log(result.error);
   };
 
   return (

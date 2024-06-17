@@ -25,7 +25,8 @@ export default function HomeView() {
     ? "Welcome " + session.user.firstName + "!"
     : "SS Playscore Pal";
 
-  const [searchText, setSearch] = useState("");
+  const [searchText, setSearch]: [string, (searchText: string) => void] =
+    useState<string>("");
 
   return (
     <>
