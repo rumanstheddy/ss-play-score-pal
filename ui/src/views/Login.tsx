@@ -25,11 +25,11 @@ export default function LoginView(): React.ReactElement {
 
   return (
     <div className="flex justify-center min-h-screen">
-      <div className="content-center">
-        <h1 className="scroll-m-20 pb-2 text-4xl font-semibold tracking-tight first:mt-0 text text-center mb-3">
+      <div className="content-center w-1/3">
+        <h1 className="scroll-m-20 pb-2 text-4xl font-bold tracking-tight first:mt-0 text text-center mb-3">
           Login
         </h1>
-        <div className="flex flex-col">
+        <div className="flex flex-col mt-8">
           <InputField
             input={email}
             label="Email:"
@@ -39,7 +39,7 @@ export default function LoginView(): React.ReactElement {
             setInput={setEmail}
           />
         </div>
-        <div className="flex flex-col">
+        <div className="flex flex-col mt-8">
           <InputField
             name="input_pw"
             label="Password:"
@@ -49,9 +49,9 @@ export default function LoginView(): React.ReactElement {
             setInput={setPassword}
           />
         </div>
-        <div className="flex flex-row justify-center">
+        <div className="flex flex-row justify-center mt-8">
           <Button
-            className="rounded-lg bg-white py-3 px-6 text-center text-black mt-6 hover:bg-slate-400"
+            className="rounded-lg bg-white py-3 px-6 text-center text-black text-md hover:bg-slate-400"
             type="button"
             onClick={() => onSubmit()}
           >
@@ -61,7 +61,7 @@ export default function LoginView(): React.ReactElement {
         <div className="flex flex-col">
           <TextLink
             link="/"
-            spanStyle="text-center mt-4"
+            spanStyle="text-center mt-8 text-"
             linkStyle="text-blue-500 hover:underline hover:text-blue-700"
             text="Back"
           />

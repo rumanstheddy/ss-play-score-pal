@@ -76,12 +76,12 @@ export default function SignupView(): React.ReactElement {
 
   return (
     <div className="flex justify-center min-h-screen">
-      <div className="content-center">
+      <div className="content-center w-1/3">
         {displaySuccessMsg()}
         <h1 className="scroll-m-20 pb-2 text-4xl font-semibold tracking-tight first:mt-0 text text-center mb-3">
           Sign Up
         </h1>
-        <div className="flex flex-col">
+        <div className="flex flex-col mt-8">
           <InputField
             name="input_fName"
             label="First Name:"
@@ -91,7 +91,7 @@ export default function SignupView(): React.ReactElement {
             setInput={setFname}
           />
         </div>
-        <div className="flex flex-col">
+        <div className="flex flex-col mt-4">
           <InputField
             name="input_lName"
             label="Last Name:"
@@ -101,7 +101,7 @@ export default function SignupView(): React.ReactElement {
             setInput={setLname}
           />
         </div>
-        <div className="flex flex-col">
+        <div className="flex flex-col mt-4">
           <InputField
             name="input_email"
             label="Email:"
@@ -111,7 +111,7 @@ export default function SignupView(): React.ReactElement {
             setInput={setEmail}
           />
         </div>
-        <div className="flex flex-col">
+        <div className="flex flex-col mt-4">
           <InputField
             name="input_pw"
             label="Password:"
@@ -121,10 +121,10 @@ export default function SignupView(): React.ReactElement {
             setInput={setPassword}
           />
         </div>
-        <div className="flex justify-center">
+        <div className="flex justify-center mt-8">
           <Button
-            className="rounded-lg bg-white py-3 px-6 text-center 
-            align-middle text-black mt-6 hover:bg-slate-400"
+            className="rounded-lg bg-white py-3 px-6 text-center text-black text-md
+            align-middle  hover:bg-slate-400"
             type="button"
             onClick={() => onSubmit()}
           >
@@ -134,7 +134,7 @@ export default function SignupView(): React.ReactElement {
         <div className="flex flex-col">
           <TextLink
             link="/"
-            spanStyle="text-center mt-4"
+            spanStyle="text-center mt-8"
             linkStyle=" text-blue-500 hover:underline hover:text-blue-700"
             text="Back"
           />
