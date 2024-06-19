@@ -3,6 +3,7 @@ import NavBar from "@/components/NavBar";
 import SearchBar from "@/components/SearchBar";
 import TextLink from "@/components/TextLink";
 import { Button } from "@/components/ui/button";
+import { UserRoundPlus } from "lucide-react";
 import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
@@ -54,11 +55,12 @@ export default function HomeView() {
             <div className="flex flex-row justify-center">
               <Link href={"/signup"}>
                 <Button
-                  className="rounded-lg bg-white w-28 mt-8 py-3 px-6 align-middle text-center text-black text-md
+                  className="rounded-lg bg-white w-30 mt-8 py-3 px-6 align-middle text-black
               hover:bg-slate-400"
                   type="button"
                 >
-                  Sign Up
+                  <UserRoundPlus className="h-4 w-4 mr-2" />
+                  <div>Sign Up</div>
                 </Button>
               </Link>
             </div>

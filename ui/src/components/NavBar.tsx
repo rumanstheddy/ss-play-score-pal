@@ -1,6 +1,8 @@
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import React from "react";
+import { Button } from "./ui/button";
+import { LogOut } from "lucide-react";
 
 interface InavBarProps {
   name?: string | null | undefined;
@@ -12,20 +14,24 @@ export default function NavBar({
   isLoggedIn,
 }: InavBarProps): React.ReactElement {
   return (
-    <div className="fixed top-0 w-screen bg-gray-800 h-12">
-      <div className="flex flex-col justify-center h-12">
-        <div className="flex flex-row text-lg">
-          <span className="text basis-1/4 text-center">{name}</span>
-          <span className="basis-2/4 text-center hover:underline text">
+    <div className="fixed top-0 w-screen bg-gray-800">
+      <div className="flex flex-col justify-center h-16">
+        <div className="flex flex-row text-lg items-center">
+          <span className="text basis-1/6 text-center">{name}</span>
+          <span className="basis-4/6 text-center hover:underline text">
             <Link href="/">Home</Link>
           </span>
           {isLoggedIn ? (
-            <span
-              className="basis-1/4 text-center text-red-700 hover:underline hover:text-red-800 hover:cursor-pointer"
-              onClick={() => signOut()}
-            >
-              Logout
-            </span>
+            <div className="basis-1/6 flex flex-row justify-center">
+              <Button
+                className="w-30 text-center text hover:bg-red-800 hover:cursor-pointer"
+                onClick={() => signOut()}
+                variant="destructive"
+              >
+                Logout
+                <LogOut className="h-4 w-4 ml-2" />
+              </Button>
+            </div>
           ) : (
             <></>
           )}

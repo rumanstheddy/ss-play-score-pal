@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { XCircleIcon } from "@heroicons/react/16/solid";
+import { CircleX } from "lucide-react";
 
 interface IpopUpMsgProps {
   isSuccess: boolean;
@@ -16,19 +16,19 @@ export default function PopUpMsg({
 }: IpopUpMsgProps): React.ReactElement<IpopUpMsgProps> {
   const msgColor: string = isSuccess ? "green" : "red";
   const styleClasses: string =
-    "rounded-lg bg-" + msgColor + "-500 px-4 py-1 mb-5";
+    "text-center rounded-lg bg-" + msgColor + "-500 px-4 py-1 mb-12";
 
   return (
     <div className={styleClasses}>
-      {message}
+      <span className="text">{message}</span>
       <Link
         href={link}
         className="pl-2 text-blue-600 hover:underline hover:text-blue-700"
       >
         Login
       </Link>
-      <XCircleIcon
-        className="size-4 inline-block ml-3 mb-0.5 hover:cursor-pointer hover:text-gray-200"
+      <CircleX
+        className="text h-5 w-5 inline-block ml-3 mb-0.5 hover:cursor-pointer hover:text-gray-300"
         onClick={() => setShouldDisplay(false)}
       />
     </div>
