@@ -2,8 +2,10 @@
 import NavBar from "@/components/NavBar";
 import SearchBar from "@/components/SearchBar";
 import TextLink from "@/components/TextLink";
+import { Button } from "@/components/ui/button";
 import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 import { useState } from "react";
 
 type CustomUser = {
@@ -22,7 +24,7 @@ interface CustomSession extends Session {
 export default function HomeView() {
   const { data: session } = useSession() as { data: CustomSession | null };
   const welcomeMsg = session?.user
-    ? "Welcome " + session.user.firstName + "!"
+    ? "Welcome, " + session.user.firstName + "!"
     : "SS Playscore Pal";
 
   const [searchText, setSearch]: [string, (searchText: string) => void] =
@@ -49,18 +51,28 @@ export default function HomeView() {
           <></>
         ) : (
           <>
-            <TextLink
-              spanStyle="text-center mt-4"
-              linkStyle="text-blue-500 hover:text-blue-700 text-center hover:underline text-lg"
-              link="/signup"
-              text="Sign Up"
-            />
-            <TextLink
-              spanStyle="text-center mt-4"
-              linkStyle="text-blue-500 hover:text-blue-700 text-center hover:underline text-lg"
-              link="/login"
-              text="Login"
-            />
+            <div className="flex flex-row justify-center">
+              <Link href={"/signup"}>
+                <Button
+                  className="rounded-lg bg-white w-28 mt-8 py-3 px-6 align-middle text-center text-black text-md
+              hover:bg-slate-400"
+                  type="button"
+                >
+                  Sign Up
+                </Button>
+              </Link>
+            </div>
+            <div className="flex flex-row justify-center items-center">
+              <span className="text text-center mt-8 text-sm">
+                Already a member?
+              </span>
+              <TextLink
+                spanStyle="text-center mt-8 text-md ml-2"
+                linkStyle="text-blue-500 hover:underline hover:text-blue-700"
+                link="/login"
+                text="Login"
+              />
+            </div>
           </>
         )}
       </div>

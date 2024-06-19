@@ -15,7 +15,7 @@ export default function NavBar({
     <div className="fixed top-0 w-screen bg-gray-800 h-12">
       <div className="flex flex-col justify-center h-12">
         <div className="flex flex-row text-lg">
-          <span className="basis-1/4 text-center">{name}</span>
+          <span className="text basis-1/4 text-center">{name}</span>
           <span className="basis-2/4 text-center hover:underline text">
             <Link href="/">Home</Link>
           </span>
