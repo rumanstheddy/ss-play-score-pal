@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Session, getServerSession } from "next-auth";
-import NextAuthProvider from "../providers/NextAuthProvider";
-import ReactQueryClientProvider from "../providers/ReactQueryClientProvider";
+import NextAuthProvider from "../providers/NextAuth/NextAuthProvider";
+import ReactQueryClientProvider from "../providers/ReactQuery/ReactQueryClientProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
