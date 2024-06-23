@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { NextAuthProvider } from "./api/auth/NextAuthProvider";
 import { Session, getServerSession } from "next-auth";
+import NextAuthProvider from "../providers/NextAuthProvider";
+import ReactQueryClientProvider from "../providers/ReactQueryClientProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,7 +23,9 @@ export default async function RootLayout({
     <html lang="en">
       <body className={inter.className + " bg-black"}>
         {/* //* Adding context to Root component from an external provider class: NextAuthProvider */}
-        <NextAuthProvider session={session}>{children}</NextAuthProvider>
+        <NextAuthProvider session={session}>
+          <ReactQueryClientProvider>{children}</ReactQueryClientProvider>
+        </NextAuthProvider>
       </body>
     </html>
   );
