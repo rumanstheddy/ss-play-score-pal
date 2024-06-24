@@ -12,7 +12,7 @@ const apiHeaders: IapiHeaders = {
   Authorization: "Bearer " + (process.env.NEXT_PUBLIC_AUTH_TOKEN as string),
 };
 
-const searchGame = async (body) => {
+const searchGame = async (body: string) => {
   console.log("searchGame data: ");
 
   const response = await fetch(baseUrl + "games", {
