@@ -6,12 +6,11 @@ import { Button } from "@/components/ui/button";
 import useDebounce from "@/hooks/useDebounce";
 import useDebouncedQuery from "@/hooks/useDebounedQuery";
 import { searchGame } from "@/providers/IGDB/IgdbProvider";
-import { useMutation, useQuery } from "@tanstack/react-query";
 import { UserRoundPlus } from "lucide-react";
 import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 type CustomUser = {
   firstName?: string | null | undefined;
@@ -39,7 +38,7 @@ export default function HomeView() {
   const body: string =
     "fields name,summary;" +
     "limit 5;" +
-    `search "${useDebounce(searchText)}"` +
+    `search "${searchText}"` +
     ";" +
     "where platforms.summary = null;";
 
@@ -56,18 +55,21 @@ export default function HomeView() {
   };
 
   const displaySearchResults = () => {
-    if (isLoading)
-      return <div className="text text-center">Searching for your game...</div>;
-    if (searchResults) {
-      console.log(searchResults);
-      return searchResults.map((result: gameResult) => (
-        <div
-          className="self-center h-10 w-2/4 pt-2 text-sm text-center rounded-md border bg-white text-black"
-          key={result.id}
-        >
-          {result.name}
+    if (searchText !== "" && isLoading)
+      return (
+        <div className="text text-center mt-6">Searching for your game...</div>
+      );
+    if (searchResults && searchResults.length > 0) {
+      console.log("searchResults: ", searchResults);
+      return (
+        <div className="self-center w-2/4 py-2 text-center rounded-md bg-white text-black">
+          {searchResults.map((result: gameResult) => (
+            <p key={result.id} className="block py-3">
+              {result.name}
+            </p>
+          ))}
         </div>
-      ));
+      );
     }
   };
 
@@ -78,7 +80,7 @@ export default function HomeView() {
           name={session?.user ? session.user.firstName : ""}
           isLoggedIn={!!(session && session.user)}
         />
-        <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl text text-center mb-4">
+        <h1 className="mb-6 scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl text text-center">
           {welcomeMsg}
         </h1>
         <div className="flex flex-col">
@@ -99,17 +101,17 @@ export default function HomeView() {
           <div className="flex flex-row justify-center">
             <Link href={"/signup"}>
               <Button
-                className="rounded-lg bg-white w-30 mt-8 py-3 px-6 align-middle text-black
+                className="rounded-lg bg-white w-30 mt-10 py-3 px-6 align-middle text-md text-black
               hover:bg-slate-400"
                 type="button"
               >
-                <UserRoundPlus className="h-4 w-4 mr-2" />
+                <UserRoundPlus className="h-5 w-5 mr-2" />
                 <div>Sign Up</div>
               </Button>
             </Link>
           </div>
           <div className="flex flex-row justify-center items-center">
-            <span className="text text-center mt-8 text-sm">
+            <span className="text text-center mt-10 text-sm">
               Already a member?
             </span>
             <TextLink
