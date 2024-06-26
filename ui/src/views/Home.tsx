@@ -3,7 +3,6 @@ import NavBar from "@/components/NavBar";
 import SearchBar from "@/components/SearchBar";
 import TextLink from "@/components/TextLink";
 import { Button } from "@/components/ui/button";
-import useDebounce from "@/hooks/useDebounce";
 import useDebouncedQuery from "@/hooks/useDebounedQuery";
 import { searchGame } from "@/providers/IGDB/IgdbProvider";
 import { UserRoundPlus } from "lucide-react";
@@ -25,7 +24,7 @@ interface CustomSession extends Session {
   };
 }
 
-export default function HomeView() {
+export default function HomeView(): React.ReactElement {
   const { data: session } = useSession() as { data: CustomSession | null };
 
   const [searchText, setSearchText]: [string, (searchText: string) => void] =
