@@ -47,7 +47,7 @@ export default function HomeView(): React.ReactElement {
     searchGame
   );
 
-  type gameResult = {
+  type game = {
     id: number;
     name: string;
     summary: string;
@@ -55,17 +55,19 @@ export default function HomeView(): React.ReactElement {
 
   const displaySearchResults = () => {
     if (searchText !== "" && isLoading)
-      return (
-        <div className="text text-center mt-6">Searching for your game...</div>
-      );
+      return <div className="text text-center mt-6">Searching...</div>;
     if (searchResults && searchResults.length > 0) {
       console.log("searchResults: ", searchResults);
       return (
         <div className="self-center w-2/4 py-2 text-center rounded-md bg-white text-black">
-          {searchResults.map((result: gameResult) => (
-            <p key={result.id} className="block py-3">
-              {result.name}
-            </p>
+          {searchResults.map((result: game) => (
+            <Link href={`/games/${result.id}`} key={result.id}>
+              <div className="hover:bg-gray-300 hover:cursor-pointer">
+                <p key={result.id} className="block py-3 hover:font-semibold">
+                  {result.name}
+                </p>
+              </div>
+            </Link>
           ))}
         </div>
       );
