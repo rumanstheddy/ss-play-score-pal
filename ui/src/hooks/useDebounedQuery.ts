@@ -5,7 +5,7 @@ export default function useDebouncedQuery<T>(
   body: string,
   queryKey: QueryKey,
   queryFn: (body: string) => Promise<T>,
-  delay: number = 500
+  delay: number = 1000
 ) {
   const [debouncedBody, setDebouncedBody]: [
     string,
