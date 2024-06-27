@@ -97,28 +97,30 @@ export default function HomeView(): React.ReactElement {
         <></>
       ) : (
         <>
-          <div className="flex flex-row justify-center">
-            <Link href={"/signup"}>
-              <Button
-                className="rounded-lg bg-white w-30 mt-10 py-3 px-6 align-middle text-md text-black
+          <div className="mt-12">
+            <div className="flex flex-row justify-center">
+              <Link href={"/signup"}>
+                <Button
+                  className="rounded-lg bg-white w-30 py-3 px-6 align-middle text-black
               hover:bg-slate-400"
-                type="button"
-              >
-                <UserRoundPlus className="h-5 w-5 mr-2" />
-                <div>Sign Up</div>
-              </Button>
-            </Link>
-          </div>
-          <div className="flex flex-row justify-center items-center">
-            <span className="text text-center mt-10 text-sm">
-              Already a member?
-            </span>
-            <TextLink
-              spanStyle="text-center mt-8 text-md ml-2"
-              linkStyle="text-blue-500 hover:underline hover:text-blue-700"
-              link="/login"
-              text="Login"
-            />
+                  type="button"
+                >
+                  <UserRoundPlus className="h-4 w-4 mr-2" />
+                  <div>Sign Up</div>
+                </Button>
+              </Link>
+            </div>
+            <div className="flex flex-row justify-center items-center">
+              <span className="text text-center mt-10 text-sm">
+                Already a member?
+              </span>
+              <TextLink
+                spanStyle="text-center text-sm mt-10 ml-2"
+                linkStyle="text-blue-500 hover:underline hover:text-blue-700"
+                link="/login"
+                text="Login"
+              />
+            </div>
           </div>
         </>
       )}
