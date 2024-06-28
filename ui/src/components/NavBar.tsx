@@ -14,7 +14,7 @@ export default function NavBar({
   isLoggedIn,
 }: InavBarProps): React.ReactElement {
   return (
-    <div className="fixed top-0 w-screen bg-gray-900">
+    <div className="fixed top-0 w-screen bg-gray-950">
       <div className="flex flex-col justify-center h-16">
         <div className="flex flex-row text-lg items-center">
           <span className="text basis-1/6 text-center">{name}</span>

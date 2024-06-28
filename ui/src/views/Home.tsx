@@ -115,7 +115,7 @@ export default function HomeView(): React.ReactElement {
                 Already a member?
               </span>
               <TextLink
-                spanStyle="text-center text-sm mt-10 ml-2"
+                spanStyle="text-center text-sm mt-10 ml-1.5"
                 linkStyle="text-blue-500 hover:underline hover:text-blue-700"
                 link="/login"
                 text="Login"
