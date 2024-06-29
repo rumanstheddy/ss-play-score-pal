@@ -5,7 +5,7 @@ import SearchResult from "@/components/SearchResult";
 import TextLink from "@/components/TextLink";
 import { Button } from "@/components/ui/button";
 import useDebouncedQuery from "@/hooks/useDebounedQuery";
-import { searchGame } from "@/providers/IGDB/IgdbProvider";
+import { searchGames } from "@/providers/IGDB/IgdbProvider";
 import { UserRoundPlus } from "lucide-react";
 import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
@@ -25,6 +25,19 @@ interface CustomSession extends Session {
   };
 }
 
+type providerFnArgs = {
+  fields: string[];
+  limit: number;
+  search: string;
+  filters: string[];
+};
+
+type game = {
+  id: number;
+  name: string;
+  summary: string;
+};
+
 export default function HomeView(): React.ReactElement {
   const { data: session } = useSession() as { data: CustomSession | null };
 
@@ -35,24 +48,18 @@ export default function HomeView(): React.ReactElement {
     ? "Welcome, " + session.user.firstName + "!"
     : "SS Playscore Pal";
 
-  const body: string =
-    "fields name,summary;" +
-    "limit 5;" +
-    `search "${searchText}"` +
-    ";" +
-    "where platforms.summary = null;";
+  const args: providerFnArgs = {
+    fields: ["name", "summary"],
+    limit: 5,
+    search: searchText,
+    filters: ["platforms.summary = null"],
+  };
 
   const { isLoading, data: results } = useDebouncedQuery(
-    body,
+    args,
     ["searchGames"],
-    searchGame
+    searchGames
   );
-
-  type game = {
-    id: number;
-    name: string;
-    summary: string;
-  };
 
   const displaySearchResults = () => {
     if (searchText !== "" && isLoading)

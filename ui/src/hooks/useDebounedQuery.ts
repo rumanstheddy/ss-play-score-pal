@@ -1,24 +1,41 @@
 import { useQuery, QueryKey } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+type providerFnArgs = {
+  fields?: string[];
+  limit?: number;
+  search?: string;
+  filters?: string[];
+};
 
 export default function useDebouncedQuery<T>(
-  body: string,
+  args: providerFnArgs,
   queryKey: QueryKey,
-  queryFn: (body: string) => Promise<T>,
-  delay: number = 1000
+  providerFn: ({
+    fields,
+    limit,
+    search,
+    filters,
+  }: providerFnArgs) => Promise<T>,
+  delay: number = 500
 ) {
-  const [debouncedBody, setDebouncedBody]: [
+  const { fields, limit, search, filters } = args;
+  const [debouncedText, setDebouncedText]: [
     string,
     (debouncedValue: string) => void
-  ] = useState<string>(body);
+  ] = useState<string>(search || "");
 
-  if (debouncedBody !== body) {
-    const timeOutId = setTimeout(() => setDebouncedBody(body), delay);
-    () => clearTimeout(timeOutId);
-  }
+  useEffect(() => {
+    const timeOutId = setTimeout(() => setDebouncedText(search || ""), delay);
+    return () => {
+      clearTimeout(timeOutId);
+    };
+  }, [search, delay]);
 
   return useQuery<T>({
-    queryKey: [...queryKey, debouncedBody],
-    queryFn: () => queryFn(debouncedBody),
+    queryKey: [...queryKey, debouncedText],
+    queryFn: () =>
+      providerFn({ fields, limit, search: debouncedText, filters }),
+    enabled: !!debouncedText,
   });
 }

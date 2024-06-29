@@ -1,24 +1,41 @@
 const baseUrl = "/igdb/";
 
-type IapiHeaders = {
+type apiHeaders = {
   Accept: string;
   "Client-ID": string;
   Authorization: string;
 };
 
-const apiHeaders: IapiHeaders = {
+const headers: apiHeaders = {
   Accept: "application/json",
   "Client-ID": process.env.NEXT_PUBLIC_CLIENT_ID as string,
   Authorization: "Bearer " + (process.env.NEXT_PUBLIC_AUTH_TOKEN as string),
 };
 
-const searchGame = async (body: string) => {
+type providerFnArgs = {
+  fields?: string[];
+  limit?: number;
+  search?: string;
+  filters?: string[];
+};
+
+const searchGames = async ({
+  fields,
+  limit,
+  search,
+  filters,
+}: providerFnArgs) => {
   console.log("searchGame data: ");
+
+  let query: string = "fields " + (fields ? fields.join(",") : "*") + ";";
+  query += limit ? "limit " + limit + ";" : "";
+  query += search ? `search "${search}"` + ";" : "";
+  query += filters ? "where " + filters.join(",") + ";" : "";
 
   const response = await fetch(baseUrl + "games", {
     method: "POST",
-    headers: apiHeaders,
-    body: body,
+    headers: headers,
+    body: query,
     mode: "cors",
   });
 
@@ -27,4 +44,4 @@ const searchGame = async (body: string) => {
   return data;
 };
 
-export { searchGame };
+export { searchGames };
