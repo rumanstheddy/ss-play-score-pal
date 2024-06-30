@@ -19,7 +19,7 @@ type providerFnArgs = {
   filters?: string[];
 };
 
-const searchGames = async ({
+const fetchGames = async ({
   fields,
   limit,
   search,
@@ -44,4 +44,4 @@ const searchGames = async ({
   return data;
 };
 
-export { searchGames };
+export { fetchGames };

@@ -5,7 +5,7 @@ import SearchResult from "@/components/SearchResult";
 import TextLink from "@/components/TextLink";
 import { Button } from "@/components/ui/button";
 import useDebouncedQuery from "@/hooks/useDebounedQuery";
-import { searchGames } from "@/providers/IGDB/IgdbProvider";
+import { fetchGames } from "@/providers/IGDB/IgdbProvider";
 import { UserRoundPlus } from "lucide-react";
 import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
@@ -58,7 +58,7 @@ export default function HomeView(): React.ReactElement {
   const { isLoading, data: results } = useDebouncedQuery(
     args,
     ["searchGames"],
-    searchGames
+    fetchGames
   );
 
   const displaySearchResults = () => {

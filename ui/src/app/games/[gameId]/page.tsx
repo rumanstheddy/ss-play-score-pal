@@ -1,14 +1,43 @@
-import { useQuery } from "@tanstack/react-query";
+import { fetchGames } from "@/providers/IGDB/IgdbProvider";
+import GameInfoView from "@/views/GameInfo";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 
-export default function GameInfo({
+export default async function GameInfo({
   params: { gameId },
 }: {
   params: { gameId: string };
 }) {
-  const { data: game, isLoading } = useQuery({
-    queryKey: ["getGameById"],
-    queryFn: () => {},
+  const dataFields = [
+    "id",
+    "name",
+    "screenshots",
+    "cover",
+    "first_release_date",
+    "release_dates",
+    "genres",
+    "involved_companies",
+    "platforms",
+  ];
+
+  const dataFilter = [`id = ${gameId}`];
+
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery({
+    queryKey: ["getGameByGameId", gameId],
+    queryFn: () => fetchGames({ fields: dataFields, filters: dataFilter }),
   });
 
-  return <div className="text">{gameId}</div>;
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <GameInfoView
+        gameId={gameId}
+        dataFields={dataFields}
+        dataFilter={dataFilter}
+      />
+    </HydrationBoundary>
+  );
 }
