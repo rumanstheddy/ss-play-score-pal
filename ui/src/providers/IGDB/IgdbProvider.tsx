@@ -19,7 +19,11 @@ type providerFnArgs = {
   filters?: string[];
 };
 
-const buildQuery = ({
+// TODO: Change the fetchData method to use the older process
+// ** Use this provider file only for fetching Data inside client components
+// ** Have configured a different proxy to use it inside Server components
+
+export const buildQuery = ({
   fields,
   limit,
   search,
@@ -33,11 +37,13 @@ const buildQuery = ({
   return query;
 };
 
-const fetchData = async (url: string, query: string) => {
-  const response = await fetch(url, {
+const fetchData = async (path: string, query: string) => {
+  console.log("path: ", path);
+  const proxyUrl = `/api/proxy?path=${path}`;
+  const response = await fetch(proxyUrl, {
     method: "POST",
-    headers: headers,
-    body: query,
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(query),
     mode: "cors",
   });
 
@@ -52,9 +58,12 @@ export const fetchGames = async ({
 }: providerFnArgs) => {
   const query = buildQuery({ fields, limit, search, filters });
 
-  const response = await fetchData(baseUrl + "games", query);
+  // const url = baseUrl + "games";
+
+  const response = await fetchData("games", query);
 
   const data = await response.json();
+
   return data;
 };
 
@@ -66,9 +75,11 @@ export const fetchScreenshots = async ({
 }: providerFnArgs) => {
   const query = buildQuery({ fields, limit, search, filters });
 
-  const response = await fetchData(baseUrl + "screenshots", query);
+  // const response = await fetchData(baseUrl + "screenshots", query);
+  const response = await fetchData("screenshots", query);
 
   const data = await response.json();
+
   return data;
 };
 
@@ -83,6 +94,7 @@ export const fetchCovers = async ({
   const response = await fetchData(baseUrl + "covers", query);
 
   const data = await response.json();
+
   return data;
 };
 
@@ -97,6 +109,7 @@ export const fetchReleaseDates = async ({
   const response = await fetchData(baseUrl + "release_dates", query);
 
   const data = await response.json();
+
   return data;
 };
 
@@ -108,9 +121,11 @@ export const fetchGenresById = async ({
 }: providerFnArgs) => {
   const query = buildQuery({ fields, limit, search, filters });
 
-  const response = await fetchData(baseUrl + "genres", query);
+  // const response = await fetchData(baseUrl + "genres", query);
+  const response = await fetchData("genres", query);
 
   const data = await response.json();
+
   return data;
 };
 
@@ -125,6 +140,7 @@ export const fetchInvolvedCompanies = async ({
   const response = await fetchData(baseUrl + "involved_companies", query);
 
   const data = await response.json();
+
   return data;
 };
 
@@ -139,6 +155,7 @@ export const fetchCompanies = async ({
   const response = await fetchData(baseUrl + "companies", query);
 
   const data = await response.json();
+
   return data;
 };
 
@@ -153,5 +170,6 @@ export const fetchPlatforms = async ({
   const response = await fetchData(baseUrl + "platforms", query);
 
   const data = await response.json();
+
   return data;
 };

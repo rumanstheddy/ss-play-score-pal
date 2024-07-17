@@ -4,7 +4,7 @@ const nextConfig = {
     return [
       {
         source: "/igdb/:path*",
-        destination: "https://api.igdb.com/v4/:path*",
+        destination: `${process.env.NEXT_PUBLIC_API_BASE_URL}/:path*`,
       },
     ];
   },
