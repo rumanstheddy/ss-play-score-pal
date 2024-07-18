@@ -14,18 +14,13 @@ const headers: apiHeaders = {
 
 export async function POST(req: NextRequest) {
   const path = req.nextUrl.searchParams.get("path");
-  const query = await req.json();
-
-  //   console.log("path ", path);
-    console.log("query ", query);
 
   if (!path) {
     return NextResponse.json({ error: "Path is required" }, { status: 400 });
   }
 
+  const query = await req.json();
   const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/${path}`;
-
-  //   console.log("url: ", url);
 
   try {
     const response = await fetch(url, {
@@ -33,8 +28,6 @@ export async function POST(req: NextRequest) {
       headers: headers,
       body: query,
     });
-
-    // console.log(response);
 
     if (!response.ok) {
       return NextResponse.json(
@@ -44,7 +37,6 @@ export async function POST(req: NextRequest) {
     }
 
     const data = await response.json();
-    // console.log(data);
 
     return NextResponse.json(data, { status: 200 });
   } catch (error) {

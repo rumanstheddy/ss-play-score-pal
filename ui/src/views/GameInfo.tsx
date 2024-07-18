@@ -5,43 +5,39 @@ import { useQuery } from "@tanstack/react-query";
 
 interface IGameInfoProps {
   gameId: string;
-  dataFields: string[];
-  dataFilter: string[];
+  gameQFields: string[];
+  gameQFilter: string[];
+  genreQFilter: string[];
 }
 
 export default function GameInfoView({
   gameId,
-  dataFields,
-  dataFilter,
+  gameQFields,
+  gameQFilter,
+  genreQFilter,
 }: IGameInfoProps): React.ReactElement {
   const { data: gameData, isLoading } = useQuery({
     queryKey: ["getGameByGameId", gameId],
     queryFn: () =>
       fetchGames({
-        fields: dataFields,
-        filters: dataFilter,
+        fields: gameQFields,
+        filters: gameQFilter,
       }),
   });
 
-  // TODO: Cleanup the variable names, very convoluted
-
   const game = gameData ? gameData[0] : null;
-
-  console.log("gameGameInfo: ", game);
 
   const gameGenres = game?.genres || [];
 
-  const filter2 = [`id = (${gameGenres.join(",")})`];
-
   const { data: genres } = useQuery({
     queryKey: ["getGenreByGenreId", gameGenres],
-    queryFn: () => fetchGenresById({ filters: filter2 }),
+    queryFn: () => fetchGenresById({ filters: genreQFilter }),
   });
 
-  console.log("gameGameInfo: ", genres);
-
-  // console.log(game);
-  // console.log(genres);
+  type genre = {
+    id: number;
+    name: string;
+  };
 
   return isLoading ? (
     <div className="text">Getting your game details...</div>
@@ -49,7 +45,8 @@ export default function GameInfoView({
     <>
       <div className="text">{game ? game.name : ""}</div>
       <div className="text">
-        Genres: {genres ? genres.map((genre) => genre.name).join(", ") : ""}
+        Genres:{" "}
+        {genres ? genres.map((genre: genre) => genre.name).join(", ") : ""}
       </div>
     </>
   );

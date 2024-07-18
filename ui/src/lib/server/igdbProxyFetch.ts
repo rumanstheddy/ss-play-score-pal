@@ -2,8 +2,8 @@ import { NextRequest } from "next/server";
 
 //TODO: Learn more about how proxies and SSR work in Server components
 
-export const fetchFromProxy = async (path: string, body: any) => {
-  const url = new URL(`http://localhost:3000/api/proxy?path=${path}`);
+export const igdbProxyFetch = async (path: string, body: any) => {
+  const url = new URL(`http://localhost:3000/api/igdb?path=${path}`);
 
   const request = new NextRequest(url.toString(), {
     method: "POST",
@@ -13,7 +13,7 @@ export const fetchFromProxy = async (path: string, body: any) => {
     body: JSON.stringify(body),
   });
 
-  const { POST: proxyHandler } = await import("@/app/api/proxy/route");
+  const { POST: proxyHandler } = await import("@/app/api/igdb/route");
 
   // Call the proxy handler and convert the response to JSON
   const response = await proxyHandler(request);

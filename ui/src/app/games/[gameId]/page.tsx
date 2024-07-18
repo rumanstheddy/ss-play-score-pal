@@ -1,4 +1,4 @@
-import { fetchFromProxy } from "@/lib/server/fetchFromProxy";
+import { igdbProxyFetch } from "@/lib/server/igdbProxyFetch";
 import {
   fetchGames,
   fetchGenresById,
@@ -16,7 +16,7 @@ export default async function GameInfo({
 }: {
   params: { gameId: string };
 }) {
-  const dataFields = [
+  const gameQFields = [
     "id",
     "name",
     "screenshots",
@@ -28,61 +28,45 @@ export default async function GameInfo({
     "platforms",
   ];
 
-  const dataFilter = [`id = ${gameId}`];
+  const gameQFilter = [`id = ${gameId}`];
 
-  // const { POST: proxyHandler } = await import("@/app/api/proxy/route");
-  // const query = buildQuery({ fields: dataFields, filters: dataFilter });
-
-  const gameData = await fetchFromProxy(
+  //** As we are pre-fetching data from a Server Component, I am using this helper method
+  const gameData = await igdbProxyFetch(
     "games",
     buildQuery({
-      fields: dataFields,
-      filters: dataFilter,
+      fields: gameQFields,
+      filters: gameQFilter,
     })
   );
 
-  // const gameData = await fetchGames({
-  //   fields: dataFields,
-  //   filters: dataFilter,
-  // });
-
-  // TODO: Cleanup the variable names, very convoluted
   // TODO: Hydrate the component with other data as well
 
   const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery({
     queryKey: ["getGameByGameId", gameId],
-    queryFn: () => fetchGames({ fields: dataFields, filters: dataFilter }),
+    queryFn: () => fetchGames({ fields: gameQFields, filters: gameQFilter }),
   });
 
-  const data = gameData[0];
+  const game = gameData[0];
 
-  console.log("gameData", data);
+  const genres = [...game.genres];
 
-  const genres = [...data.genres];
-  console.log("genres", genres);
-
-  const filter2 = [`id = (${genres.join(",")})`];
-
-  // const genreData = await fetchGenresById({ filters: filter2 });
+  const genreQFilter = [`id = (${genres.join(",")})`];
 
   await queryClient.prefetchQuery({
     queryKey: ["getGenreByGenreId", genres],
-    queryFn: () => fetchGenresById({ filters: filter2 }),
+    queryFn: () => fetchGenresById({ filters: genreQFilter }),
   });
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <GameInfoView
         gameId={gameId}
-        dataFields={dataFields}
-        dataFilter={dataFilter}
+        gameQFields={gameQFields}
+        gameQFilter={gameQFilter}
+        genreQFilter={genreQFilter}
       />
     </HydrationBoundary>
-    // <>
-    //   <div className="text">{gameData ? gameData[0].name : ""}</div>
-    //   <div className="text">{genreData ? "yes" : ""}</div>
-    // </>
   );
 }

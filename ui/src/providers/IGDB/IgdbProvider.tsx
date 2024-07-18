@@ -38,12 +38,10 @@ export const buildQuery = ({
 };
 
 const fetchData = async (path: string, query: string) => {
-  console.log("path: ", path);
-  const proxyUrl = `/api/proxy?path=${path}`;
-  const response = await fetch(proxyUrl, {
+  const response = await fetch(baseUrl + path, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(query),
+    headers: headers,
+    body: query,
     mode: "cors",
   });
 
@@ -57,8 +55,6 @@ export const fetchGames = async ({
   filters,
 }: providerFnArgs) => {
   const query = buildQuery({ fields, limit, search, filters });
-
-  // const url = baseUrl + "games";
 
   const response = await fetchData("games", query);
 
@@ -75,7 +71,6 @@ export const fetchScreenshots = async ({
 }: providerFnArgs) => {
   const query = buildQuery({ fields, limit, search, filters });
 
-  // const response = await fetchData(baseUrl + "screenshots", query);
   const response = await fetchData("screenshots", query);
 
   const data = await response.json();
@@ -121,7 +116,6 @@ export const fetchGenresById = async ({
 }: providerFnArgs) => {
   const query = buildQuery({ fields, limit, search, filters });
 
-  // const response = await fetchData(baseUrl + "genres", query);
   const response = await fetchData("genres", query);
 
   const data = await response.json();
