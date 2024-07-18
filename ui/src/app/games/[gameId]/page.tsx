@@ -30,6 +30,11 @@ export default async function GameInfo({
 
   const gameQFilter = [`id = ${gameId}`];
 
+  const involvedCompQFields = ["company", "developer", "publisher"];
+  const involvedCompQFilter = [
+    `game = ${gameId} & (developer=true | publisher=true)`,
+  ];
+
   //** As we are pre-fetching data from a Server Component, I am using this helper method
   const gameData = await igdbProxyFetch(
     "games",
@@ -37,6 +42,11 @@ export default async function GameInfo({
       fields: gameQFields,
       filters: gameQFilter,
     })
+  );
+
+  const companyData = await igdbProxyFetch(
+    "involved_companies",
+    buildQuery({ fields: involvedCompQFields, filters: involvedCompQFilter })
   );
 
   // TODO: Hydrate the component with other data as well
@@ -50,13 +60,36 @@ export default async function GameInfo({
 
   const game = gameData[0];
 
+  type company = {
+    id: number;
+    company: string;
+    developer: string;
+    publisher: string;
+  };
+
+  const companyIds = companyData.map((el: company) => el.company);
+
+  console.log("companies: ", companyIds);
+
   const genres = [...game.genres];
 
   const genreQFilter = [`id = (${genres.join(",")})`];
 
+  const compNameQFields = ["name", "url"];
+  const compNameQFilter = [`id = (${companyIds.join(",")})`];
+
   await queryClient.prefetchQuery({
-    queryKey: ["getGenreByGenreId", genres],
+    queryKey: ["fetchGenreByGenreId", genres],
     queryFn: () => fetchGenresById({ filters: genreQFilter }),
+  });
+
+  await queryClient.prefetchQuery({
+    queryKey: ["fetchCompanyByCompanyId", companyIds],
+    queryFn: () =>
+      fetchGenresById({
+        fields: compNameQFields,
+        filters: compNameQFilter,
+      }),
   });
 
   return (
@@ -66,6 +99,10 @@ export default async function GameInfo({
         gameQFields={gameQFields}
         gameQFilter={gameQFilter}
         genreQFilter={genreQFilter}
+        involvedCompQFields={involvedCompQFields}
+        involvedCompQFilter={involvedCompQFilter}
+        compNameQFields={compNameQFields}
+        compNameQFilter={compNameQFilter}
       />
     </HydrationBoundary>
   );

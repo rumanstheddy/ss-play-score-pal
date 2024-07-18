@@ -6,7 +6,7 @@ type apiHeaders = {
   Authorization: string;
 };
 
-const headers: apiHeaders = {
+export const headers: apiHeaders = {
   Accept: "application/json",
   "Client-ID": process.env.NEXT_PUBLIC_CLIENT_ID as string,
   Authorization: "Bearer " + (process.env.NEXT_PUBLIC_AUTH_TOKEN as string),
@@ -86,7 +86,7 @@ export const fetchCovers = async ({
 }: providerFnArgs) => {
   const query = buildQuery({ fields, limit, search, filters });
 
-  const response = await fetchData(baseUrl + "covers", query);
+  const response = await fetchData("covers", query);
 
   const data = await response.json();
 
@@ -101,7 +101,7 @@ export const fetchReleaseDates = async ({
 }: providerFnArgs) => {
   const query = buildQuery({ fields, limit, search, filters });
 
-  const response = await fetchData(baseUrl + "release_dates", query);
+  const response = await fetchData("release_dates", query);
 
   const data = await response.json();
 
@@ -131,7 +131,7 @@ export const fetchInvolvedCompanies = async ({
 }: providerFnArgs) => {
   const query = buildQuery({ fields, limit, search, filters });
 
-  const response = await fetchData(baseUrl + "involved_companies", query);
+  const response = await fetchData("involved_companies", query);
 
   const data = await response.json();
 
@@ -146,7 +146,7 @@ export const fetchCompanies = async ({
 }: providerFnArgs) => {
   const query = buildQuery({ fields, limit, search, filters });
 
-  const response = await fetchData(baseUrl + "companies", query);
+  const response = await fetchData("companies", query);
 
   const data = await response.json();
 
@@ -161,7 +161,7 @@ export const fetchPlatforms = async ({
 }: providerFnArgs) => {
   const query = buildQuery({ fields, limit, search, filters });
 
-  const response = await fetchData(baseUrl + "platforms", query);
+  const response = await fetchData("platforms", query);
 
   const data = await response.json();
 

@@ -1,16 +1,5 @@
+import { headers } from "@/providers/IGDB/IgdbProvider";
 import { NextRequest, NextResponse } from "next/server";
-
-type apiHeaders = {
-  Accept: string;
-  "Client-ID": string;
-  Authorization: string;
-};
-
-const headers: apiHeaders = {
-  Accept: "application/json",
-  "Client-ID": process.env.NEXT_PUBLIC_CLIENT_ID as string,
-  Authorization: "Bearer " + (process.env.NEXT_PUBLIC_AUTH_TOKEN as string),
-};
 
 export async function POST(req: NextRequest) {
   const path = req.nextUrl.searchParams.get("path");
