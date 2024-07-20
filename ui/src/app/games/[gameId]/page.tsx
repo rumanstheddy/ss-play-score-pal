@@ -11,6 +11,13 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 
+type company = {
+  id: number;
+  company: string;
+  developer: string;
+  publisher: string;
+};
+
 export default async function GameInfo({
   params: { gameId },
 }: {
@@ -60,16 +67,7 @@ export default async function GameInfo({
 
   const game = gameData[0];
 
-  type company = {
-    id: number;
-    company: string;
-    developer: string;
-    publisher: string;
-  };
-
   const companyIds = companyData.map((el: company) => el.company);
-
-  console.log("companies: ", companyIds);
 
   const genres = [...game.genres];
 
