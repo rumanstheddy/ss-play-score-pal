@@ -20,12 +20,12 @@ interface IGameInfoProps {
   compNameQFilter: string[];
 }
 
-type genre = {
+type Genre = {
   id: number;
   name: string;
 };
 
-type company = {
+type Company = {
   id: number;
   company: number;
   name?: string;
@@ -84,17 +84,26 @@ export default function GameInfoView({
     ],
   });
 
+  console.log("otherResults", otherResults);
+
   const [genres, involvedCompanies, companyNames] = otherResults.map(
-    (result) => result.data
+    (result) => {
+      return {
+        data: result.data,
+        isLoading: result.isLoading,
+      };
+    }
   );
 
   const getCompanyDetails = (companyId: number) => {
-    return companyNames?.find((compInfo: company) => compInfo.id === companyId);
+    return companyNames.data?.find(
+      (compInfo: Company) => compInfo.id === companyId
+    );
   };
 
   const buildCompanyList = () => {
-    const companies = involvedCompanies?.map((company: company) => {
-      const compDetails: company = getCompanyDetails(company.company);
+    const companies = involvedCompanies.data?.map((company: Company) => {
+      const compDetails: Company = getCompanyDetails(company.company);
       return {
         id: compDetails?.id,
         name: compDetails?.name,
@@ -107,11 +116,11 @@ export default function GameInfoView({
     return companies;
   };
 
-  const separateDevAndPublishers = (companies: company[]) => {
-    const developers: Partial<company>[] = [];
-    const publishers: Partial<company>[] = [];
+  const separateDevAndPublishers = (companies: Company[]) => {
+    const developers: Partial<Company>[] = [];
+    const publishers: Partial<Company>[] = [];
 
-    companies?.forEach((company: company) => {
+    companies?.forEach((company: Company) => {
       if (company?.developer) {
         developers.push({
           id: company.id,
@@ -135,19 +144,26 @@ export default function GameInfoView({
     };
   };
 
-  const displayListItems = (list: Partial<company>[], isDeveloper: boolean) => {
-    const companyType = isDeveloper ? "Developed" : "Published";
+  const displayCompanyListItems = (
+    list: Partial<Company>[],
+    isDeveloper: boolean
+  ) => {
+    const companyType = isDeveloper ? "Developer(s)" : "Publisher(s)";
     return (
-      <ul className="list-disc list-inside marker:text">
-        {companyType} by:
-        {list.map((company: Partial<company>) => (
-          <li className="text-blue-500 underline" key={company.id}>
-            <Link className="hover:text-blue-700" href={`${company.url}`}>
+      <div className="block">
+        {list.length > 0 ? `${companyType}: ` : ""}
+        {list.map((company: Partial<Company>, i: number) => (
+          <div className="text-blue-500 inline" key={company.id}>
+            <Link
+              className="hover:text-blue-700 hover:underline"
+              href={`${company.url}`}
+            >
               {company.name}
             </Link>
-          </li>
+            {i !== list.length - 1 ? ", " : ""}
+          </div>
         ))}
-      </ul>
+      </div>
     );
   };
 
@@ -158,14 +174,14 @@ export default function GameInfoView({
 
     return (
       <>
-        {displayListItems(developers, true)}
-        {displayListItems(publishers, false)}
+        {displayCompanyListItems(developers, true)}
+        {displayCompanyListItems(publishers, false)}
       </>
     );
   };
 
   // TODO: Find a way to display developers and publishers seperated by a ","
-  // TODO: Fetch Multiple queries together
+  // TODO: Make the performance better
 
   return isLoading ? (
     <div className="text">Getting your game details...</div>
@@ -173,8 +189,10 @@ export default function GameInfoView({
     <>
       <div className="text">{game ? game.name : ""}</div>
       <div className="text">
-        Genres:{" "}
-        {genres ? genres.map((genre: genre) => genre.name).join(", ") : ""}
+        {genres.data
+          ? "Genres: " +
+            genres.data.map((genre: Genre) => genre.name).join(", ")
+          : ""}
       </div>
       <div className="text">{displayCompanies()}</div>
     </>

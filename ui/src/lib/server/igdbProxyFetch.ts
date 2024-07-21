@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 
-//TODO: Learn more about how proxies and SSR work in Server components
+//TODO: Learn more about how proxies and SSR works in Server components
 
 export const igdbProxyFetch = async (path: string, body: any) => {
   const url = new URL(`http://localhost:3000/api/igdb?path=${path}`);

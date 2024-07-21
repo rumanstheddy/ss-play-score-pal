@@ -1,25 +1,24 @@
 const baseUrl = "/igdb/";
 
-type apiHeaders = {
+type ApiHeaders = {
   Accept: string;
   "Client-ID": string;
   Authorization: string;
 };
 
-export const headers: apiHeaders = {
+export const headers: ApiHeaders = {
   Accept: "application/json",
   "Client-ID": process.env.NEXT_PUBLIC_CLIENT_ID as string,
   Authorization: "Bearer " + (process.env.NEXT_PUBLIC_AUTH_TOKEN as string),
 };
 
-type providerFnArgs = {
+type ProviderFnArgs = {
   fields?: string[];
   limit?: number;
   search?: string;
   filters?: string[];
 };
 
-// TODO: Change the fetchData method to use the older process
 // ** Use this provider file only for fetching Data inside client components
 // ** Have configured a different proxy to use it inside Server components
 
@@ -28,7 +27,7 @@ export const buildQuery = ({
   limit,
   search,
   filters,
-}: providerFnArgs): string => {
+}: ProviderFnArgs): string => {
   let query: string = "fields " + (fields ? fields.join(",") : "*") + ";";
   query += limit ? "limit " + limit + ";" : "";
   query += search ? `search "${search}"` + ";" : "";
@@ -53,7 +52,7 @@ export const fetchGames = async ({
   limit,
   search,
   filters,
-}: providerFnArgs) => {
+}: ProviderFnArgs) => {
   const query = buildQuery({ fields, limit, search, filters });
 
   const response = await fetchData("games", query);
@@ -68,7 +67,7 @@ export const fetchScreenshots = async ({
   limit,
   search,
   filters,
-}: providerFnArgs) => {
+}: ProviderFnArgs) => {
   const query = buildQuery({ fields, limit, search, filters });
 
   const response = await fetchData("screenshots", query);
@@ -83,7 +82,7 @@ export const fetchCovers = async ({
   limit,
   search,
   filters,
-}: providerFnArgs) => {
+}: ProviderFnArgs) => {
   const query = buildQuery({ fields, limit, search, filters });
 
   const response = await fetchData("covers", query);
@@ -98,7 +97,7 @@ export const fetchReleaseDates = async ({
   limit,
   search,
   filters,
-}: providerFnArgs) => {
+}: ProviderFnArgs) => {
   const query = buildQuery({ fields, limit, search, filters });
 
   const response = await fetchData("release_dates", query);
@@ -113,7 +112,7 @@ export const fetchGenresById = async ({
   limit,
   search,
   filters,
-}: providerFnArgs) => {
+}: ProviderFnArgs) => {
   const query = buildQuery({ fields, limit, search, filters });
 
   const response = await fetchData("genres", query);
@@ -128,7 +127,7 @@ export const fetchInvolvedCompanies = async ({
   limit,
   search,
   filters,
-}: providerFnArgs) => {
+}: ProviderFnArgs) => {
   const query = buildQuery({ fields, limit, search, filters });
 
   const response = await fetchData("involved_companies", query);
@@ -143,7 +142,7 @@ export const fetchCompanies = async ({
   limit,
   search,
   filters,
-}: providerFnArgs) => {
+}: ProviderFnArgs) => {
   const query = buildQuery({ fields, limit, search, filters });
 
   const response = await fetchData("companies", query);
@@ -158,7 +157,7 @@ export const fetchPlatforms = async ({
   limit,
   search,
   filters,
-}: providerFnArgs) => {
+}: ProviderFnArgs) => {
   const query = buildQuery({ fields, limit, search, filters });
 
   const response = await fetchData("platforms", query);

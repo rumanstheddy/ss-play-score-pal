@@ -25,14 +25,14 @@ interface CustomSession extends Session {
   };
 }
 
-type providerFnArgs = {
+type ProviderFnArgs = {
   fields: string[];
   limit: number;
   search: string;
   filters: string[];
 };
 
-type game = {
+type Game = {
   id: number;
   name: string;
   summary: string;
@@ -48,7 +48,7 @@ export default function HomeView(): React.ReactElement {
     ? "Welcome, " + session.user.firstName + "!"
     : "SS Playscore Pal";
 
-  const args: providerFnArgs = {
+  const args: ProviderFnArgs = {
     fields: ["name", "summary"],
     limit: 5,
     search: searchText,
@@ -67,7 +67,7 @@ export default function HomeView(): React.ReactElement {
     if (results && results.length > 0) {
       return (
         <div className="self-center w-2/4 py-2 text-center rounded-md bg-white text-black">
-          {results.map((result: game) => (
+          {results.map((result: Game) => (
             <SearchResult
               key={result.id}
               link={`/games/${result.id}`}

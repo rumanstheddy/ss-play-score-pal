@@ -1,7 +1,7 @@
 import { useQuery, QueryKey } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
-type providerFnArgs = {
+type ProviderFnArgs = {
   fields?: string[];
   limit?: number;
   search?: string;
@@ -9,14 +9,14 @@ type providerFnArgs = {
 };
 
 export default function useDebouncedQuery<T>(
-  args: providerFnArgs,
+  args: ProviderFnArgs,
   queryKey: QueryKey,
   providerFn: ({
     fields,
     limit,
     search,
     filters,
-  }: providerFnArgs) => Promise<T>,
+  }: ProviderFnArgs) => Promise<T>,
   delay: number = 500
 ) {
   const { fields, limit, search, filters } = args;
