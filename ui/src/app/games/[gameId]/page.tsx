@@ -26,6 +26,7 @@ export default async function GameInfo({
   const gameQFields = [
     "id",
     "name",
+    "summary",
     "screenshots",
     "cover",
     "first_release_date",
@@ -90,6 +91,18 @@ export default async function GameInfo({
       }),
   });
 
+  const coverQFields = ["game", "height", "width", "url"];
+  const coverQFilter = [`game = ${gameId}`];
+
+  await queryClient.prefetchQuery({
+    queryKey: ["fetchCovers", gameId],
+    queryFn: () =>
+      fetchGenresById({
+        fields: coverQFields,
+        filters: coverQFilter,
+      }),
+  });
+
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <GameInfoView
@@ -101,6 +114,8 @@ export default async function GameInfo({
         involvedCompQFilter={involvedCompQFilter}
         compNameQFields={compNameQFields}
         compNameQFilter={compNameQFilter}
+        coverQFields={coverQFields}
+        coverQFilter={coverQFilter}
       />
     </HydrationBoundary>
   );

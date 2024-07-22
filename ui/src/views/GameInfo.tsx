@@ -2,6 +2,7 @@
 
 import {
   fetchCompanies,
+  fetchCovers,
   fetchGames,
   fetchGenresById,
   fetchInvolvedCompanies,
@@ -18,6 +19,8 @@ interface IGameInfoProps {
   involvedCompQFilter: string[];
   compNameQFields: string[];
   compNameQFilter: string[];
+  coverQFields: string[];
+  coverQFilter: string[];
 }
 
 type Genre = {
@@ -43,6 +46,8 @@ export default function GameInfoView({
   involvedCompQFilter,
   compNameQFields,
   compNameQFilter,
+  coverQFields,
+  coverQFilter,
 }: IGameInfoProps): React.ReactElement {
   const { data: gameData, isLoading } = useQuery({
     queryKey: ["getGameByGameId", gameId],
@@ -54,6 +59,12 @@ export default function GameInfoView({
   });
 
   const game = gameData ? gameData[0] : null;
+
+  const releaseDate = new Date(game?.first_release_date * 1000);
+
+  const gameSummary = game?.summary;
+
+  console.log("game: ", game);
 
   const gameGenres = game?.genres || [];
 
@@ -81,13 +92,20 @@ export default function GameInfoView({
             filters: compNameQFilter,
           }),
       },
+      {
+        queryKey: ["fetchCovers", gameId],
+        queryFn: () =>
+          fetchCovers({
+            fields: coverQFields,
+            filters: coverQFilter,
+          }),
+      },
     ],
   });
 
-  console.log("otherResults", otherResults);
-
-  const [genres, involvedCompanies, companyNames] = otherResults.map(
+  const [genres, involvedCompanies, companyNames, gameCover] = otherResults.map(
     (result) => {
+      console.log("result", result);
       return {
         data: result.data,
         isLoading: result.isLoading,
@@ -167,6 +185,11 @@ export default function GameInfoView({
     );
   };
 
+  console.log("gameCover?.data", gameCover?.data);
+
+  const gameCoverUrl =
+    gameCover.data && gameCover.data[0] ? gameCover.data[0].url : "";
+
   const displayCompanies = () => {
     const { developers, publishers } = separateDevAndPublishers(
       buildCompanyList()
@@ -187,14 +210,31 @@ export default function GameInfoView({
     <div className="text">Getting your game details...</div>
   ) : (
     <>
-      <div className="text">{game ? game.name : ""}</div>
-      <div className="text">
-        {genres.data
-          ? "Genres: " +
-            genres.data.map((genre: Genre) => genre.name).join(", ")
-          : ""}
+      <div className="text font-bold">{game ? game.name : ""}</div>
+      <div className="text inline">Initial Release Date: </div>
+      <div className="text inline font-bold">
+        {releaseDate.toLocaleDateString()}
       </div>
+      <div className="block">
+        <div className="text inline">Genres: </div>
+        <div className="text inline font-bold">
+          {genres.data
+            ? genres.data.map((genre: Genre) => genre.name).join(", ")
+            : ""}
+        </div>
+      </div>
+      <div className="text block">Summary:</div>
+      <div className="text">{gameSummary}</div>
       <div className="text">{displayCompanies()}</div>
+      <div className="text">
+        URL:{" "}
+        <Link
+          className="text-blue-500 hover:text-blue-700 hover:underline"
+          href={`${gameCoverUrl}`}
+        >
+          {gameCoverUrl}
+        </Link>
+      </div>
     </>
   );
 }
