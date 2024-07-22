@@ -1,5 +1,6 @@
 "use client";
 
+import NavBar from "@/components/NavBar";
 import {
   fetchCompanies,
   fetchCovers,
@@ -8,7 +9,10 @@ import {
   fetchInvolvedCompanies,
 } from "@/providers/IGDB/IgdbProvider";
 import { useQueries, useQuery } from "@tanstack/react-query";
+import Image from "next/image";
 import Link from "next/link";
+import { CustomSession } from "./Home";
+import { useSession } from "next-auth/react";
 
 interface IGameInfoProps {
   gameId: string;
@@ -49,7 +53,8 @@ export default function GameInfoView({
   coverQFields,
   coverQFilter,
 }: IGameInfoProps): React.ReactElement {
-  const { data: gameData, isLoading } = useQuery({
+  const { data: session } = useSession() as { data: CustomSession | null };
+  const { data: gameData, isLoading: isGameLoading } = useQuery({
     queryKey: ["getGameByGameId", gameId],
     queryFn: () =>
       fetchGames({
@@ -103,12 +108,14 @@ export default function GameInfoView({
     ],
   });
 
+  const isAnyLoading =
+    isGameLoading || otherResults.some((result) => result.isLoading);
+
   const [genres, involvedCompanies, companyNames, gameCover] = otherResults.map(
     (result) => {
       console.log("result", result);
       return {
         data: result.data,
-        isLoading: result.isLoading,
       };
     }
   );
@@ -169,16 +176,21 @@ export default function GameInfoView({
     const companyType = isDeveloper ? "Developer(s)" : "Publisher(s)";
     return (
       <div className="block">
-        {list.length > 0 ? `${companyType}: ` : ""}
+        <div className="text-xl my-2">
+          {list.length > 0 ? `${companyType}: ` : ""}
+        </div>
         {list.map((company: Partial<Company>, i: number) => (
-          <div className="text-blue-500 inline" key={company.id}>
+          <div
+            className="text-blue-500 text-xl whitespace-nowrap"
+            key={company.id}
+          >
             <Link
               className="hover:text-blue-700 hover:underline"
               href={`${company.url}`}
             >
               {company.name}
             </Link>
-            {i !== list.length - 1 ? ", " : ""}
+            {/* {i !== list.length - 1 ? ", " : ""} */}
           </div>
         ))}
       </div>
@@ -187,8 +199,10 @@ export default function GameInfoView({
 
   console.log("gameCover?.data", gameCover?.data);
 
-  const gameCoverUrl =
+  let gameCoverUrl: string =
     gameCover.data && gameCover.data[0] ? gameCover.data[0].url : "";
+
+  gameCoverUrl = gameCoverUrl.replace("thumb", "720p");
 
   const displayCompanies = () => {
     const { developers, publishers } = separateDevAndPublishers(
@@ -196,45 +210,92 @@ export default function GameInfoView({
     );
 
     return (
-      <>
-        {displayCompanyListItems(developers, true)}
-        {displayCompanyListItems(publishers, false)}
-      </>
+      <div className="flex flex-col basis-5">
+        <div className="mt-2">{displayCompanyListItems(developers, true)}</div>
+        <div className="mt-2">{displayCompanyListItems(publishers, false)}</div>
+      </div>
     );
   };
 
-  // TODO: Find a way to display developers and publishers seperated by a ","
   // TODO: Make the performance better
 
-  return isLoading ? (
-    <div className="text">Getting your game details...</div>
-  ) : (
-    <>
-      <div className="text font-bold">{game ? game.name : ""}</div>
-      <div className="text inline">Initial Release Date: </div>
-      <div className="text inline font-bold">
-        {releaseDate.toLocaleDateString()}
-      </div>
-      <div className="block">
-        <div className="text inline">Genres: </div>
-        <div className="text inline font-bold">
-          {genres.data
-            ? genres.data.map((genre: Genre) => genre.name).join(", ")
-            : ""}
-        </div>
-      </div>
-      <div className="text block">Summary:</div>
-      <div className="text">{gameSummary}</div>
-      <div className="text">{displayCompanies()}</div>
-      <div className="text">
-        URL:{" "}
-        <Link
-          className="text-blue-500 hover:text-blue-700 hover:underline"
-          href={`${gameCoverUrl}`}
-        >
-          {gameCoverUrl}
-        </Link>
-      </div>
-    </>
+  // return isLoading ? (
+  //   <div className="text">Getting your game details...</div>
+  // ) : (
+  //   <>
+  //     <div className="text font-bold">{game ? game.name : ""}</div>
+  //     <div className="text inline">Initial Release Date: </div>
+  //     <div className="text inline font-bold">
+  //       {releaseDate.toLocaleDateString()}
+  //     </div>
+  //     <div className="block">
+  //       <div className="text inline">Genres: </div>
+  //       <div className="text inline font-bold">
+  //         {genres.data
+  //           ? genres.data.map((genre: Genre) => genre.name).join(", ")
+  //           : ""}
+  //       </div>
+  //     </div>
+  //     <div className="text block">Summary:</div>
+  //     <div className="text">{gameSummary}</div>
+  //     <div className="text">{displayCompanies()}</div>
+  //     <div className="text">
+  //       URL:{" "}
+  //       <Link
+  //         className="text-blue-500 hover:text-blue-700 hover:underline"
+  //         href={`${gameCoverUrl}`}
+  //       >
+  //         {gameCoverUrl}
+  //       </Link>
+  //     </div>
+  //   </>
+  // );
+
+  return (
+    <div className="flex flex-col justify-center min-h-screen">
+      <>
+        <NavBar
+          name={session?.user ? session.user.firstName : ""}
+          isLoggedIn={!!(session && session.user)}
+        />
+        {isAnyLoading ? (
+          <div className="text text-center text-lg">
+            Getting your game details...
+          </div>
+        ) : (
+          <div className="flex flex-row text justify-center">
+            <Image
+              src={"https:" + gameCoverUrl}
+              alt="Cover art for the selected game"
+              width={400}
+              height={200}
+              className="rounded-lg"
+            />
+            <div className="flex flex-col justify-center px-10 text-center rounded-lg bg-slate-950">
+              <h2 className="text pb-2 text-4xl font-semibold tracking-tight first:mt-0">
+                {game ? game.name : ""}
+              </h2>
+              <div className="flex flex-row items-center justify-center mt-5">
+                <div className="text text-xl">Initial Release Date:</div>
+                <div className="text text-2xl font-semibold tracking-tight ml-2">
+                  {releaseDate.toLocaleDateString()}
+                </div>
+              </div>
+              <div className="flex flex-row items-center justify-center mt-2">
+                <div className="text text-xl">Genres: </div>
+                <div className="text text-xl font-semibold tracking-tight ml-2">
+                  {genres.data
+                    ? genres.data.map((genre: Genre) => genre.name).join(", ")
+                    : ""}
+                </div>
+              </div>
+              <div className="flex flex-row items-center justify-center mt-2">
+                {displayCompanies()}
+              </div>
+            </div>
+          </div>
+        )}
+      </>
+    </div>
   );
 }

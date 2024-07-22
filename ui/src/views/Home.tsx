@@ -17,7 +17,7 @@ type CustomUser = {
   lastName?: string | null | undefined;
 };
 
-interface CustomSession extends Session {
+export interface CustomSession extends Session {
   user?: CustomUser & {
     name?: string | null | undefined;
     email?: string | null | undefined;
