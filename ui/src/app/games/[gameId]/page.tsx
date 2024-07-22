@@ -70,7 +70,7 @@ export default async function GameInfo({
 
   const companyIds = companyData.map((el: Company) => el.company);
 
-  const genres = [...game.genres];
+  const genres = game.genres ? [...game.genres] : [];
 
   const genreQFilter = [`id = (${genres.join(",")})`];
 

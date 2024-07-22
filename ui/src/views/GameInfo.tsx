@@ -71,15 +71,16 @@ export default function GameInfoView({
 
   console.log("game: ", game);
 
-  const gameGenres = game?.genres || [];
+  const gameGenres = game?.genres ?? [];
 
-  const gameCompanies = game?.involved_companies || [];
+  const gameCompanies = game?.involved_companies ?? [];
 
   const otherResults = useQueries({
     queries: [
       {
         queryKey: ["getGenreByGenreId", gameGenres],
         queryFn: () => fetchGenresById({ filters: genreQFilter }),
+        enabled: gameGenres.length > 0,
       },
       {
         queryKey: ["getInvolvedCompanies", gameCompanies],
@@ -88,6 +89,7 @@ export default function GameInfoView({
             fields: involvedCompQFields,
             filters: involvedCompQFilter,
           }),
+        enabled: gameCompanies.length > 0,
       },
       {
         queryKey: ["getCompanyByCompId", gameCompanies],
@@ -96,6 +98,7 @@ export default function GameInfoView({
             fields: compNameQFields,
             filters: compNameQFilter,
           }),
+        enabled: gameCompanies.length > 0,
       },
       {
         queryKey: ["fetchCovers", gameId],
@@ -272,24 +275,26 @@ export default function GameInfoView({
               className="rounded-lg"
             />
             <div className="flex flex-col justify-center px-10 text-center rounded-lg bg-slate-950">
-              <h2 className="text pb-2 text-4xl font-semibold tracking-tight first:mt-0">
+              <h2 className="text pb-2 text-4xl font-extrabold tracking-tight first:mt-0">
                 {game ? game.name : ""}
               </h2>
-              <div className="flex flex-row items-center justify-center mt-5">
+              <div className="flex flex-row items-center justify-center mt-4">
                 <div className="text text-xl">Initial Release Date:</div>
-                <div className="text text-2xl font-semibold tracking-tight ml-2">
+                <div className="text text-2xl font-semibold tracking-tight ml-1">
                   {releaseDate.toLocaleDateString()}
                 </div>
               </div>
-              <div className="flex flex-row items-center justify-center mt-2">
-                <div className="text text-xl">Genres: </div>
-                <div className="text text-xl font-semibold tracking-tight ml-2">
+              <div className="flex flex-row justify-center mt-4">
+                <div className="text text-xl">
+                  {genres.data ? "Genres: " : ""}
+                </div>
+                <div className="text text-xl font-semibold tracking-tight ml-1">
                   {genres.data
                     ? genres.data.map((genre: Genre) => genre.name).join(", ")
-                    : ""}
+                    : "Genres not specified"}
                 </div>
               </div>
-              <div className="flex flex-row items-center justify-center mt-2">
+              <div className="flex flex-row items-center justify-center">
                 {displayCompanies()}
               </div>
             </div>
