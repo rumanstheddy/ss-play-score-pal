@@ -7,6 +7,7 @@ import {
   fetchGames,
   fetchGenresById,
   fetchInvolvedCompanies,
+  fetchPlatforms,
 } from "@/providers/IGDB/IgdbProvider";
 import { useQueries, useQuery } from "@tanstack/react-query";
 import Image from "next/image";
@@ -25,6 +26,8 @@ interface IGameInfoProps {
   compNameQFilter: string[];
   coverQFields: string[];
   coverQFilter: string[];
+  platformQFields: string[];
+  platformQFilter: string[];
 }
 
 type Genre = {
@@ -41,6 +44,12 @@ type Company = {
   url?: string;
 };
 
+type Platform = {
+  id: number;
+  abbreviation: string;
+  name: string;
+};
+
 export default function GameInfoView({
   gameId,
   gameQFields,
@@ -52,6 +61,8 @@ export default function GameInfoView({
   compNameQFilter,
   coverQFields,
   coverQFilter,
+  platformQFields,
+  platformQFilter,
 }: IGameInfoProps): React.ReactElement {
   const { data: session } = useSession() as { data: CustomSession | null };
   const { data: gameData, isLoading: isGameLoading } = useQuery({
@@ -72,6 +83,8 @@ export default function GameInfoView({
   console.log("game: ", game);
 
   const gameGenres = game?.genres ?? [];
+
+  const platforms = game?.platforms ?? [];
 
   const gameCompanies = game?.involved_companies ?? [];
 
@@ -108,20 +121,28 @@ export default function GameInfoView({
             filters: coverQFilter,
           }),
       },
+      {
+        queryKey: ["fetchPlatformNames", platforms],
+        queryFn: () =>
+          fetchPlatforms({
+            fields: platformQFields,
+            filters: platformQFilter,
+          }),
+        enabled: platforms.length > 0,
+      },
     ],
   });
 
   const isAnyLoading =
     isGameLoading || otherResults.some((result) => result.isLoading);
 
-  const [genres, involvedCompanies, companyNames, gameCover] = otherResults.map(
-    (result) => {
-      console.log("result", result);
-      return {
-        data: result.data,
-      };
-    }
-  );
+  const [
+    genres,
+    involvedCompanies,
+    companyNames,
+    gameCover,
+    platformNamesList,
+  ] = otherResults.map((result) => result);
 
   const getCompanyDetails = (companyId: number) => {
     return companyNames.data?.find(
@@ -178,8 +199,8 @@ export default function GameInfoView({
   ) => {
     const companyType = isDeveloper ? "Developer(s)" : "Publisher(s)";
     return (
-      <div className="block">
-        <div className="text-xl my-2">
+      <div className="block mt-4">
+        <div className="text-xl">
           {list.length > 0 ? `${companyType}: ` : ""}
         </div>
         {list.map((company: Partial<Company>, i: number) => (
@@ -193,17 +214,35 @@ export default function GameInfoView({
             >
               {company.name}
             </Link>
-            {/* {i !== list.length - 1 ? ", " : ""} */}
           </div>
         ))}
       </div>
     );
   };
 
-  console.log("gameCover?.data", gameCover?.data);
+  const displayGamePlatforms = () => {
+    const platformNames = platformNamesList?.data as Platform[];
+    return (
+      <div className="block mt-4">
+        <div className="text-xl">Platforms:</div>
+        {platformNames?.map((platform: Platform) => (
+          <div
+            className="text text-xl whitespace-nowrap font-bold"
+            key={platform.id}
+          >
+            {platform.name}
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  console.log("platformNamesList?.data", gameCover?.data);
 
   let gameCoverUrl: string =
-    gameCover.data && gameCover.data[0] ? gameCover.data[0].url : "";
+    gameCover.data && gameCover.data[0]
+      ? `https:${gameCover.data[0].url}`
+      : `/images/game-placeholder.png`;
 
   gameCoverUrl = gameCoverUrl.replace("thumb", "720p");
 
@@ -221,38 +260,7 @@ export default function GameInfoView({
   };
 
   // TODO: Make the performance better
-
-  // return isLoading ? (
-  //   <div className="text">Getting your game details...</div>
-  // ) : (
-  //   <>
-  //     <div className="text font-bold">{game ? game.name : ""}</div>
-  //     <div className="text inline">Initial Release Date: </div>
-  //     <div className="text inline font-bold">
-  //       {releaseDate.toLocaleDateString()}
-  //     </div>
-  //     <div className="block">
-  //       <div className="text inline">Genres: </div>
-  //       <div className="text inline font-bold">
-  //         {genres.data
-  //           ? genres.data.map((genre: Genre) => genre.name).join(", ")
-  //           : ""}
-  //       </div>
-  //     </div>
-  //     <div className="text block">Summary:</div>
-  //     <div className="text">{gameSummary}</div>
-  //     <div className="text">{displayCompanies()}</div>
-  //     <div className="text">
-  //       URL:{" "}
-  //       <Link
-  //         className="text-blue-500 hover:text-blue-700 hover:underline"
-  //         href={`${gameCoverUrl}`}
-  //       >
-  //         {gameCoverUrl}
-  //       </Link>
-  //     </div>
-  //   </>
-  // );
+  // TODO: Make the layout different (maybe set a standard size for the image and cater more space for the info on the right?)
 
   return (
     <div className="flex flex-col justify-center min-h-screen">
@@ -268,14 +276,15 @@ export default function GameInfoView({
         ) : (
           <div className="flex flex-row text justify-center">
             <Image
-              src={"https:" + gameCoverUrl}
+              src={gameCoverUrl}
               alt="Cover art for the selected game"
               width={400}
               height={200}
               className="rounded-lg"
+              placeholder="empty"
             />
-            <div className="flex flex-col justify-center px-10 text-center rounded-lg bg-slate-950">
-              <h2 className="text pb-2 text-4xl font-extrabold tracking-tight first:mt-0">
+            <div className="flex flex-col justify-center py-10 text-center rounded-lg bg-slate-950">
+              <h2 className="text pb-2 text-3xl font-extrabold tracking-tight first:mt-0 px-5">
                 {game ? game.name : ""}
               </h2>
               <div className="flex flex-row items-center justify-center mt-4">
@@ -293,6 +302,9 @@ export default function GameInfoView({
                     ? genres.data.map((genre: Genre) => genre.name).join(", ")
                     : "Genres not specified"}
                 </div>
+              </div>
+              <div className="flex flex-row items-center justify-center">
+                {displayGamePlatforms()}
               </div>
               <div className="flex flex-row items-center justify-center">
                 {displayCompanies()}

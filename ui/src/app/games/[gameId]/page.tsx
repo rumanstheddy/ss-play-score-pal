@@ -71,11 +71,17 @@ export default async function GameInfo({
   const companyIds = companyData.map((el: Company) => el.company);
 
   const genres = game.genres ? [...game.genres] : [];
+  const platforms = game.platforms ? [...game.platforms] : [];
 
   const genreQFilter = [`id = (${genres.join(",")})`];
 
   const compNameQFields = ["name", "url"];
+
   const compNameQFilter = [`id = (${companyIds.join(",")})`];
+
+  const platformQFields = ["abbreviation", "name"];
+
+  const platformQFilter = [`id = (${platforms.join(",")})`];
 
   await queryClient.prefetchQuery({
     queryKey: ["fetchGenreByGenreId", genres],
@@ -116,6 +122,8 @@ export default async function GameInfo({
         compNameQFilter={compNameQFilter}
         coverQFields={coverQFields}
         coverQFilter={coverQFilter}
+        platformQFields={platformQFields}
+        platformQFilter={platformQFilter}
       />
     </HydrationBoundary>
   );
