@@ -237,15 +237,6 @@ export default function GameInfoView({
     );
   };
 
-  console.log("platformNamesList?.data", gameCover?.data);
-
-  let gameCoverUrl: string =
-    gameCover.data && gameCover.data[0]
-      ? `https:${gameCover.data[0].url}`
-      : `/images/game-placeholder.png`;
-
-  gameCoverUrl = gameCoverUrl.replace("thumb", "720p");
-
   const displayCompanies = () => {
     const { developers, publishers } = separateDevAndPublishers(
       buildCompanyList()
@@ -257,6 +248,36 @@ export default function GameInfoView({
         <div className="mt-2">{displayCompanyListItems(publishers, false)}</div>
       </div>
     );
+  };
+
+  let gameCoverUrl: string =
+    gameCover.data && gameCover.data[0]
+      ? `https:${gameCover.data[0].url}`
+      : `/images/game-placeholder.png`;
+
+  gameCoverUrl = gameCoverUrl.replace("thumb", "720p");
+
+  const dateConverter = (date: Date) => {
+    const months = [
+      "January",
+      "Februrary",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+
+    const year = date.getFullYear();
+    const month = months[date.getMonth()];
+    const day = date.getDate();
+
+    return `${day} ${month} ${year}`;
   };
 
   // TODO: Make the performance better
@@ -280,17 +301,17 @@ export default function GameInfoView({
               alt="Cover art for the selected game"
               width={400}
               height={200}
-              className="rounded-lg"
+              className="rounded-lg basis-1/6"
               placeholder="empty"
             />
-            <div className="flex flex-col justify-center py-10 text-center rounded-lg bg-slate-950">
+            <div className="flex flex-col basis-1/3 justify-center py-10 text-center rounded-lg bg-slate-950">
               <h2 className="text pb-2 text-3xl font-extrabold tracking-tight first:mt-0 px-5">
                 {game ? game.name : ""}
               </h2>
               <div className="flex flex-row items-center justify-center mt-4">
                 <div className="text text-xl">Initial Release Date:</div>
                 <div className="text text-2xl font-semibold tracking-tight ml-1">
-                  {releaseDate.toLocaleDateString()}
+                  {releaseDate ? dateConverter(releaseDate) : "Not specified"}
                 </div>
               </div>
               <div className="flex flex-row justify-center mt-4">
