@@ -46,7 +46,7 @@ export default function HomeView(): React.ReactElement {
 
   const welcomeMsg = session?.user
     ? "Welcome, " + session.user.firstName + "!"
-    : "SS Playscore Pal";
+    : "Playscore Pal";
 
   const args: ProviderFnArgs = {
     fields: ["name", "summary"],

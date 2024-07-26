@@ -224,7 +224,7 @@ export default function GameInfoView({
     const platformNames = platformNamesList?.data as Platform[];
     return (
       <div className="block mt-4">
-        <div className="text-xl">Platforms:</div>
+        <div className="text-xl">Platform(s):</div>
         {platformNames?.map((platform: Platform) => (
           <div
             className="text text-xl whitespace-nowrap font-bold"
@@ -310,18 +310,18 @@ export default function GameInfoView({
               </h2>
               <div className="flex flex-row items-center justify-center mt-4">
                 <div className="text text-xl">Initial Release Date:</div>
-                <div className="text text-2xl font-semibold tracking-tight ml-1">
+                <div className="text text-xl font-semibold tracking-tight ml-1">
                   {releaseDate ? dateConverter(releaseDate) : "Not specified"}
                 </div>
               </div>
               <div className="flex flex-row justify-center mt-4">
                 <div className="text text-xl">
-                  {genres.data ? "Genres: " : ""}
+                  {genres.data ? "Genre(s): " : ""}
                 </div>
                 <div className="text text-xl font-semibold tracking-tight ml-1">
                   {genres.data
                     ? genres.data.map((genre: Genre) => genre.name).join(", ")
-                    : "Genres not specified"}
+                    : "Not specified"}
                 </div>
               </div>
               <div className="flex flex-row items-center justify-center">
