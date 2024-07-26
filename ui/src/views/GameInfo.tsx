@@ -199,13 +199,13 @@ export default function GameInfoView({
   ) => {
     const companyType = isDeveloper ? "Developer(s)" : "Publisher(s)";
     return (
-      <div className="block mt-4">
-        <div className="text-xl">
+      <div className="text block mt-4">
+        <div className="text-xl inline">
           {list.length > 0 ? `${companyType}: ` : ""}
         </div>
         {list.map((company: Partial<Company>, i: number) => (
           <div
-            className="text-blue-500 text-xl whitespace-nowrap"
+            className="text-blue-500 text-xl whitespace-nowrap inline"
             key={company.id}
           >
             <Link
@@ -214,6 +214,7 @@ export default function GameInfoView({
             >
               {company.name}
             </Link>
+            {i !== list.length - 1 ? ", " : ""}
           </div>
         ))}
       </div>
@@ -223,14 +224,12 @@ export default function GameInfoView({
   const displayGamePlatforms = () => {
     const platformNames = platformNamesList?.data as Platform[];
     return (
-      <div className="block mt-4">
-        <div className="text-xl">Platform(s):</div>
-        {platformNames?.map((platform: Platform) => (
-          <div
-            className="text text-xl whitespace-nowrap font-bold"
-            key={platform.id}
-          >
+      <div className=" text block mt-4">
+        <div className="text-xl inline">Platform(s): </div>
+        {platformNames?.map((platform: Platform, i: number) => (
+          <div className="text text-xl font-bold inline" key={platform.id}>
             {platform.name}
+            {i !== platformNames.length - 1 ? ", " : ""}
           </div>
         ))}
       </div>
@@ -243,9 +242,9 @@ export default function GameInfoView({
     );
 
     return (
-      <div className="flex flex-col basis-5">
-        <div className="mt-2">{displayCompanyListItems(developers, true)}</div>
-        <div className="mt-2">{displayCompanyListItems(publishers, false)}</div>
+      <div className="flex flex-col">
+        {displayCompanyListItems(developers, true)}
+        {displayCompanyListItems(publishers, false)}
       </div>
     );
   };
@@ -295,17 +294,17 @@ export default function GameInfoView({
             Getting your game details...
           </div>
         ) : (
-          <div className="flex flex-row text justify-center">
+          <div className="flex justify-center">
             <Image
               src={gameCoverUrl}
               alt="Cover art for the selected game"
-              width={400}
+              width={300}
               height={200}
-              className="rounded-lg basis-1/6"
+              className="rounded-xl flex-grow-0 flex-shrink-0"
               placeholder="empty"
             />
-            <div className="flex flex-col basis-1/3 justify-center py-10 text-center rounded-lg bg-slate-950">
-              <h2 className="text pb-2 text-3xl font-extrabold tracking-tight first:mt-0 px-5">
+            <div className="flex flex-col justify-center px-10 py-10 text-center rounded-xl bg-slate-950">
+              <h2 className="text pb-2 text-4xl font-extrabold tracking-tight first:mt-0 px-5">
                 {game ? game.name : ""}
               </h2>
               <div className="flex flex-row items-center justify-center mt-4">
