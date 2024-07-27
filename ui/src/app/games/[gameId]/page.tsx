@@ -3,6 +3,7 @@ import {
   fetchGames,
   fetchGenresById,
   buildQuery,
+  fetchArtworks,
 } from "@/providers/IGDB/IgdbProvider";
 import GameInfoView from "@/views/GameInfo";
 import {
@@ -109,6 +110,18 @@ export default async function GameInfo({
       }),
   });
 
+  const artQFields = [`image_id`, `height`, `width`, `url`, `game`];
+  const artQFilter = [`game = ${gameId}`];
+
+  await queryClient.prefetchQuery({
+    queryKey: ["fetchArtworks", gameId],
+    queryFn: () =>
+      fetchArtworks({
+        fields: artQFields,
+        filters: artQFilter,
+      }),
+  });
+
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <GameInfoView
@@ -124,6 +137,8 @@ export default async function GameInfo({
         coverQFilter={coverQFilter}
         platformQFields={platformQFields}
         platformQFilter={platformQFilter}
+        artQFields={artQFields}
+        artQFilter={artQFilter}
       />
     </HydrationBoundary>
   );

@@ -2,6 +2,7 @@
 
 import NavBar from "@/components/NavBar";
 import {
+  fetchArtworks,
   fetchCompanies,
   fetchCovers,
   fetchGames,
@@ -28,6 +29,8 @@ interface IGameInfoProps {
   coverQFilter: string[];
   platformQFields: string[];
   platformQFilter: string[];
+  artQFields: string[];
+  artQFilter: string[];
 }
 
 type Genre = {
@@ -63,6 +66,8 @@ export default function GameInfoView({
   coverQFilter,
   platformQFields,
   platformQFilter,
+  artQFields,
+  artQFilter,
 }: IGameInfoProps): React.ReactElement {
   const { data: session } = useSession() as { data: CustomSession | null };
   const { data: gameData, isLoading: isGameLoading } = useQuery({
@@ -79,8 +84,6 @@ export default function GameInfoView({
   const releaseDate = new Date(game?.first_release_date * 1000);
 
   const gameSummary = game?.summary;
-
-  console.log("game: ", game);
 
   const gameGenres = game?.genres ?? [];
 
@@ -130,6 +133,14 @@ export default function GameInfoView({
           }),
         enabled: platforms.length > 0,
       },
+      {
+        queryKey: ["fetchArtworks", gameId],
+        queryFn: () =>
+          fetchArtworks({
+            fields: artQFields,
+            filters: artQFilter,
+          }),
+      },
     ],
   });
 
@@ -142,6 +153,7 @@ export default function GameInfoView({
     companyNames,
     gameCover,
     platformNamesList,
+    artworksList,
   ] = otherResults.map((result) => result);
 
   const getCompanyDetails = (companyId: number) => {
@@ -256,6 +268,11 @@ export default function GameInfoView({
 
   gameCoverUrl = gameCoverUrl.replace("thumb", "720p");
 
+  let artworkUrl: string =
+    artworksList.data && artworksList.data[0]
+      ? `https:${artworksList.data[0]}`
+      : "";
+
   const dateConverter = (date: Date) => {
     const months = [
       "January",
@@ -303,7 +320,7 @@ export default function GameInfoView({
               className="rounded-xl flex-grow-0 flex-shrink-0"
               placeholder="empty"
             />
-            <div className="flex flex-col justify-center px-10 py-10 text-center rounded-xl bg-slate-950">
+            <div className="flex flex-col flex-grow-0 justify-center px-10 py-10 text-center">
               <h2 className="text pb-2 text-4xl font-extrabold tracking-tight first:mt-0 px-5">
                 {game ? game.name : ""}
               </h2>

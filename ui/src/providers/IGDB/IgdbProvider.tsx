@@ -92,6 +92,21 @@ export const fetchCovers = async ({
   return data;
 };
 
+export const fetchArtworks = async ({
+  fields,
+  limit,
+  search,
+  filters,
+}: ProviderFnArgs) => {
+  const query = buildQuery({ fields, limit, search, filters });
+
+  const response = await fetchData("artworks", query);
+
+  const data = await response.json();
+
+  return data;
+};
+
 export const fetchReleaseDates = async ({
   fields,
   limit,
