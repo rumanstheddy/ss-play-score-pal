@@ -15,6 +15,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { CustomSession } from "./Home";
 import { useSession } from "next-auth/react";
+import { Button } from "@/components/ui/button";
+import { Play } from "lucide-react";
 
 interface IGameInfoProps {
   gameId: string;
@@ -206,18 +208,26 @@ export default function GameInfoView({
   };
 
   const displayCompanyListItems = (
-    list: Partial<Company>[],
+    // list: Partial<Company>[],
     isDeveloper: boolean
   ) => {
-    const companyType = isDeveloper ? "Developer(s)" : "Publisher(s)";
+    const { developers, publishers } = separateDevAndPublishers(
+      buildCompanyList()
+    );
+    // const companyType = isDeveloper ? "Developer(s)" : "Publisher(s)";
+    // const list = [...(isDeveloper ? developers : publishers)];
+    // console.log(developers);
+    const list: Partial<Company>[] = [];
+    isDeveloper ? list.push(developers[0]) : list.push(...publishers);
+
     return (
-      <div className="text block mt-4">
-        <div className="text-xl inline">
+      <>
+        {/* <div className="text-xl inline">
           {list.length > 0 ? `${companyType}: ` : ""}
-        </div>
+        </div> */}
         {list.map((company: Partial<Company>, i: number) => (
           <div
-            className="text-blue-500 text-xl whitespace-nowrap inline"
+            className="text-blue-500 text-xl tracking-tight whitespace-nowrap inline mt-2"
             key={company.id}
           >
             <Link
@@ -229,7 +239,7 @@ export default function GameInfoView({
             {i !== list.length - 1 ? ", " : ""}
           </div>
         ))}
-      </div>
+      </>
     );
   };
 
@@ -248,18 +258,19 @@ export default function GameInfoView({
     );
   };
 
-  const displayCompanies = () => {
-    const { developers, publishers } = separateDevAndPublishers(
-      buildCompanyList()
-    );
+  // const displayCompanies = (isDeveloper: boolean) => {
+  //   const { developers, publishers } = separateDevAndPublishers(
+  //     buildCompanyList()
+  //   );
 
-    return (
-      <div className="flex flex-col">
-        {displayCompanyListItems(developers, true)}
-        {displayCompanyListItems(publishers, false)}
-      </div>
-    );
-  };
+  //   return (
+  //     <>
+  //       {isDeveloper
+  //         ? displayCompanyListItems(developers, true)
+  //         : displayCompanyListItems(publishers, false)}
+  //     </>
+  //   );
+  // };
 
   let gameCoverUrl: string =
     gameCover.data && gameCover.data[0]
@@ -297,21 +308,22 @@ export default function GameInfoView({
   };
 
   // TODO: Make the performance better
-  // TODO: Make the layout different (maybe set a standard size for the image and cater more space for the info on the right?)
 
   return (
-    <div className="flex flex-col justify-center min-h-screen">
-      <>
-        <NavBar
-          name={session?.user ? session.user.firstName : ""}
-          isLoggedIn={!!(session && session.user)}
-        />
-        {isAnyLoading ? (
+    <>
+      <NavBar
+        name={session?.user ? session.user.firstName : ""}
+        isLoggedIn={!!(session && session.user)}
+      />
+      {isAnyLoading ? (
+        <div className="flex flex-col justify-center min-h-screen">
           <div className="text text-center text-lg">
             Getting your game details...
           </div>
-        ) : (
-          <div className="flex justify-center">
+        </div>
+      ) : (
+        <div className="flex flex-col justify-start min-h-screen mt-24">
+          {/* <div className="flex justify-center">
             <Image
               src={gameCoverUrl}
               alt="Cover art for the selected game"
@@ -347,9 +359,29 @@ export default function GameInfoView({
                 {displayCompanies()}
               </div>
             </div>
+          </div> */}
+          {/* //** A different layout */}
+          <div className="flex flex-row justify-between items-center mx-24">
+            <div className="flex flex-col">
+              <h2 className="text pb-2 text-3xl font-extrabold tracking-tight first:mt-0">
+                {game ? game.name : ""}
+              </h2>
+              <div className="text text-xl font-semibold tracking-tight mt-2">
+                {releaseDate ? dateConverter(releaseDate) : "Not specified"}
+              </div>
+              {displayCompanyListItems(true)}
+            </div>
+            <Button
+              className="rounded-lg bg-white text-center text-black text-md tracking-tight hover:bg-slate-400"
+              type="button"
+              onClick={() => console.log("Clicked!")}
+            >
+              <Play className="h-4 w-4 mr-2" />
+              Watch Trailer
+            </Button>
           </div>
-        )}
-      </>
-    </div>
+        </div>
+      )}
+    </>
   );
 }
