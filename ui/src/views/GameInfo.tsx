@@ -227,7 +227,7 @@ export default function GameInfoView({
         </div> */}
         {list.map((company: Partial<Company>, i: number) => (
           <div
-            className="text-blue-500 text-xl tracking-tight whitespace-nowrap inline mt-2"
+            className="text-blue-500 text-xl tracking-tight whitespace-nowrap inline"
             key={company.id}
           >
             <Link
@@ -246,10 +246,10 @@ export default function GameInfoView({
   const displayGamePlatforms = () => {
     const platformNames = platformNamesList?.data as Platform[];
     return (
-      <div className=" text block mt-4">
-        <div className="text-xl inline">Platform(s): </div>
+      <div className=" text block">
+        <div className="text-xl inline font-bold">Platform(s): </div>
         {platformNames?.map((platform: Platform, i: number) => (
-          <div className="text text-xl font-bold inline" key={platform.id}>
+          <div className="text text-xl inline" key={platform.id}>
             {platform.name}
             {i !== platformNames.length - 1 ? ", " : ""}
           </div>
@@ -322,7 +322,7 @@ export default function GameInfoView({
           </div>
         </div>
       ) : (
-        <div className="flex flex-col justify-start min-h-screen mt-24">
+        <div className="flex flex-col justify-start min-h-screen mt-32">
           {/* <div className="flex justify-center">
             <Image
               src={gameCoverUrl}
@@ -361,7 +361,8 @@ export default function GameInfoView({
             </div>
           </div> */}
           {/* //** A different layout */}
-          <div className="flex flex-row justify-between items-center mx-24">
+
+          <div className="flex flex-row justify-between items-center mx-20">
             <div className="flex flex-col">
               <h2 className="text pb-2 text-3xl font-extrabold tracking-tight first:mt-0">
                 {game ? game.name : ""}
@@ -369,7 +370,7 @@ export default function GameInfoView({
               <div className="text text-xl font-semibold tracking-tight mt-2">
                 {releaseDate ? dateConverter(releaseDate) : "Not specified"}
               </div>
-              {displayCompanyListItems(true)}
+              <span className="mt-2">{displayCompanyListItems(true)}</span>
             </div>
             <Button
               className="rounded-lg bg-white text-center text-black text-md tracking-tight hover:bg-slate-400"
@@ -379,6 +380,50 @@ export default function GameInfoView({
               <Play className="h-4 w-4 mr-2" />
               Watch Trailer
             </Button>
+          </div>
+          <div className="flex flex-row justify-around mx-20 mt-16">
+            <Image
+              src={gameCoverUrl}
+              alt="Cover art for the selected game"
+              width={250}
+              height={1}
+              className="rounded-xl self-start"
+              placeholder="empty"
+            />
+            <div className="flex flex-col mx-16">
+              <div className="flex flex-row">
+                <span className="text text-xl font-bold">
+                  {genres.data ? "Genre(s): " : ""}
+                </span>
+                <div className="text text-xl tracking-tight ml-1">
+                  {genres.data
+                    ? genres.data.map((genre: Genre) => genre.name).join(", ")
+                    : "Not specified"}
+                </div>
+              </div>
+              <div className="flex flex-row mt-2">{displayGamePlatforms()}</div>
+              <div className="flex flex-row items-center mt-2">
+                <span className="text text-xl mr-1 font-bold">
+                  Publisher(s):
+                </span>
+                {displayCompanyListItems(false)}
+              </div>
+              <div className="text text-xl mt-2">
+                {/* <span className=" block font-bold mb-1">Summary:</span> */}
+                <span className="whitespace-pre-line">
+                  {/* {console.log(gameSummary)} */}
+                  {game && gameSummary ? gameSummary : ""}
+                </span>
+              </div>
+            </div>
+            <div className="flex flex-col">
+              <div className="text flex flex-col bg-green-500 rounded-full w-60 h-60 items-center justify-center tracking-tight">
+                <span className="text-xl mt-2">Critic Playscore:</span>
+                <span className="text-4xl">8.9</span>
+                <span className="text-xl mt-2">User Playscore:</span>
+                <span className="text-4xl">9.6</span>
+              </div>
+            </div>
           </div>
         </div>
       )}
