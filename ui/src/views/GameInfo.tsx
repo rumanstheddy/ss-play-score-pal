@@ -226,17 +226,14 @@ export default function GameInfoView({
           {list.length > 0 ? `${companyType}: ` : ""}
         </div> */}
         {list.map((company: Partial<Company>, i: number) => (
-          <div
-            className="text-blue-500 text-xl tracking-tight whitespace-nowrap inline"
-            key={company.id}
-          >
+          <div className="text-blue-500 text-xl inline" key={company.id}>
             <Link
-              className="hover:text-blue-700 hover:underline"
+              className="hover:text-blue-700 hover:underline whitespace-pre-wrap"
               href={`${company.url}`}
             >
               {company.name}
             </Link>
-            {i !== list.length - 1 ? ", " : ""}
+            {i !== list.length - 1 ? "," + " " : ""}
           </div>
         ))}
       </>
@@ -370,10 +367,13 @@ export default function GameInfoView({
               <div className="text text-xl font-semibold tracking-tight mt-2">
                 {releaseDate ? dateConverter(releaseDate) : "Not specified"}
               </div>
-              <span className="mt-2">{displayCompanyListItems(true)}</span>
+              <div className="flex flex-col mt-2">
+                <span className="mt-2">{displayCompanyListItems(true)}</span>
+                <span className="mt-2">{displayCompanyListItems(false)}</span>
+              </div>
             </div>
             <Button
-              className="rounded-lg bg-white text-center text-black text-md tracking-tight hover:bg-slate-400"
+              className="rounded-lg bg-white text-center text-black text-md mr-6 tracking-tight hover:bg-slate-400"
               type="button"
               onClick={() => console.log("Clicked!")}
             >
@@ -381,7 +381,7 @@ export default function GameInfoView({
               Watch Trailer
             </Button>
           </div>
-          <div className="flex flex-row justify-around mx-20 mt-16">
+          <div className="flex flex-row justify-around mt-16 mx-16">
             <Image
               src={gameCoverUrl}
               alt="Cover art for the selected game"
@@ -391,37 +391,41 @@ export default function GameInfoView({
               placeholder="empty"
             />
             <div className="flex flex-col mx-16">
-              <div className="flex flex-row">
-                <span className="text text-xl font-bold">
-                  {genres.data ? "Genre(s): " : ""}
-                </span>
-                <div className="text text-xl tracking-tight ml-1">
+              <span className="text text-xl font-bold inline">
+                {genres.data ? "Genre(s): " : ""}
+                <span className="text text-xl tracking-tight font-normal">
                   {genres.data
                     ? genres.data.map((genre: Genre) => genre.name).join(", ")
                     : "Not specified"}
-                </div>
-              </div>
+                </span>
+              </span>
               <div className="flex flex-row mt-2">{displayGamePlatforms()}</div>
-              <div className="flex flex-row items-center mt-2">
+              {/* <div className="flex flex-row items-center mt-2">
                 <span className="text text-xl mr-1 font-bold">
                   Publisher(s):
                 </span>
                 {displayCompanyListItems(false)}
-              </div>
+              </div> */}
               <div className="text text-xl mt-2">
-                {/* <span className=" block font-bold mb-1">Summary:</span> */}
-                <span className="whitespace-pre-line">
-                  {/* {console.log(gameSummary)} */}
-                  {game && gameSummary ? gameSummary : ""}
+                <span className=" block font-bold">
+                  Summary:{" "}
+                  <span className="whitespace-pre-line font-normal">
+                    {/* {console.log(gameSummary)} */}
+                    {game && gameSummary ? gameSummary : ""}
+                  </span>
                 </span>
               </div>
             </div>
             <div className="flex flex-col">
               <div className="text flex flex-col bg-green-500 rounded-full w-60 h-60 items-center justify-center tracking-tight">
-                <span className="text-xl mt-2">Critic Playscore:</span>
-                <span className="text-4xl">8.9</span>
-                <span className="text-xl mt-2">User Playscore:</span>
-                <span className="text-4xl">9.6</span>
+                <span className="text-xl mt-2 tracking-tight">
+                  Critic Playscore:
+                </span>
+                <span className="text-4xl font-extrabold mt-1">8.9</span>
+                <span className="text-xl mt-2 tracking-tight">
+                  User Playscore:
+                </span>
+                <span className="text-4xl font-extrabold mt-1">9.6</span>
               </div>
             </div>
           </div>
