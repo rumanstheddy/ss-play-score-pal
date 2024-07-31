@@ -18,7 +18,7 @@ export default function NavBar({
       <div className="flex flex-col justify-center h-16">
         <div className="flex flex-row text-lg items-center">
           <span className="text basis-1/6 text-center">{name}</span>
-          <span className="basis-4/6 text-center text">
+          <span className="basis-4/6 text-center text font-bold tracking-tight">
             <Link href="/" className="hover:underline">
               Home
             </Link>
