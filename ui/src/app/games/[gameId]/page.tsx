@@ -27,6 +27,7 @@ export default async function GameInfo({
   const gameQFields = [
     "id",
     "name",
+    "category",
     "summary",
     "screenshots",
     "cover",

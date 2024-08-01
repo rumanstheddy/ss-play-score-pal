@@ -304,6 +304,30 @@ export default function GameInfoView({
     return `${day} ${month} ${year}`;
   };
 
+  const getCategoryName = (): string => {
+    const categoryNames = [
+      "main_game",
+      "dlc_addon",
+      "expansion",
+      "bundle",
+      "standalone_expansion",
+      "mod",
+      "episode",
+      "season",
+      "remake",
+      "remaster",
+      "expanded_game",
+      "port",
+      "fork",
+      "pack",
+      "update",
+    ];
+
+    const category = game?.category;
+
+    return categoryNames[category];
+  };
+
   // TODO: Make the performance better
 
   return (
@@ -370,6 +394,7 @@ export default function GameInfoView({
               <div className="flex flex-col mt-2">
                 <span className="mt-2">{displayCompanyListItems(true)}</span>
                 <span className="mt-2">{displayCompanyListItems(false)}</span>
+                <span className="text mt-2">{getCategoryName()}</span>
               </div>
             </div>
             <Button
@@ -381,16 +406,16 @@ export default function GameInfoView({
               Watch Trailer
             </Button>
           </div>
-          <div className="flex flex-row justify-around mt-16 mx-16">
+          <div className="flex flex-row justify-between mt-16 mx-16 items-center">
             <Image
               src={gameCoverUrl}
               alt="Cover art for the selected game"
               width={250}
               height={1}
-              className="rounded-xl self-start"
+              className="rounded-xl"
               placeholder="empty"
             />
-            <div className="flex flex-col mx-16">
+            {/* <div className="flex flex-col mx-16">
               <span className="text text-xl font-bold inline">
                 {genres.data ? "Genre(s): " : ""}
                 <span className="text text-xl tracking-tight font-normal">
@@ -400,22 +425,21 @@ export default function GameInfoView({
                 </span>
               </span>
               <div className="flex flex-row mt-2">{displayGamePlatforms()}</div>
-              {/* <div className="flex flex-row items-center mt-2">
+              <div className="flex flex-row items-center mt-2">
                 <span className="text text-xl mr-1 font-bold">
                   Publisher(s):
                 </span>
                 {displayCompanyListItems(false)}
-              </div> */}
+              </div>
               <div className="text text-xl mt-2">
                 <span className=" block font-bold">
                   Summary:{" "}
                   <span className="whitespace-pre-line font-normal">
-                    {/* {console.log(gameSummary)} */}
                     {game && gameSummary ? gameSummary : ""}
                   </span>
                 </span>
               </div>
-            </div>
+            </div> */}
             <div className="flex flex-col">
               <div className="text flex flex-col bg-green-500 rounded-full w-60 h-60 items-center justify-center tracking-tight">
                 <span className="text-xl mt-2 tracking-tight">
