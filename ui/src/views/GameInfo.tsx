@@ -16,6 +16,7 @@ import Link from "next/link";
 import { CustomSession } from "./Home";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Play } from "lucide-react";
 
 interface IGameInfoProps {
@@ -221,14 +222,14 @@ export default function GameInfoView({
     isDeveloper ? list.push(developers[0]) : list.push(...publishers);
 
     return (
-      <>
+      <p className="block font-semibold">
         {/* <div className="text-xl inline">
           {list.length > 0 ? `${companyType}: ` : ""}
         </div> */}
         {list.map((company: Partial<Company>, i: number) => (
-          <div className="text-blue-500 text-xl inline" key={company.id}>
+          <div className="text text-xl inline" key={company.id}>
             <Link
-              className="hover:text-blue-700 hover:underline whitespace-pre-wrap"
+              className="hover:text-blue-500 tracking-tight hover:underline whitespace-pre-wrap"
               href={`${company.url}`}
             >
               {company.name}
@@ -236,21 +237,23 @@ export default function GameInfoView({
             {i !== list.length - 1 ? "," + " " : ""}
           </div>
         ))}
-      </>
+      </p>
     );
   };
 
   const displayGamePlatforms = () => {
     const platformNames = platformNamesList?.data as Platform[];
     return (
-      <div className=" text block">
-        <div className="text-xl inline font-bold">Platform(s): </div>
-        {platformNames?.map((platform: Platform, i: number) => (
-          <div className="text text-xl inline" key={platform.id}>
-            {platform.name}
-            {i !== platformNames.length - 1 ? ", " : ""}
-          </div>
-        ))}
+      <div className=" text-gray-500 block">
+        <p className="text-xl inline font-semibold">Platforms</p>
+        <div className="block mt-1">
+          {platformNames?.map((platform: Platform, i: number) => (
+            <span className="text text-xl inline" key={platform.id}>
+              {platform.name}
+              {i !== platformNames.length - 1 ? ", " : ""}
+            </span>
+          ))}
+        </div>
       </div>
     );
   };
@@ -306,21 +309,21 @@ export default function GameInfoView({
 
   const getCategoryName = (): string => {
     const categoryNames = [
-      "main_game",
-      "dlc_addon",
-      "expansion",
-      "bundle",
-      "standalone_expansion",
-      "mod",
-      "episode",
-      "season",
-      "remake",
-      "remaster",
-      "expanded_game",
-      "port",
-      "fork",
-      "pack",
-      "update",
+      "Main Game",
+      "DLC",
+      "Expansion",
+      "Bundle",
+      "Standalone Expansion",
+      "Mod",
+      "Episode",
+      "Season",
+      "Remake",
+      "Remaster",
+      "Expanded Game",
+      "Port",
+      "Fork",
+      "Pack",
+      "Update",
     ];
 
     const category = game?.category;
@@ -393,9 +396,12 @@ export default function GameInfoView({
               </div>
               <div className="flex flex-col mt-2">
                 <span className="mt-2">{displayCompanyListItems(true)}</span>
-                <span className="mt-2">{displayCompanyListItems(false)}</span>
-                <span className="text mt-2">{getCategoryName()}</span>
+                {/* <span className="mt-2">{displayCompanyListItems(false)}</span> */}
               </div>
+              <Badge className="mt-2">
+                {/* //TODO: Check why the badge is expanded */}
+                <span className="text">{getCategoryName()}</span>
+              </Badge>
             </div>
             <Button
               className="rounded-lg bg-white text-center text-black text-md mr-6 tracking-tight hover:bg-slate-400"
@@ -406,40 +412,44 @@ export default function GameInfoView({
               Watch Trailer
             </Button>
           </div>
-          <div className="flex flex-row justify-between mt-16 mx-16 items-center">
+          <div className="flex flex-row justify-between mt-16 mx-16">
             <Image
               src={gameCoverUrl}
               alt="Cover art for the selected game"
               width={250}
               height={1}
-              className="rounded-xl"
+              className="rounded-xl self-start"
               placeholder="empty"
             />
-            {/* <div className="flex flex-col mx-16">
-              <span className="text text-xl font-bold inline">
-                {genres.data ? "Genre(s): " : ""}
-                <span className="text text-xl tracking-tight font-normal">
+            <div className="flex flex-col mx-16">
+              <div className="block">
+                <p className="text-gray-500 text-xl font-semibold mb-1">
+                  {genres.data ? "Genres " : ""}
+                </p>
+                <p className="text text-xl font-normal block">
                   {genres.data
                     ? genres.data.map((genre: Genre) => genre.name).join(", ")
                     : "Not specified"}
-                </span>
-              </span>
-              <div className="flex flex-row mt-2">{displayGamePlatforms()}</div>
-              <div className="flex flex-row items-center mt-2">
-                <span className="text text-xl mr-1 font-bold">
-                  Publisher(s):
-                </span>
+                </p>
+              </div>
+              <div className="flex flex-row mt-4">{displayGamePlatforms()}</div>
+              {/* <div className="flex flex-row mt-2"> */}
+              <div className="text-gray-500 block mt-4">
+                <p className="text-gray-500 text-xl font-semibold block mb-1">
+                  Publishers
+                </p>
                 {displayCompanyListItems(false)}
               </div>
-              <div className="text text-xl mt-2">
-                <span className=" block font-bold">
-                  Summary:{" "}
-                  <span className="whitespace-pre-line font-normal">
+              {/* </div> */}
+              {/* <div className="text-xl mt-2">
+                <span className="text-gray-500 block font-bold">
+                  About:{" "}
+                  <span className="text whitespace-pre-line font-normal">
                     {game && gameSummary ? gameSummary : ""}
                   </span>
                 </span>
-              </div>
-            </div> */}
+              </div> */}
+            </div>
             <div className="flex flex-col">
               <div className="text flex flex-col bg-green-500 rounded-full w-60 h-60 items-center justify-center tracking-tight">
                 <span className="text-xl mt-2 tracking-tight">
