@@ -222,21 +222,27 @@ export default function GameInfoView({
     isDeveloper ? list.push(developers[0]) : list.push(...publishers);
 
     return (
-      <p className="block font-semibold">
+      <p className="block">
         {/* <div className="text-xl inline">
           {list.length > 0 ? `${companyType}: ` : ""}
         </div> */}
-        {list.map((company: Partial<Company>, i: number) => (
-          <div className="text text-xl inline" key={company.id}>
-            <Link
-              className="hover:text-blue-500 tracking-tight hover:underline whitespace-pre-wrap"
-              href={`${company.url}`}
-            >
-              {company.name}
-            </Link>
-            {i !== list.length - 1 ? "," + " " : ""}
-          </div>
-        ))}
+        {list.length > 0 ? (
+          list.map((company: Partial<Company>, i: number) => (
+            <div className="text text-xl inline font-semibold" key={company.id}>
+              <Link
+                className="hover:text-blue-500 tracking-tight hover:underline whitespace-pre-wrap"
+                href={`${company.url}`}
+              >
+                {company.name}
+              </Link>
+              {i !== list.length - 1 ? "," + " " : ""}
+            </div>
+          ))
+        ) : (
+          <span className="text tracking-tight text-xl">
+            Information unavailable
+          </span>
+        )}
       </p>
     );
   };
@@ -391,17 +397,20 @@ export default function GameInfoView({
               <h2 className="text pb-2 text-3xl font-extrabold tracking-tight first:mt-0">
                 {game ? game.name : ""}
               </h2>
-              <div className="text text-xl font-semibold tracking-tight mt-2">
+              <div className="text text-xl font-semibold tracking-tight mt-4">
                 {releaseDate ? dateConverter(releaseDate) : "Not specified"}
               </div>
-              <div className="flex flex-col mt-2">
-                <span className="mt-2">{displayCompanyListItems(true)}</span>
+              <div className="flex flex-col mt-4">
+                {displayCompanyListItems(true)}
                 {/* <span className="mt-2">{displayCompanyListItems(false)}</span> */}
               </div>
-              <Badge className="mt-2">
-                {/* //TODO: Check why the badge is expanded */}
-                <span className="text">{getCategoryName()}</span>
-              </Badge>
+              <div className="mt-4 flex-grow-0">
+                <Badge>
+                  <span className="text text-base px-1 py-1">
+                    {getCategoryName()}
+                  </span>
+                </Badge>
+              </div>
             </div>
             <Button
               className="rounded-lg bg-white text-center text-black text-md mr-6 tracking-tight hover:bg-slate-400"
@@ -421,7 +430,7 @@ export default function GameInfoView({
               className="rounded-xl self-start"
               placeholder="empty"
             />
-            <div className="flex flex-col mx-16">
+            <div className="flex flex-col mx-16 justify-center">
               <div className="block">
                 <p className="text-gray-500 text-xl font-semibold mb-1">
                   {genres.data ? "Genres " : ""}
@@ -450,7 +459,7 @@ export default function GameInfoView({
                 </span>
               </div> */}
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col justify-center">
               <div className="text flex flex-col bg-green-500 rounded-full w-60 h-60 items-center justify-center tracking-tight">
                 <span className="text-xl mt-2 tracking-tight">
                   Critic Playscore:
