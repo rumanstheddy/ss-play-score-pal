@@ -181,3 +181,18 @@ export const fetchPlatforms = async ({
 
   return data;
 };
+
+export const fetchVideos = async ({
+  fields,
+  limit,
+  search,
+  filters,
+}: ProviderFnArgs) => {
+  const query = buildQuery({ fields, limit, search, filters });
+
+  const response = await fetchData("game_videos", query);
+
+  const data = await response.json();
+
+  return data;
+};

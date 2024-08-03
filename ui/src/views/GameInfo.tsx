@@ -9,6 +9,7 @@ import {
   fetchGenresById,
   fetchInvolvedCompanies,
   fetchPlatforms,
+  fetchVideos,
 } from "@/providers/IGDB/IgdbProvider";
 import { useQueries, useQuery } from "@tanstack/react-query";
 import Image from "next/image";
@@ -18,6 +19,14 @@ import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Play } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 interface IGameInfoProps {
   gameId: string;
@@ -32,8 +41,6 @@ interface IGameInfoProps {
   coverQFilter: string[];
   platformQFields: string[];
   platformQFilter: string[];
-  artQFields: string[];
-  artQFilter: string[];
 }
 
 type Genre = {
@@ -69,8 +76,6 @@ export default function GameInfoView({
   coverQFilter,
   platformQFields,
   platformQFilter,
-  artQFields,
-  artQFilter,
 }: IGameInfoProps): React.ReactElement {
   const { data: session } = useSession() as { data: CustomSession | null };
   const { data: gameData, isLoading: isGameLoading } = useQuery({
@@ -93,6 +98,12 @@ export default function GameInfoView({
   const platforms = game?.platforms ?? [];
 
   const gameCompanies = game?.involved_companies ?? [];
+
+  const artQFields = [`image_id`, `height`, `width`, `url`, `game`];
+  const artQFilter = [`game = ${gameId}`];
+
+  const videoQFields = [`game`, `name`, `video_id`];
+  // const videoQFilter = [`game = ${gameId}`];
 
   const otherResults = useQueries({
     queries: [
@@ -144,6 +155,14 @@ export default function GameInfoView({
             filters: artQFilter,
           }),
       },
+      {
+        queryKey: ["fetchVideos", gameId],
+        queryFn: () =>
+          fetchVideos({
+            fields: videoQFields,
+            filters: artQFilter,
+          }),
+      },
     ],
   });
 
@@ -157,6 +176,7 @@ export default function GameInfoView({
     gameCover,
     platformNamesList,
     artworksList,
+    videosList,
   ] = otherResults.map((result) => result);
 
   const getCompanyDetails = (companyId: number) => {
@@ -247,37 +267,6 @@ export default function GameInfoView({
     );
   };
 
-  const displayGamePlatforms = () => {
-    const platformNames = platformNamesList?.data as Platform[];
-    return (
-      <div className=" text-gray-500 block">
-        <p className="text-xl inline font-semibold">Platforms</p>
-        <div className="block mt-1">
-          {platformNames?.map((platform: Platform, i: number) => (
-            <span className="text text-xl inline" key={platform.id}>
-              {platform.name}
-              {i !== platformNames.length - 1 ? ", " : ""}
-            </span>
-          ))}
-        </div>
-      </div>
-    );
-  };
-
-  // const displayCompanies = (isDeveloper: boolean) => {
-  //   const { developers, publishers } = separateDevAndPublishers(
-  //     buildCompanyList()
-  //   );
-
-  //   return (
-  //     <>
-  //       {isDeveloper
-  //         ? displayCompanyListItems(developers, true)
-  //         : displayCompanyListItems(publishers, false)}
-  //     </>
-  //   );
-  // };
-
   let gameCoverUrl: string =
     gameCover.data && gameCover.data[0]
       ? `https:${gameCover.data[0].url}`
@@ -285,10 +274,15 @@ export default function GameInfoView({
 
   gameCoverUrl = gameCoverUrl.replace("thumb", "720p");
 
-  let artworkUrl: string =
-    artworksList.data && artworksList.data[0]
-      ? `https:${artworksList.data[0]}`
-      : "";
+  let artworkUrl: string = `https:${
+    artworksList.data && artworksList.data[0] ? artworksList.data[0] : ""
+  }`;
+
+  const trailerUrl: string = `https://www.youtube.com/embed/${
+    videosList.data && videosList.data[0] ? videosList.data[0].video_id : ""
+  }`;
+
+  console.log("trailerUrl", trailerUrl);
 
   const dateConverter = (date: Date) => {
     const months = [
@@ -336,6 +330,37 @@ export default function GameInfoView({
 
     return categoryNames[category];
   };
+
+  const displayGamePlatforms = () => {
+    const platformNames = platformNamesList?.data as Platform[];
+    return (
+      <div className=" text-gray-500 block">
+        <p className="text-xl inline font-semibold">Platforms</p>
+        <div className="block mt-1">
+          {platformNames?.map((platform: Platform, i: number) => (
+            <span className="text text-xl inline" key={platform.id}>
+              {platform.name}
+              {i !== platformNames.length - 1 ? ", " : ""}
+            </span>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  // const displayCompanies = (isDeveloper: boolean) => {
+  //   const { developers, publishers } = separateDevAndPublishers(
+  //     buildCompanyList()
+  //   );
+
+  //   return (
+  //     <>
+  //       {isDeveloper
+  //         ? displayCompanyListItems(developers, true)
+  //         : displayCompanyListItems(publishers, false)}
+  //     </>
+  //   );
+  // };
 
   // TODO: Make the performance better
 
@@ -405,21 +430,41 @@ export default function GameInfoView({
                 {/* <span className="mt-2">{displayCompanyListItems(false)}</span> */}
               </div>
               <div className="mt-4 flex-grow-0">
-                <Badge>
-                  <span className="text text-base px-1 py-1">
+                <Badge className="bg-white">
+                  <span className="text-black text-base px-1 py-1">
                     {getCategoryName()}
                   </span>
                 </Badge>
               </div>
             </div>
-            <Button
-              className="rounded-lg bg-white text-center text-black text-md mr-6 tracking-tight hover:bg-slate-400"
-              type="button"
-              onClick={() => console.log("Clicked!")}
-            >
-              <Play className="h-4 w-4 mr-2" />
-              Watch Trailer
-            </Button>
+
+            <Dialog>
+              <DialogTrigger>
+                <Button
+                  className="rounded-lg bg-white text-center text-black text-md mr-6 tracking-tight hover:bg-slate-400"
+                  type="button"
+                  onClick={() => console.log("Clicked!")}
+                >
+                  <Play className="h-4 w-4 mr-2" />
+                  Watch Trailer
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="bg-black text px-0 py-0 max-w-3xl">
+                {/* <DialogHeader>
+                  <DialogTitle>Are you absolutely sure?</DialogTitle>
+                  <DialogDescription>
+                    This action cannot be undone. This will permanently delete
+                    your account and remove your data from our servers.
+                  </DialogDescription>
+                </DialogHeader> */}
+                <div className="aspect-w-16 aspect-h-9">
+                  <iframe
+                    src={trailerUrl}
+                    className="w-full aspect-[16/9] rounded-xl"
+                  ></iframe>
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
           <div className="flex flex-row justify-between mt-16 mx-16">
             <Image
