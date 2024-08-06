@@ -19,14 +19,7 @@ import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Play } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 interface IGameInfoProps {
   gameId: string;
@@ -241,6 +234,8 @@ export default function GameInfoView({
     const list: Partial<Company>[] = [];
     isDeveloper ? list.push(developers[0]) : list.push(...publishers);
 
+    // TODO: Handle no company existing
+
     return (
       <p className="block">
         {/* <div className="text-xl inline">
@@ -248,7 +243,7 @@ export default function GameInfoView({
         </div> */}
         {list.length > 0 ? (
           list.map((company: Partial<Company>, i: number) => (
-            <div className="text text-xl inline font-semibold" key={company.id}>
+            <div className="text inline font-semibold" key={company.id}>
               <Link
                 className="hover:text-blue-500 tracking-tight hover:underline whitespace-pre-wrap"
                 href={`${company.url}`}
@@ -259,9 +254,7 @@ export default function GameInfoView({
             </div>
           ))
         ) : (
-          <span className="text tracking-tight text-xl">
-            Information unavailable
-          </span>
+          <span className="text tracking-tight">Information unavailable</span>
         )}
       </p>
     );
@@ -282,7 +275,7 @@ export default function GameInfoView({
     videosList.data && videosList.data[0] ? videosList.data[0].video_id : ""
   }`;
 
-  console.log("trailerUrl", trailerUrl);
+  // console.log("trailerUrl", trailerUrl);
 
   const dateConverter = (date: Date) => {
     const months = [
@@ -419,18 +412,18 @@ export default function GameInfoView({
 
           <div className="flex flex-row justify-between items-center mx-20">
             <div className="flex flex-col">
-              <h2 className="text pb-2 text-3xl font-extrabold tracking-tight first:mt-0">
+              <h2 className="text pb-2 text-6xl font-extrabold tracking-tight first:mt-0">
                 {game ? game.name : ""}
               </h2>
-              <div className="text text-xl font-semibold tracking-tight mt-4">
+              <div className="text text-2xl font-semibold tracking-tight mt-8">
                 {releaseDate ? dateConverter(releaseDate) : "Not specified"}
               </div>
-              <div className="flex flex-col mt-4">
+              <div className="flex flex-col text-2xl mt-6">
                 {displayCompanyListItems(true)}
                 {/* <span className="mt-2">{displayCompanyListItems(false)}</span> */}
               </div>
-              <div className="mt-4 flex-grow-0">
-                <Badge className="bg-white">
+              <div className="mt-6 flex-grow-0">
+                <Badge className="bg-white rounded-full">
                   <span className="text-black text-base px-1 py-1">
                     {getCategoryName()}
                   </span>
@@ -441,11 +434,11 @@ export default function GameInfoView({
             <Dialog>
               <DialogTrigger>
                 <Button
-                  className="rounded-lg bg-white text-center text-black text-md mr-6 tracking-tight hover:bg-slate-400"
+                  className="rounded-lg bg-white text-center text-black text-xl mr-6 tracking-tight hover:bg-slate-400"
                   type="button"
                   onClick={() => console.log("Clicked!")}
                 >
-                  <Play className="h-4 w-4 mr-2" />
+                  <Play className="h-6 w-6 mr-2" />
                   Watch Trailer
                 </Button>
               </DialogTrigger>
@@ -467,35 +460,81 @@ export default function GameInfoView({
             </Dialog>
           </div>
           <div className="flex flex-row justify-between mt-16 mx-16">
-            <Image
-              src={gameCoverUrl}
-              alt="Cover art for the selected game"
-              width={250}
-              height={1}
-              className="rounded-xl self-start"
-              placeholder="empty"
-            />
-            <div className="flex flex-col mx-16 justify-center">
-              <div className="block">
-                <p className="text-gray-500 text-xl font-semibold mb-1">
-                  {genres.data ? "Genres " : ""}
-                </p>
-                <p className="text text-xl font-normal block">
-                  {genres.data
-                    ? genres.data.map((genre: Genre) => genre.name).join(", ")
-                    : "Not specified"}
-                </p>
-              </div>
-              <div className="flex flex-row mt-4">{displayGamePlatforms()}</div>
-              {/* <div className="flex flex-row mt-2"> */}
-              <div className="text-gray-500 block mt-4">
-                <p className="text-gray-500 text-xl font-semibold block mb-1">
-                  Publishers
-                </p>
-                {displayCompanyListItems(false)}
-              </div>
-              {/* </div> */}
-              {/* <div className="text-xl mt-2">
+            <div className="flex flex-row w-8/12">
+              <Image
+                src={gameCoverUrl}
+                alt="Cover art for the selected game"
+                width={350}
+                height={1} //placeholder
+                className="rounded-xl"
+                placeholder="empty"
+              />
+              <div className="flex flex-col mx-10 justify-center">
+                {/* //TODO: Need an outline for the circle */}
+                <div className="flex flex-row mb-4">
+                  <div className="flex flex-col justify-center">
+                    <div className="text flex flex-col bg-green-500 rounded-full w-36 h-36 items-center justify-center tracking-tight">
+                      <span className="text-6xl mt-3 font-extrabold">8.9</span>
+                      <span className="text-md tracking-tight">Critic</span>
+                    </div>
+                  </div>
+                  <div className="flex flex-col justify-center ml-4">
+                    <div className="text flex flex-col bg-green-500 rounded-full w-36 h-36 items-center justify-center tracking-tight">
+                      <span className="text-6xl mt-3 font-extrabold">9.1</span>
+                      <span className="text-md tracking-tight">User</span>
+                    </div>
+                  </div>
+                </div>
+                {/* //TODO: Make this dynamic */}
+                <div className="flex flex-row mt-6 flex-wrap">
+                  <Badge className="bg-gray-500 rounded-md">
+                    <span className="text-white text-base px-1 py-1">
+                      Action
+                    </span>
+                  </Badge>
+                  <Badge className="bg-gray-500 ml-1 rounded-md">
+                    <span className="text-white text-base px-1 py-1">
+                      Historical
+                    </span>
+                  </Badge>
+                  <Badge className="bg-gray-500 ml-1 rounded-md">
+                    <span className="text-white text-base px-1 py-1">
+                      Open World
+                    </span>
+                  </Badge>
+                  <Badge className="bg-gray-500 ml-1 rounded-md">
+                    <span className="text-white text-base px-1 py-1">
+                      Stealth
+                    </span>
+                  </Badge>
+                  <Badge className="bg-gray-500 ml-1 rounded-md">
+                    <span className="text-white text-base px-1 py-1">
+                      Drama
+                    </span>
+                  </Badge>
+                </div>
+                <div className="block mt-6">
+                  <p className="text-gray-500 text-xl font-semibold mb-1">
+                    {genres.data ? "Genres " : ""}
+                  </p>
+                  <p className="text text-xl font-normal block">
+                    {genres.data
+                      ? genres.data.map((genre: Genre) => genre.name).join(", ")
+                      : "Not specified"}
+                  </p>
+                </div>
+                <div className="flex flex-row mt-4">
+                  {displayGamePlatforms()}
+                </div>
+                {/* <div className="flex flex-row mt-2"> */}
+                <div className="block mt-4">
+                  <p className="text-gray-500 text-xl font-semibold block mb-1">
+                    Publishers
+                  </p>
+                  <p className="text-xl">{displayCompanyListItems(false)}</p>
+                </div>
+                {/* </div> */}
+                {/* <div className="text-xl mt-2">
                 <span className="text-gray-500 block font-bold">
                   About:{" "}
                   <span className="text whitespace-pre-line font-normal">
@@ -503,8 +542,11 @@ export default function GameInfoView({
                   </span>
                 </span>
               </div> */}
+              </div>
             </div>
-            <div className="flex flex-col justify-center">
+
+            {/* //? Playscore here */}
+            {/* <div className="flex flex-col justify-center">
               <div className="text flex flex-col bg-green-500 rounded-full w-60 h-60 items-center justify-center tracking-tight">
                 <span className="text-xl mt-2 tracking-tight">
                   Critic Playscore:
@@ -515,7 +557,7 @@ export default function GameInfoView({
                 </span>
                 <span className="text-4xl font-extrabold mt-1">9.6</span>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       )}

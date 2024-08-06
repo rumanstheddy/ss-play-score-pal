@@ -29,7 +29,7 @@ type ProviderFnArgs = {
   fields: string[];
   limit: number;
   search: string;
-  filters: string[];
+  // filters: string[];
 };
 
 type Game = {
@@ -52,7 +52,7 @@ export default function HomeView(): React.ReactElement {
     fields: ["name", "summary"],
     limit: 5,
     search: searchText,
-    filters: ["platforms.summary = null"],
+    // filters: ["platforms.summary = null"],
   };
 
   const { isLoading, data: results } = useDebouncedQuery(
