@@ -4,6 +4,9 @@ import {
   fetchGenresById,
   buildQuery,
   fetchArtworks,
+  fetchGameModes,
+  fetchPerspectives,
+  fetchThemes,
 } from "@/providers/IGDB/IgdbProvider";
 import GameInfoView from "@/views/GameInfo";
 import {
@@ -36,6 +39,9 @@ export default async function GameInfo({
     "genres",
     "involved_companies",
     "platforms",
+    "game_modes",
+    "player_perspectives",
+    "themes",
   ];
 
   const gameQFilter = [`id = ${gameId}`];
@@ -111,16 +117,42 @@ export default async function GameInfo({
       }),
   });
 
+  const gameModeQFields = ["name"];
+  const gameModeQFilter = [`id = (${game?.game_modes.join(",")})`];
 
+  await queryClient.prefetchQuery({
+    queryKey: ["fetchGameModes", gameId],
+    queryFn: () =>
+      fetchGameModes({
+        fields: gameModeQFields,
+        filters: gameModeQFilter,
+      }),
+  });
 
-  // await queryClient.prefetchQuery({
-  //   queryKey: ["fetchArtworks", gameId],
-  //   queryFn: () =>
-  //     fetchArtworks({
-  //       fields: artQFields,
-  //       filters: artQFilter,
-  //     }),
-  // });
+  // const playPerspectiveQFields = ["name"];
+  const playPerspectiveQFilter = [
+    `id = (${game?.player_perspectives.join(",")})`,
+  ];
+
+  await queryClient.prefetchQuery({
+    queryKey: ["fetchPlayerPerspectives", gameId],
+    queryFn: () =>
+      fetchPerspectives({
+        fields: gameModeQFields,
+        filters: playPerspectiveQFilter,
+      }),
+  });
+
+  const themeQFilter = [`id = (${game?.themes.join(",")})`];
+
+  await queryClient.prefetchQuery({
+    queryKey: ["fetchThemes", gameId],
+    queryFn: () =>
+      fetchThemes({
+        fields: gameModeQFields,
+        filters: themeQFilter,
+      }),
+  });
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
@@ -137,6 +169,10 @@ export default async function GameInfo({
         coverQFilter={coverQFilter}
         platformQFields={platformQFields}
         platformQFilter={platformQFilter}
+        gameModeQFields={gameModeQFields}
+        gameModeQFilter={gameModeQFilter}
+        playPerspectiveQFilter={playPerspectiveQFilter}
+        themeQFilter={themeQFilter}
       />
     </HydrationBoundary>
   );

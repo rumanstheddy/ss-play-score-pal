@@ -5,10 +5,13 @@ import {
   fetchArtworks,
   fetchCompanies,
   fetchCovers,
+  fetchGameModes,
   fetchGames,
   fetchGenresById,
   fetchInvolvedCompanies,
+  fetchPerspectives,
   fetchPlatforms,
+  fetchThemes,
   fetchVideos,
 } from "@/providers/IGDB/IgdbProvider";
 import { useQueries, useQuery } from "@tanstack/react-query";
@@ -34,6 +37,10 @@ interface IGameInfoProps {
   coverQFilter: string[];
   platformQFields: string[];
   platformQFilter: string[];
+  gameModeQFields: string[];
+  gameModeQFilter: string[];
+  playPerspectiveQFilter: string[];
+  themeQFilter: string[];
 }
 
 type Genre = {
@@ -69,6 +76,10 @@ export default function GameInfoView({
   coverQFilter,
   platformQFields,
   platformQFilter,
+  gameModeQFields,
+  gameModeQFilter,
+  playPerspectiveQFilter,
+  themeQFilter,
 }: IGameInfoProps): React.ReactElement {
   const { data: session } = useSession() as { data: CustomSession | null };
   const { data: gameData, isLoading: isGameLoading } = useQuery({
@@ -156,6 +167,30 @@ export default function GameInfoView({
             filters: artQFilter,
           }),
       },
+      {
+        queryKey: ["fetchGameModes", gameId],
+        queryFn: () =>
+          fetchGameModes({
+            fields: gameModeQFields,
+            filters: gameModeQFilter,
+          }),
+      },
+      {
+        queryKey: ["fetchPlayerPerspectives", gameId],
+        queryFn: () =>
+          fetchPerspectives({
+            fields: gameModeQFields,
+            filters: playPerspectiveQFilter,
+          }),
+      },
+      {
+        queryKey: ["fetchThemes", gameId],
+        queryFn: () =>
+          fetchThemes({
+            fields: gameModeQFields,
+            filters: themeQFilter,
+          }),
+      },
     ],
   });
 
@@ -170,6 +205,9 @@ export default function GameInfoView({
     platformNamesList,
     artworksList,
     videosList,
+    gameModeList,
+    playPerspectiveList,
+    themeList,
   ] = otherResults.map((result) => result);
 
   const getCompanyDetails = (companyId: number) => {
@@ -233,8 +271,6 @@ export default function GameInfoView({
     // console.log(developers);
     const list: Partial<Company>[] = [];
     isDeveloper ? list.push(developers[0]) : list.push(...publishers);
-
-    // TODO: Handle no company existing
 
     return (
       <p className="block">
@@ -341,6 +377,23 @@ export default function GameInfoView({
     );
   };
 
+  const displayThemeBadges = () => {
+    return themeList.data ? (
+      themeList.data.map(
+        ({ id, name }: { id: number; name: string }, index: number) => (
+          <Badge
+            className={`bg-gray-500 rounded-md ${index > 0 ? "ml-1" : ""}`}
+            key={id}
+          >
+            <span className="text-white text-base px-1 py-1">{name}</span>
+          </Badge>
+        )
+      )
+    ) : (
+      <></>
+    );
+  };
+
   // const displayCompanies = (isDeveloper: boolean) => {
   //   const { developers, publishers } = separateDevAndPublishers(
   //     buildCompanyList()
@@ -412,23 +465,32 @@ export default function GameInfoView({
 
           <div className="flex flex-row justify-between items-center mx-20">
             <div className="flex flex-col">
-              <h2 className="text pb-2 text-6xl font-extrabold tracking-tight first:mt-0">
-                {game ? game.name : ""}
-              </h2>
-              <div className="text text-2xl font-semibold tracking-tight mt-8">
+              <div className="flex flex-row items-center">
+                <h2 className="text pb-2 text-6xl font-extrabold tracking-tight first:mt-0">
+                  {game ? game.name : ""}
+                </h2>
+                <div className="ml-6 mt-2 flex-grow-0">
+                  <Badge className="bg-white rounded-lg">
+                    <span className="text-black text-base">
+                      {getCategoryName()}
+                    </span>
+                  </Badge>
+                </div>
+              </div>
+              <div className="text text-2xl font-semibold tracking-tight mt-4">
                 {releaseDate ? dateConverter(releaseDate) : "Not specified"}
               </div>
-              <div className="flex flex-col text-2xl mt-6">
+              {/* <div className="flex flex-col text-2xl mt-6">
                 {displayCompanyListItems(true)}
-                {/* <span className="mt-2">{displayCompanyListItems(false)}</span> */}
-              </div>
-              <div className="mt-6 flex-grow-0">
+                <span className="mt-2">{displayCompanyListItems(false)}</span>
+              </div> */}
+              {/* <div className="mt-6 flex-grow-0">
                 <Badge className="bg-white rounded-full">
                   <span className="text-black text-base px-1 py-1">
                     {getCategoryName()}
                   </span>
                 </Badge>
-              </div>
+              </div> */}
             </div>
 
             <Dialog>
@@ -460,18 +522,18 @@ export default function GameInfoView({
             </Dialog>
           </div>
           <div className="flex flex-row justify-between mt-16 mx-16">
-            <div className="flex flex-row w-8/12">
+            <div className="flex flex-row w-6/12">
               <Image
                 src={gameCoverUrl}
                 alt="Cover art for the selected game"
-                width={350}
+                width={400}
                 height={1} //placeholder
                 className="rounded-xl"
                 placeholder="empty"
               />
-              <div className="flex flex-col mx-10 justify-center">
+              <div className="flex flex-col mx-10">
                 {/* //TODO: Need an outline for the circle */}
-                <div className="flex flex-row mb-4">
+                <div className="flex flex-row">
                   <div className="flex flex-col justify-center">
                     <div className="text flex flex-col bg-green-500 rounded-full w-36 h-36 items-center justify-center tracking-tight">
                       <span className="text-6xl mt-3 font-extrabold">8.9</span>
@@ -485,35 +547,10 @@ export default function GameInfoView({
                     </div>
                   </div>
                 </div>
-                {/* //TODO: Make this dynamic */}
-                <div className="flex flex-row mt-6 flex-wrap">
-                  <Badge className="bg-gray-500 rounded-md">
-                    <span className="text-white text-base px-1 py-1">
-                      Action
-                    </span>
-                  </Badge>
-                  <Badge className="bg-gray-500 ml-1 rounded-md">
-                    <span className="text-white text-base px-1 py-1">
-                      Historical
-                    </span>
-                  </Badge>
-                  <Badge className="bg-gray-500 ml-1 rounded-md">
-                    <span className="text-white text-base px-1 py-1">
-                      Open World
-                    </span>
-                  </Badge>
-                  <Badge className="bg-gray-500 ml-1 rounded-md">
-                    <span className="text-white text-base px-1 py-1">
-                      Stealth
-                    </span>
-                  </Badge>
-                  <Badge className="bg-gray-500 ml-1 rounded-md">
-                    <span className="text-white text-base px-1 py-1">
-                      Drama
-                    </span>
-                  </Badge>
+                <div className="flex flex-row mt-8 flex-wrap">
+                  {displayThemeBadges()}
                 </div>
-                <div className="block mt-6">
+                <div className="block mt-4">
                   <p className="text-gray-500 text-xl font-semibold mb-1">
                     {genres.data ? "Genres " : ""}
                   </p>
@@ -527,12 +564,12 @@ export default function GameInfoView({
                   {displayGamePlatforms()}
                 </div>
                 {/* <div className="flex flex-row mt-2"> */}
-                <div className="block mt-4">
+                {/* <div className="block mt-4">
                   <p className="text-gray-500 text-xl font-semibold block mb-1">
                     Publishers
                   </p>
                   <p className="text-xl">{displayCompanyListItems(false)}</p>
-                </div>
+                </div> */}
                 {/* </div> */}
                 {/* <div className="text-xl mt-2">
                 <span className="text-gray-500 block font-bold">
@@ -542,9 +579,34 @@ export default function GameInfoView({
                   </span>
                 </span>
               </div> */}
+
+                <div className="block mt-4">
+                  <p className="text-gray-500 text-xl font-semibold mb-1">
+                    {gameModeList.data ? "Game Modes" : ""}
+                  </p>
+                  <p className="text text-xl font-normal block">
+                    {gameModeList.data
+                      ? gameModeList.data
+                          .map(({ name }: { name: string }) => name)
+                          .join(", ")
+                      : "Not specified"}
+                  </p>
+                </div>
+                <div className="block mt-4">
+                  <p className="text-gray-500 text-xl font-semibold mb-1">
+                    {playPerspectiveList.data ? "Player Perspectives" : ""}
+                  </p>
+                  <p className="text text-xl font-normal block">
+                    {playPerspectiveList.data
+                      ? playPerspectiveList.data
+                          .map(({ name }: { name: string }) => name)
+                          .join(", ")
+                      : "Not specified"}
+                  </p>
+                </div>
               </div>
             </div>
-
+            {/* //TODO: Change the typeface to 'Inter' */}
             {/* //? Playscore here */}
             {/* <div className="flex flex-col justify-center">
               <div className="text flex flex-col bg-green-500 rounded-full w-60 h-60 items-center justify-center tracking-tight">
@@ -558,6 +620,20 @@ export default function GameInfoView({
                 <span className="text-4xl font-extrabold mt-1">9.6</span>
               </div>
             </div> */}
+            <div className="flex flex-col basis-4/12">
+              <div className="block">
+                <p className="text-gray-500 text-xl font-semibold block mb-1">
+                  Developers
+                </p>
+                <p className="text-xl">{displayCompanyListItems(true)}</p>
+              </div>
+              <div className="block mt-4">
+                <p className="text-gray-500 text-xl font-semibold block mb-1">
+                  Publishers
+                </p>
+                <p className="text-xl">{displayCompanyListItems(false)}</p>
+              </div>
+            </div>
           </div>
         </div>
       )}

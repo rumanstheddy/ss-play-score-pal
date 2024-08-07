@@ -196,3 +196,48 @@ export const fetchVideos = async ({
 
   return data;
 };
+
+export const fetchGameModes = async ({
+  fields,
+  limit,
+  search,
+  filters,
+}: ProviderFnArgs) => {
+  const query = buildQuery({ fields, limit, search, filters });
+
+  const response = await fetchData("game_modes", query);
+
+  const data = await response.json();
+
+  return data;
+};
+
+export const fetchPerspectives = async ({
+  fields,
+  limit,
+  search,
+  filters,
+}: ProviderFnArgs) => {
+  const query = buildQuery({ fields, limit, search, filters });
+
+  const response = await fetchData("player_perspectives", query);
+
+  const data = await response.json();
+
+  return data;
+};
+
+export const fetchThemes = async ({
+  fields,
+  limit,
+  search,
+  filters,
+}: ProviderFnArgs) => {
+  const query = buildQuery({ fields, limit, search, filters });
+
+  const response = await fetchData("themes", query);
+
+  const data = await response.json();
+
+  return data;
+};
