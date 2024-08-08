@@ -11,6 +11,7 @@ import {
   fetchInvolvedCompanies,
   fetchPerspectives,
   fetchPlatforms,
+  fetchReleaseDates,
   fetchThemes,
   fetchVideos,
 } from "@/providers/IGDB/IgdbProvider";
@@ -41,6 +42,7 @@ interface IGameInfoProps {
   gameModeQFilter: string[];
   playPerspectiveQFilter: string[];
   themeQFilter: string[];
+  releaseDatesQFields: string[];
 }
 
 type Genre = {
@@ -63,6 +65,14 @@ type Platform = {
   name: string;
 };
 
+type Release = {
+  id?: number;
+  game?: number;
+  date?: Date;
+  platform?: number;
+  platformName?: string;
+};
+
 export default function GameInfoView({
   gameId,
   gameQFields,
@@ -80,6 +90,7 @@ export default function GameInfoView({
   gameModeQFilter,
   playPerspectiveQFilter,
   themeQFilter,
+  releaseDatesQFields,
 }: IGameInfoProps): React.ReactElement {
   const { data: session } = useSession() as { data: CustomSession | null };
   const { data: gameData, isLoading: isGameLoading } = useQuery({
@@ -93,7 +104,7 @@ export default function GameInfoView({
 
   const game = gameData ? gameData[0] : null;
 
-  const releaseDate = new Date(game?.first_release_date * 1000);
+  const releaseDate = new Date(game?.first_release_date);
 
   const gameSummary = game?.summary;
 
@@ -191,6 +202,14 @@ export default function GameInfoView({
             filters: themeQFilter,
           }),
       },
+      {
+        queryKey: ["fetchReleaseDates", gameId],
+        queryFn: () =>
+          fetchReleaseDates({
+            fields: releaseDatesQFields,
+            filters: coverQFilter,
+          }),
+      },
     ],
   });
 
@@ -208,17 +227,40 @@ export default function GameInfoView({
     gameModeList,
     playPerspectiveList,
     themeList,
+    releaseDateList,
   ] = otherResults.map((result) => result);
 
-  const getCompanyDetails = (companyId: number) => {
-    return companyNames.data?.find(
-      (compInfo: Company) => compInfo.id === companyId
-    );
+  const buildReleaseDateList = (): Release[] => {
+    const platforms = platformNamesList?.data as Platform[];
+    const releases = releaseDateList?.data as Partial<Release>[];
+
+    const releaseDateInfo: Release[] = [];
+
+    releases.forEach((release: Partial<Release>) => {
+      const platformDetails: Platform | undefined = platforms.find(
+        (platform: Platform) => platform.id === release.platform
+      );
+
+      releaseDateInfo.push({
+        id: release?.id,
+        game: release?.game,
+        date: release?.date,
+        platform: release?.platform,
+        platformName: platformDetails?.name,
+      });
+    });
+
+    return releaseDateInfo;
   };
 
-  const buildCompanyList = () => {
-    const companies = involvedCompanies.data?.map((company: Company) => {
-      const compDetails: Company = getCompanyDetails(company.company);
+  const buildCompanyList = () =>
+    involvedCompanies.data?.map((company: Company) => {
+      //** company.company is the actual ID of the company in the API
+      //** Using this company.company we are fetching the name and other details of the companies from compDetails
+      const compDetails: Company = companyNames.data?.find(
+        (compInfo: Company) => compInfo.id === company.company
+      );
+
       return {
         id: compDetails?.id,
         name: compDetails?.name,
@@ -227,9 +269,6 @@ export default function GameInfoView({
         publisher: company?.publisher,
       };
     });
-
-    return companies;
-  };
 
   const separateDevAndPublishers = (companies: Company[]) => {
     const developers: Partial<Company>[] = [];
@@ -259,43 +298,6 @@ export default function GameInfoView({
     };
   };
 
-  const displayCompanyListItems = (
-    // list: Partial<Company>[],
-    isDeveloper: boolean
-  ) => {
-    const { developers, publishers } = separateDevAndPublishers(
-      buildCompanyList()
-    );
-    // const companyType = isDeveloper ? "Developer(s)" : "Publisher(s)";
-    // const list = [...(isDeveloper ? developers : publishers)];
-    // console.log(developers);
-    const list: Partial<Company>[] = [];
-    isDeveloper ? list.push(developers[0]) : list.push(...publishers);
-
-    return (
-      <p className="block">
-        {/* <div className="text-xl inline">
-          {list.length > 0 ? `${companyType}: ` : ""}
-        </div> */}
-        {list.length > 0 ? (
-          list.map((company: Partial<Company>, i: number) => (
-            <div className="text inline font-semibold" key={company.id}>
-              <Link
-                className="hover:text-blue-500 tracking-tight hover:underline whitespace-pre-wrap"
-                href={`${company.url}`}
-              >
-                {company.name}
-              </Link>
-              {i !== list.length - 1 ? "," + " " : ""}
-            </div>
-          ))
-        ) : (
-          <span className="text tracking-tight">Information unavailable</span>
-        )}
-      </p>
-    );
-  };
-
   let gameCoverUrl: string =
     gameCover.data && gameCover.data[0]
       ? `https:${gameCover.data[0].url}`
@@ -313,7 +315,9 @@ export default function GameInfoView({
 
   // console.log("trailerUrl", trailerUrl);
 
-  const dateConverter = (date: Date) => {
+  const dateConverter = (dateNumber: number) => {
+    const date: Date = new Date(dateNumber * 1000);
+
     const months = [
       "January",
       "Februrary",
@@ -360,16 +364,50 @@ export default function GameInfoView({
     return categoryNames[category];
   };
 
+  const displayCompanyListItems = (isDeveloper: boolean) => {
+    const { developers, publishers } = separateDevAndPublishers(
+      buildCompanyList()
+    );
+    const list: Partial<Company>[] = [];
+    isDeveloper ? list.push(developers[0]) : list.push(...publishers);
+
+    return (
+      <p className="block">
+        {list.length > 0 ? (
+          list.map((company: Partial<Company>, i: number) => {
+            return company ? (
+              <div className="text inline font-semibold" key={company.id}>
+                <Link
+                  className="hover:text-blue-500 tracking-tight hover:underline whitespace-pre-wrap"
+                  href={`${company.url}`}
+                >
+                  {company.name}
+                </Link>
+                {i !== list.length - 1 ? "," + " " : ""}
+              </div>
+            ) : (
+              <span className="text tracking-tight">
+                Information unavailable
+              </span>
+            );
+          })
+        ) : (
+          <span className="text tracking-tight">Information unavailable</span>
+        )}
+      </p>
+    );
+  };
+
   const displayGamePlatforms = () => {
-    const platformNames = platformNamesList?.data as Platform[];
+    const platforms = platformNamesList?.data as Platform[];
     return (
       <div className=" text-gray-500 block">
         <p className="text-xl inline font-semibold">Platforms</p>
         <div className="block mt-1">
-          {platformNames?.map((platform: Platform, i: number) => (
+          {platforms?.map((platform: Platform, i: number) => (
             <span className="text text-xl inline" key={platform.id}>
               {platform.name}
-              {i !== platformNames.length - 1 ? ", " : ""}
+              {i !== platforms.length - 1 ? ", " : ""}
             </span>
           ))}
         </div>
@@ -394,20 +432,6 @@ export default function GameInfoView({
     );
   };
 
-  // const displayCompanies = (isDeveloper: boolean) => {
-  //   const { developers, publishers } = separateDevAndPublishers(
-  //     buildCompanyList()
-  //   );
-
-  //   return (
-  //     <>
-  //       {isDeveloper
-  //         ? displayCompanyListItems(developers, true)
-  //         : displayCompanyListItems(publishers, false)}
-  //     </>
-  //   );
-  // };
-
   // TODO: Make the performance better
 
   return (
@@ -424,45 +448,7 @@ export default function GameInfoView({
         </div>
       ) : (
         <div className="flex flex-col justify-start min-h-screen mt-32">
-          {/* <div className="flex justify-center">
-            <Image
-              src={gameCoverUrl}
-              alt="Cover art for the selected game"
-              width={300}
-              height={200}
-              className="rounded-xl flex-grow-0 flex-shrink-0"
-              placeholder="empty"
-            />
-            <div className="flex flex-col flex-grow-0 justify-center px-10 py-10 text-center">
-              <h2 className="text pb-2 text-4xl font-extrabold tracking-tight first:mt-0 px-5">
-                {game ? game.name : ""}
-              </h2>
-              <div className="flex flex-row items-center justify-center mt-4">
-                <div className="text text-xl">Initial Release Date:</div>
-                <div className="text text-xl font-semibold tracking-tight ml-1">
-                  {releaseDate ? dateConverter(releaseDate) : "Not specified"}
-                </div>
-              </div>
-              <div className="flex flex-row justify-center mt-4">
-                <div className="text text-xl">
-                  {genres.data ? "Genre(s): " : ""}
-                </div>
-                <div className="text text-xl font-semibold tracking-tight ml-1">
-                  {genres.data
-                    ? genres.data.map((genre: Genre) => genre.name).join(", ")
-                    : "Not specified"}
-                </div>
-              </div>
-              <div className="flex flex-row items-center justify-center">
-                {displayGamePlatforms()}
-              </div>
-              <div className="flex flex-row items-center justify-center">
-                {displayCompanies()}
-              </div>
-            </div>
-          </div> */}
-          {/* //** A different layout */}
-
+          {/* // A different layout */}
           <div className="flex flex-row justify-between items-center mx-20">
             <div className="flex flex-col">
               <div className="flex flex-row items-center">
@@ -478,25 +464,16 @@ export default function GameInfoView({
                 </div>
               </div>
               <div className="text text-2xl font-semibold tracking-tight mt-4">
-                {releaseDate ? dateConverter(releaseDate) : "Not specified"}
+                {releaseDate
+                  ? dateConverter(releaseDate as unknown as number)
+                  : "Not specified"}
               </div>
-              {/* <div className="flex flex-col text-2xl mt-6">
-                {displayCompanyListItems(true)}
-                <span className="mt-2">{displayCompanyListItems(false)}</span>
-              </div> */}
-              {/* <div className="mt-6 flex-grow-0">
-                <Badge className="bg-white rounded-full">
-                  <span className="text-black text-base px-1 py-1">
-                    {getCategoryName()}
-                  </span>
-                </Badge>
-              </div> */}
             </div>
 
             <Dialog>
               <DialogTrigger>
                 <Button
-                  className="rounded-lg bg-white text-center text-black text-xl mr-6 tracking-tight hover:bg-slate-400"
+                  className="rounded-lg bg-white text-center text-black text-xl tracking-tight hover:bg-slate-400"
                   type="button"
                   onClick={() => console.log("Clicked!")}
                 >
@@ -505,13 +482,6 @@ export default function GameInfoView({
                 </Button>
               </DialogTrigger>
               <DialogContent className="bg-black text px-0 py-0 max-w-3xl">
-                {/* <DialogHeader>
-                  <DialogTitle>Are you absolutely sure?</DialogTitle>
-                  <DialogDescription>
-                    This action cannot be undone. This will permanently delete
-                    your account and remove your data from our servers.
-                  </DialogDescription>
-                </DialogHeader> */}
                 <div className="aspect-w-16 aspect-h-9">
                   <iframe
                     src={trailerUrl}
@@ -521,13 +491,13 @@ export default function GameInfoView({
               </DialogContent>
             </Dialog>
           </div>
-          <div className="flex flex-row justify-between mt-16 mx-16">
+          <div className="flex flex-row justify-between mt-16 mx-20">
             <div className="flex flex-row w-6/12">
               <Image
                 src={gameCoverUrl}
                 alt="Cover art for the selected game"
                 width={400}
-                height={1} //placeholder
+                height={1} //? placeholder
                 className="rounded-xl"
                 placeholder="empty"
               />
@@ -563,23 +533,6 @@ export default function GameInfoView({
                 <div className="flex flex-row mt-4">
                   {displayGamePlatforms()}
                 </div>
-                {/* <div className="flex flex-row mt-2"> */}
-                {/* <div className="block mt-4">
-                  <p className="text-gray-500 text-xl font-semibold block mb-1">
-                    Publishers
-                  </p>
-                  <p className="text-xl">{displayCompanyListItems(false)}</p>
-                </div> */}
-                {/* </div> */}
-                {/* <div className="text-xl mt-2">
-                <span className="text-gray-500 block font-bold">
-                  About:{" "}
-                  <span className="text whitespace-pre-line font-normal">
-                    {game && gameSummary ? gameSummary : ""}
-                  </span>
-                </span>
-              </div> */}
-
                 <div className="block mt-4">
                   <p className="text-gray-500 text-xl font-semibold mb-1">
                     {gameModeList.data ? "Game Modes" : ""}
@@ -607,19 +560,6 @@ export default function GameInfoView({
               </div>
             </div>
             {/* //TODO: Change the typeface to 'Inter' */}
-            {/* //? Playscore here */}
-            {/* <div className="flex flex-col justify-center">
-              <div className="text flex flex-col bg-green-500 rounded-full w-60 h-60 items-center justify-center tracking-tight">
-                <span className="text-xl mt-2 tracking-tight">
-                  Critic Playscore:
-                </span>
-                <span className="text-4xl font-extrabold mt-1">8.9</span>
-                <span className="text-xl mt-2 tracking-tight">
-                  User Playscore:
-                </span>
-                <span className="text-4xl font-extrabold mt-1">9.6</span>
-              </div>
-            </div> */}
             <div className="flex flex-col basis-4/12">
               <div className="block">
                 <p className="text-gray-500 text-xl font-semibold block mb-1">
@@ -633,6 +573,29 @@ export default function GameInfoView({
                 </p>
                 <p className="text-xl">{displayCompanyListItems(false)}</p>
               </div>
+              <fieldset className="border px-4 pb-4 mt-6 rounded-sm">
+                <legend className="text-gray-500 text-xl font-bold px-2">
+                  Releases
+                </legend>
+                <div className="flex flex-col">
+                  {buildReleaseDateList().map((release: Release) => {
+                    console.log(release);
+                    return (
+                      <div
+                        className="flex flex-row justify-between"
+                        key={release.id}
+                      >
+                        <span className="text text-xl mt-2">
+                          {release.platformName}
+                        </span>
+                        <span className="text text-xl mt-2">
+                          {dateConverter(release.date as unknown as number)}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </fieldset>
             </div>
           </div>
         </div>

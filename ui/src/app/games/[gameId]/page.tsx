@@ -7,6 +7,7 @@ import {
   fetchGameModes,
   fetchPerspectives,
   fetchThemes,
+  fetchReleaseDates,
 } from "@/providers/IGDB/IgdbProvider";
 import GameInfoView from "@/views/GameInfo";
 import {
@@ -154,6 +155,18 @@ export default async function GameInfo({
       }),
   });
 
+  const releaseDatesQFields = ["game", "date", "platform"];
+  // const releaseDatesQFilter = [`game = ${gameId}`];
+
+  await queryClient.prefetchQuery({
+    queryKey: ["fetchReleaseDates", gameId],
+    queryFn: () =>
+      fetchReleaseDates({
+        fields: releaseDatesQFields,
+        filters: coverQFilter,
+      }),
+  });
+
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <GameInfoView
@@ -173,6 +186,7 @@ export default async function GameInfo({
         gameModeQFilter={gameModeQFilter}
         playPerspectiveQFilter={playPerspectiveQFilter}
         themeQFilter={themeQFilter}
+        releaseDatesQFields={releaseDatesQFields}
       />
     </HydrationBoundary>
   );
