@@ -14,6 +14,7 @@ import {
   fetchReleaseDates,
   fetchThemes,
   fetchVideos,
+  fetchWebsites,
 } from "@/providers/IGDB/IgdbProvider";
 import { useQueries, useQuery } from "@tanstack/react-query";
 import Image from "next/image";
@@ -24,6 +25,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Play } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Suspense, lazy } from "react";
+import { FaExternalLinkAlt } from "react-icons/fa";
 
 interface IGameInfoProps {
   gameId: string;
@@ -43,6 +46,7 @@ interface IGameInfoProps {
   playPerspectiveQFilter: string[];
   themeQFilter: string[];
   releaseDatesQFields: string[];
+  websiteQFields: string[];
 }
 
 type Genre = {
@@ -73,6 +77,12 @@ type Release = {
   platformName?: string;
 };
 
+type Website = {
+  id: number;
+  category: number;
+  url: string;
+};
+
 export default function GameInfoView({
   gameId,
   gameQFields,
@@ -91,6 +101,7 @@ export default function GameInfoView({
   playPerspectiveQFilter,
   themeQFilter,
   releaseDatesQFields,
+  websiteQFields,
 }: IGameInfoProps): React.ReactElement {
   const { data: session } = useSession() as { data: CustomSession | null };
   const { data: gameData, isLoading: isGameLoading } = useQuery({
@@ -210,6 +221,15 @@ export default function GameInfoView({
             filters: coverQFilter,
           }),
       },
+      {
+        queryKey: ["fetchWebsites", gameId],
+        queryFn: () =>
+          fetchWebsites({
+            fields: websiteQFields,
+            filters: coverQFilter,
+            limit: 20,
+          }),
+      },
     ],
   });
 
@@ -228,6 +248,7 @@ export default function GameInfoView({
     playPerspectiveList,
     themeList,
     releaseDateList,
+    websiteList,
   ] = otherResults.map((result) => result);
 
   const buildReleaseDateList = (): Release[] => {
@@ -252,6 +273,8 @@ export default function GameInfoView({
 
     return releaseDateInfo;
   };
+
+  console.log("websiteList?.data", websiteList?.data);
 
   const buildCompanyList = () =>
     involvedCompanies.data?.map((company: Company) => {
@@ -362,6 +385,114 @@ export default function GameInfoView({
     const category = game?.category;
 
     return categoryNames[category];
+  };
+
+  const getWebsiteType = () => {
+    const websiteCategories = [
+      "official",
+      "wikia",
+      "wikipedia",
+      "facebook",
+      "twitter",
+      "twitch",
+      "instagram",
+      "youtube",
+      "iphone",
+      "ipad",
+      "android",
+      "steam",
+      "reddit",
+      "itch",
+      "epicgames",
+      "gog",
+      "discord",
+    ];
+  };
+
+  const iconMap: Record<number, React.ComponentType> = {
+    1: lazy(() =>
+      import("react-icons/fa").then((mod) => ({ default: mod.FaGlobe }))
+    ),
+    2: lazy(() =>
+      import("react-icons/si").then((mod) => ({ default: mod.SiFandom }))
+    ),
+    3: lazy(() =>
+      import("react-icons/si").then((mod) => ({ default: mod.SiWikipedia }))
+    ),
+    4: lazy(() =>
+      import("react-icons/si").then((mod) => ({ default: mod.SiFacebook }))
+    ),
+    5: lazy(() =>
+      import("react-icons/si").then((mod) => ({ default: mod.SiTwitter }))
+    ),
+    6: lazy(() =>
+      import("react-icons/si").then((mod) => ({ default: mod.SiTwitch }))
+    ),
+    8: lazy(() =>
+      import("react-icons/si").then((mod) => ({ default: mod.SiInstagram }))
+    ),
+    9: lazy(() =>
+      import("react-icons/si").then((mod) => ({ default: mod.SiYoutube }))
+    ),
+    10: lazy(() =>
+      import("react-icons/si").then((mod) => ({ default: mod.SiApple }))
+    ),
+    11: lazy(() =>
+      import("react-icons/tb").then((mod) => ({ default: mod.TbDeviceIpad }))
+    ),
+    12: lazy(() =>
+      import("react-icons/si").then((mod) => ({ default: mod.SiAndroid }))
+    ),
+    13: lazy(() =>
+      import("react-icons/si").then((mod) => ({ default: mod.SiSteam }))
+    ),
+    14: lazy(() =>
+      import("react-icons/si").then((mod) => ({ default: mod.SiReddit }))
+    ),
+    15: lazy(() =>
+      import("react-icons/si").then((mod) => ({ default: mod.SiItchdotio }))
+    ),
+    16: lazy(() =>
+      import("react-icons/si").then((mod) => ({ default: mod.SiEpicgames }))
+    ),
+    17: lazy(() =>
+      import("react-icons/si").then((mod) => ({ default: mod.SiGogdotcom }))
+    ),
+    18: lazy(() =>
+      import("react-icons/si").then((mod) => ({ default: mod.SiDiscord }))
+    ),
+  };
+
+  const buildIcon = (iconCategory: number) => {
+    // import { FaGlobe } from "react-icons/fa";
+    // import { SiFandom } from "react-icons/si";
+    // import { SiWikipedia } from "react-icons/si";
+    // import { SiFacebook } from "react-icons/si";
+    // import { SiTwitter } from "react-icons/si";
+    // import { SiTwitch } from "react-icons/si";
+    // import { SiInstagram } from "react-icons/si";
+    // import { SiYoutube } from "react-icons/si";
+    // import { SiApple } from "react-icons/si";
+    // import { SiAndroid } from "react-icons/si";
+    // import { SiSteam } from "react-icons/si";
+    // import { SiReddit } from "react-icons/si";
+    // import { SiItchdotio } from "react-icons/si";
+    // import { SiEpicgames } from "react-icons/si";
+    // import { SiGogdotcom } from "react-icons/si";
+    // import { SiDiscord } from "react-icons/si";
+    // import { FaExternalLinkAlt } from "react-icons/fa";
+
+    const Icon = iconMap[iconCategory];
+
+    if (!Icon) {
+      return <FaExternalLinkAlt size={40} />; // Return a fallback if the icon isn't in the map
+    }
+
+    return (
+      <Suspense fallback={<div></div>}>
+        <Icon size={40} />
+      </Suspense>
+    );
   };
 
   const displayCompanyListItems = (isDeveloper: boolean) => {
@@ -550,7 +681,9 @@ export default function GameInfoView({
                     {playPerspectiveList.data ? "Player Perspectives" : ""}
                   </p>
                   <p className="text text-xl font-normal block">
-                    {playPerspectiveList.data
+                    {console.log(playPerspectiveList?.data.length)}
+                    {playPerspectiveList.data &&
+                    playPerspectiveList.data.length > 0
                       ? playPerspectiveList.data
                           .map(({ name }: { name: string }) => name)
                           .join(", ")
@@ -560,7 +693,7 @@ export default function GameInfoView({
               </div>
             </div>
             {/* //TODO: Change the typeface to 'Inter' */}
-            <div className="flex flex-col basis-4/12">
+            <div className="flex flex-col basis-4/12 justify-center">
               <div className="block">
                 <p className="text-gray-500 text-xl font-semibold block mb-1">
                   Developers
@@ -579,7 +712,6 @@ export default function GameInfoView({
                 </legend>
                 <div className="flex flex-col">
                   {buildReleaseDateList().map((release: Release) => {
-                    console.log(release);
                     return (
                       <div
                         className="flex flex-row justify-between"
@@ -589,6 +721,7 @@ export default function GameInfoView({
                           {release.platformName}
                         </span>
                         <span className="text text-xl mt-2">
+                          {/* //TODO: Fix the date changing positions on page refresh sometimes */}
                           {dateConverter(release.date as unknown as number)}
                         </span>
                       </div>
@@ -596,6 +729,17 @@ export default function GameInfoView({
                   })}
                 </div>
               </fieldset>
+              <div className="flex flex-row mt-10 justify-around">
+                {websiteList.data ? (
+                  websiteList.data.map((website: Website) => (
+                    <Link href={website.url} key={website.id}>
+                      <div className="text">{buildIcon(website.category)}</div>
+                    </Link>
+                  ))
+                ) : (
+                  <></>
+                )}
+              </div>
             </div>
           </div>
         </div>

@@ -8,6 +8,7 @@ import {
   fetchPerspectives,
   fetchThemes,
   fetchReleaseDates,
+  fetchWebsites,
 } from "@/providers/IGDB/IgdbProvider";
 import GameInfoView from "@/views/GameInfo";
 import {
@@ -132,7 +133,7 @@ export default async function GameInfo({
 
   // const playPerspectiveQFields = ["name"];
   const playPerspectiveQFilter = [
-    `id = (${game?.player_perspectives.join(",")})`,
+    `id = (${game?.player_perspectives?.join(",")})`,
   ];
 
   await queryClient.prefetchQuery({
@@ -144,7 +145,7 @@ export default async function GameInfo({
       }),
   });
 
-  const themeQFilter = [`id = (${game?.themes.join(",")})`];
+  const themeQFilter = [`id = (${game?.themes?.join(",")})`];
 
   await queryClient.prefetchQuery({
     queryKey: ["fetchThemes", gameId],
@@ -164,6 +165,19 @@ export default async function GameInfo({
       fetchReleaseDates({
         fields: releaseDatesQFields,
         filters: coverQFilter,
+      }),
+  });
+
+  const websiteQFields = ["category", "url"];
+  // const websiteQFilter = [`game = ${gameId}`];
+
+  await queryClient.prefetchQuery({
+    queryKey: ["fetchWebsites", gameId],
+    queryFn: () =>
+      fetchWebsites({
+        fields: websiteQFields,
+        filters: coverQFilter,
+        limit: 20,
       }),
   });
 
@@ -187,6 +201,7 @@ export default async function GameInfo({
         playPerspectiveQFilter={playPerspectiveQFilter}
         themeQFilter={themeQFilter}
         releaseDatesQFields={releaseDatesQFields}
+        websiteQFields={websiteQFields}
       />
     </HydrationBoundary>
   );

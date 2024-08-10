@@ -241,3 +241,18 @@ export const fetchThemes = async ({
 
   return data;
 };
+
+export const fetchWebsites = async ({
+  fields,
+  limit,
+  search,
+  filters,
+}: ProviderFnArgs) => {
+  const query = buildQuery({ fields, limit, search, filters });
+
+  const response = await fetchData("websites", query);
+
+  const data = await response.json();
+
+  return data;
+};
