@@ -328,9 +328,12 @@ export default function GameInfoView({
 
   gameCoverUrl = gameCoverUrl.replace("thumb", "720p");
 
-  let artworkUrl: string = `https:${
-    artworksList.data && artworksList.data[0] ? artworksList.data[0] : ""
-  }`;
+  let artworkUrl: string =
+    artworksList.data && artworksList.data[0]
+      ? `https:${artworksList.data[0].url}`
+      : "";
+
+  artworkUrl = artworkUrl.replace("thumb", "1080p");
 
   const trailerUrl: string = `https://www.youtube.com/embed/${
     videosList.data && videosList.data[0] ? videosList.data[0].video_id : ""
@@ -578,167 +581,185 @@ export default function GameInfoView({
           </div>
         </div>
       ) : (
-        <div className="flex flex-col justify-start min-h-screen mt-32">
-          {/* // A different layout */}
-          <div className="flex flex-row justify-between items-center mx-20">
-            <div className="flex flex-col">
-              <div className="flex flex-row items-center">
-                <h2 className="text pb-2 text-6xl font-extrabold tracking-tight first:mt-0">
-                  {game ? game.name : ""}
-                </h2>
-                <div className="ml-6 mt-2 flex-grow-0">
-                  <Badge className="bg-white rounded-lg">
-                    <span className="text-black text-base">
-                      {getCategoryName()}
-                    </span>
-                  </Badge>
-                </div>
-              </div>
-              <div className="text text-2xl font-semibold tracking-tight mt-4">
-                {releaseDate
-                  ? dateConverter(releaseDate as unknown as number)
-                  : "Not specified"}
-              </div>
-            </div>
-
-            <Dialog>
-              <DialogTrigger>
-                <Button
-                  className="rounded-lg bg-white text-center text-black text-xl tracking-tight hover:bg-slate-400"
-                  type="button"
-                  onClick={() => console.log("Clicked!")}
-                >
-                  <Play className="h-6 w-6 mr-2" />
-                  Watch Trailer
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="bg-black text px-0 py-0 max-w-3xl">
-                <div className="aspect-w-16 aspect-h-9">
-                  <iframe
-                    src={trailerUrl}
-                    className="w-full aspect-[16/9] rounded-xl"
-                  ></iframe>
-                </div>
-              </DialogContent>
-            </Dialog>
-          </div>
-          <div className="flex flex-row justify-between mt-16 mx-20">
-            <div className="flex flex-row w-6/12">
-              <Image
-                src={gameCoverUrl}
-                alt="Cover art for the selected game"
-                width={400}
-                height={1} //? placeholder
-                className="rounded-xl"
-                placeholder="empty"
-              />
-              <div className="flex flex-col mx-10">
-                {/* //TODO: Need an outline for the circle */}
-                <div className="flex flex-row">
-                  <div className="flex flex-col justify-center">
-                    <div className="text flex flex-col bg-green-500 rounded-full w-36 h-36 items-center justify-center tracking-tight">
-                      <span className="text-6xl mt-3 font-extrabold">8.9</span>
-                      <span className="text-md tracking-tight">Critic</span>
-                    </div>
-                  </div>
-                  <div className="flex flex-col justify-center ml-4">
-                    <div className="text flex flex-col bg-green-500 rounded-full w-36 h-36 items-center justify-center tracking-tight">
-                      <span className="text-6xl mt-3 font-extrabold">9.1</span>
-                      <span className="text-md tracking-tight">User</span>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex flex-row mt-8 flex-wrap">
-                  {displayThemeBadges()}
-                </div>
-                <div className="block mt-4">
-                  <p className="text-gray-500 text-xl font-semibold mb-1">
-                    {genres.data ? "Genres " : ""}
-                  </p>
-                  <p className="text text-xl font-normal block">
-                    {genres.data
-                      ? genres.data.map((genre: Genre) => genre.name).join(", ")
-                      : "Not specified"}
-                  </p>
-                </div>
-                <div className="flex flex-row mt-4">
-                  {displayGamePlatforms()}
-                </div>
-                <div className="block mt-4">
-                  <p className="text-gray-500 text-xl font-semibold mb-1">
-                    {gameModeList.data ? "Game Modes" : ""}
-                  </p>
-                  <p className="text text-xl font-normal block">
-                    {gameModeList.data
-                      ? gameModeList.data
-                          .map(({ name }: { name: string }) => name)
-                          .join(", ")
-                      : "Not specified"}
-                  </p>
-                </div>
-                <div className="block mt-4">
-                  <p className="text-gray-500 text-xl font-semibold mb-1">
-                    {playPerspectiveList.data ? "Player Perspectives" : ""}
-                  </p>
-                  <p className="text text-xl font-normal block">
-                    {console.log(playPerspectiveList?.data.length)}
-                    {playPerspectiveList.data &&
-                    playPerspectiveList.data.length > 0
-                      ? playPerspectiveList.data
-                          .map(({ name }: { name: string }) => name)
-                          .join(", ")
-                      : "Not specified"}
-                  </p>
-                </div>
-              </div>
-            </div>
-            {/* //TODO: Change the typeface to 'Inter' */}
-            <div className="flex flex-col basis-4/12 justify-center">
-              <div className="block">
-                <p className="text-gray-500 text-xl font-semibold block mb-1">
-                  Developers
-                </p>
-                <p className="text-xl">{displayCompanyListItems(true)}</p>
-              </div>
-              <div className="block mt-4">
-                <p className="text-gray-500 text-xl font-semibold block mb-1">
-                  Publishers
-                </p>
-                <p className="text-xl">{displayCompanyListItems(false)}</p>
-              </div>
-              <fieldset className="border px-4 pb-4 mt-6 rounded-sm">
-                <legend className="text-gray-500 text-xl font-bold px-2">
-                  Releases
-                </legend>
+        <div className="relative min-h-screen">
+          {/* Background layer */}
+          <div
+            style={{ backgroundImage: `url(${artworkUrl})` }}
+            className="absolute inset-0 bg-cover bg-center blur-lg"
+          ></div>
+          {/* Content layer */}
+          <div className="relative z-10 flex flex-col justify-start min-h-screen">
+            <div className="flex flex-col justify-start mt-32">
+              {/* // A different layout */}
+              <div className="flex flex-row justify-between items-center mx-20">
                 <div className="flex flex-col">
-                  {buildReleaseDateList().map((release: Release) => {
-                    return (
-                      <div
-                        className="flex flex-row justify-between"
-                        key={release.id}
-                      >
-                        <span className="text text-xl mt-2">
-                          {release.platformName}
+                  <div className="flex flex-row items-center">
+                    <h2 className="text pb-2 text-6xl font-extrabold tracking-tight first:mt-0">
+                      {game ? game.name : ""}
+                    </h2>
+                    <div className="ml-6 mt-2 flex-grow-0">
+                      <Badge className="bg-white rounded-lg">
+                        <span className="text-black text-base">
+                          {getCategoryName()}
                         </span>
-                        <span className="text text-xl mt-2">
-                          {/* //TODO: Fix the date changing positions on page refresh sometimes */}
-                          {dateConverter(release.date as unknown as number)}
-                        </span>
-                      </div>
-                    );
-                  })}
+                      </Badge>
+                    </div>
+                  </div>
+                  <div className="text text-2xl font-semibold tracking-tight mt-4">
+                    {releaseDate
+                      ? dateConverter(releaseDate as unknown as number)
+                      : "Not specified"}
+                  </div>
                 </div>
-              </fieldset>
-              <div className="flex flex-row mt-10 justify-around">
-                {websiteList.data ? (
-                  websiteList.data.map((website: Website) => (
-                    <Link href={website.url} key={website.id}>
-                      <div className="text">{buildIcon(website.category)}</div>
-                    </Link>
-                  ))
-                ) : (
-                  <></>
-                )}
+
+                <Dialog>
+                  <DialogTrigger>
+                    <Button
+                      className="rounded-lg bg-white text-center text-black text-xl tracking-tight hover:bg-slate-400"
+                      type="button"
+                      onClick={() => console.log("Clicked!")}
+                    >
+                      <Play className="h-6 w-6 mr-2" />
+                      Watch Trailer
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="bg-black text px-0 py-0 max-w-3xl">
+                    <div className="aspect-w-16 aspect-h-9">
+                      <iframe
+                        src={trailerUrl}
+                        className="w-full aspect-[16/9] rounded-xl"
+                      ></iframe>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </div>
+              <div className="flex flex-row justify-between mt-16 mx-20">
+                <div className="flex flex-row w-6/12">
+                  <Image
+                    src={gameCoverUrl}
+                    alt="Cover art for the selected game"
+                    width={400}
+                    height={1} //? placeholder
+                    className="rounded-xl"
+                    placeholder="empty"
+                  />
+                  <div className="flex flex-col mx-10">
+                    {/* //TODO: Need an outline for the circle */}
+                    <div className="flex flex-row">
+                      <div className="flex flex-col justify-center">
+                        <div className="text flex flex-col bg-green-500 rounded-full w-36 h-36 items-center justify-center tracking-tight">
+                          <span className="text-6xl mt-3 font-extrabold">
+                            8.9
+                          </span>
+                          <span className="text-md tracking-tight">Critic</span>
+                        </div>
+                      </div>
+                      <div className="flex flex-col justify-center ml-4">
+                        <div className="text flex flex-col bg-green-500 rounded-full w-36 h-36 items-center justify-center tracking-tight">
+                          <span className="text-6xl mt-3 font-extrabold">
+                            9.1
+                          </span>
+                          <span className="text-md tracking-tight">User</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex flex-row mt-8 flex-wrap">
+                      {displayThemeBadges()}
+                    </div>
+                    <div className="block mt-4">
+                      <p className="text-gray-500 text-xl font-semibold mb-1">
+                        {genres.data ? "Genres " : ""}
+                      </p>
+                      <p className="text text-xl font-normal block">
+                        {genres.data
+                          ? genres.data
+                              .map((genre: Genre) => genre.name)
+                              .join(", ")
+                          : "Not specified"}
+                      </p>
+                    </div>
+                    <div className="flex flex-row mt-4">
+                      {displayGamePlatforms()}
+                    </div>
+                    <div className="block mt-4">
+                      <p className="text-gray-500 text-xl font-semibold mb-1">
+                        {gameModeList.data ? "Game Modes" : ""}
+                      </p>
+                      <p className="text text-xl font-normal block">
+                        {gameModeList.data
+                          ? gameModeList.data
+                              .map(({ name }: { name: string }) => name)
+                              .join(", ")
+                          : "Not specified"}
+                      </p>
+                    </div>
+                    <div className="block mt-4">
+                      <p className="text-gray-500 text-xl font-semibold mb-1">
+                        {playPerspectiveList.data ? "Player Perspectives" : ""}
+                      </p>
+                      <p className="text text-xl font-normal block">
+                        {console.log(playPerspectiveList?.data.length)}
+                        {playPerspectiveList.data &&
+                        playPerspectiveList.data.length > 0
+                          ? playPerspectiveList.data
+                              .map(({ name }: { name: string }) => name)
+                              .join(", ")
+                          : "Not specified"}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                {/* //TODO: Change the typeface to 'Inter' */}
+                <div className="flex flex-col basis-4/12 justify-center">
+                  <div className="block">
+                    <p className="text-gray-500 text-xl font-semibold block mb-1">
+                      Developers
+                    </p>
+                    <p className="text-xl">{displayCompanyListItems(true)}</p>
+                  </div>
+                  <div className="block mt-4">
+                    <p className="text-gray-500 text-xl font-semibold block mb-1">
+                      Publishers
+                    </p>
+                    <p className="text-xl">{displayCompanyListItems(false)}</p>
+                  </div>
+                  <fieldset className="border px-4 pb-4 mt-6 rounded-sm">
+                    <legend className="text-gray-500 text-xl font-bold px-2">
+                      Releases
+                    </legend>
+                    <div className="flex flex-col">
+                      {buildReleaseDateList().map((release: Release) => {
+                        return (
+                          <div
+                            className="flex flex-row justify-between"
+                            key={release.id}
+                          >
+                            <span className="text text-xl mt-2">
+                              {release.platformName}
+                            </span>
+                            <span className="text text-xl mt-2">
+                              {/* //TODO: Fix the date changing positions on page refresh sometimes */}
+                              {dateConverter(release.date as unknown as number)}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </fieldset>
+                  <div className="flex flex-row mt-10 justify-around items-center">
+                    {websiteList.data ? (
+                      websiteList.data.map((website: Website) => (
+                        <Link href={website.url} key={website.id}>
+                          <div className="text">
+                            {buildIcon(website.category)}
+                          </div>
+                        </Link>
+                      ))
+                    ) : (
+                      <></>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
