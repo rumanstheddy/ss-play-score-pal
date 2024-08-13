@@ -78,7 +78,7 @@ export default async function GameInfo({
 
   const game = gameData[0];
 
-  const companyIds = companyData.map((el: Company) => el.company);
+  const companyIds = companyData?.map((el: Company) => el.company);
 
   const genres = game.genres ? [...game.genres] : [];
   const platforms = game.platforms ? [...game.platforms] : [];
@@ -120,7 +120,7 @@ export default async function GameInfo({
   });
 
   const gameModeQFields = ["name"];
-  const gameModeQFilter = [`id = (${game?.game_modes.join(",")})`];
+  const gameModeQFilter = [`id = (${game?.game_modes?.join(",")})`];
 
   await queryClient.prefetchQuery({
     queryKey: ["fetchGameModes", gameId],

@@ -163,6 +163,7 @@ export default function GameInfoView({
             fields: coverQFields,
             filters: coverQFilter,
           }),
+        refetchOnWindowFocus: false,
       },
       {
         queryKey: ["fetchPlatformNames", platforms],
@@ -220,6 +221,7 @@ export default function GameInfoView({
             fields: releaseDatesQFields,
             filters: coverQFilter,
           }),
+        refetchOnWindowFocus: false,
       },
       {
         queryKey: ["fetchWebsites", gameId],
@@ -229,6 +231,7 @@ export default function GameInfoView({
             filters: coverQFilter,
             limit: 20,
           }),
+        refetchOnWindowFocus: false,
       },
     ],
   });
@@ -237,19 +240,19 @@ export default function GameInfoView({
     isGameLoading || otherResults.some((result) => result.isLoading);
 
   const [
-    genres,
-    involvedCompanies,
-    companyNames,
-    gameCover,
-    platformNamesList,
-    artworksList,
-    videosList,
-    gameModeList,
-    playPerspectiveList,
-    themeList,
-    releaseDateList,
-    websiteList,
-  ] = otherResults.map((result) => result);
+    genres = { data: [] },
+    involvedCompanies = { data: [] },
+    companyNames = { data: [] },
+    gameCover = { data: [] },
+    platformNamesList = { data: [] },
+    artworksList = { data: [] },
+    videosList = { data: [] },
+    gameModeList = { data: [] },
+    playPerspectiveList = { data: [] },
+    themeList = { data: [] },
+    releaseDateList = { data: [] },
+    websiteList = { data: [] },
+  ] = otherResults.map((result) => result || { data: [] });
 
   const buildReleaseDateList = (): Release[] => {
     const platforms = platformNamesList?.data as Platform[];
@@ -507,7 +510,7 @@ export default function GameInfoView({
 
     return (
       <p className="block">
-        {list.length > 0 ? (
+        {list ? (
           list.map((company: Partial<Company>, i: number) => {
             return company ? (
               <div className="text inline font-semibold" key={company.id}>
@@ -538,12 +541,16 @@ export default function GameInfoView({
       <div className=" text-gray-500 block">
         <p className="text-xl inline font-semibold">Platforms</p>
         <div className="block mt-1">
-          {platforms?.map((platform: Platform, i: number) => (
-            <span className="text text-xl inline" key={platform.id}>
-              {platform.name}
-              {i !== platforms.length - 1 ? ", " : ""}
-            </span>
-          ))}
+          {platforms ? (
+            platforms.map((platform: Platform, i: number) => (
+              <span className="text text-xl inline" key={platform.id}>
+                {platform.name}
+                {i !== platforms.length - 1 ? ", " : ""}
+              </span>
+            ))
+          ) : (
+            <span className="text text-xl inline">Information unavailable</span>
+          )}
         </div>
       </div>
     );
@@ -552,14 +559,18 @@ export default function GameInfoView({
   const displayThemeBadges = () => {
     return themeList.data ? (
       themeList.data.map(
-        ({ id, name }: { id: number; name: string }, index: number) => (
-          <Badge
-            className={`bg-gray-500 rounded-md ${index > 0 ? "ml-1" : ""}`}
-            key={id}
-          >
-            <span className="text-white text-base px-1 py-1">{name}</span>
-          </Badge>
-        )
+        ({ id, name }: { id: number; name: string }, index: number) => {
+          return !!id && !!name ? (
+            <Badge
+              className={`bg-gray-500 rounded-md ${index > 0 ? "ml-1" : ""}`}
+              key={id}
+            >
+              <span className="text-white text-base px-1 py-1">{name}</span>
+            </Badge>
+          ) : (
+            <></>
+          );
+        }
       )
     ) : (
       <></>
@@ -584,13 +595,12 @@ export default function GameInfoView({
         <div className="relative min-h-screen">
           {/* Background layer */}
           <div
-            style={{ backgroundImage: `url(${artworkUrl})` }}
-            className="absolute inset-0 bg-cover bg-center blur-lg"
+            style={{ backgroundImage: `url(${artworkUrl ? artworkUrl : ""})` }}
+            className="absolute inset-0 bg-cover bg-center"
           ></div>
           {/* Content layer */}
-          <div className="relative z-10 flex flex-col justify-start min-h-screen">
+          <div className="relative z-10 flex flex-col justify-start min-h-screen backdrop-blur-sm bg-black/75">
             <div className="flex flex-col justify-start mt-32">
-              {/* // A different layout */}
               <div className="flex flex-row justify-between items-center mx-20">
                 <div className="flex flex-col">
                   <div className="flex flex-row items-center">
@@ -606,12 +616,12 @@ export default function GameInfoView({
                     </div>
                   </div>
                   <div className="text text-2xl font-semibold tracking-tight mt-4">
+                    {/* //TODO:Fix all info unavailable cases */}
                     {releaseDate
                       ? dateConverter(releaseDate as unknown as number)
-                      : "Not specified"}
+                      : "Information unavailable"}
                   </div>
                 </div>
-
                 <Dialog>
                   <DialogTrigger>
                     <Button
@@ -668,14 +678,14 @@ export default function GameInfoView({
                     </div>
                     <div className="block mt-4">
                       <p className="text-gray-500 text-xl font-semibold mb-1">
-                        {genres.data ? "Genres " : ""}
+                        Genres
                       </p>
                       <p className="text text-xl font-normal block">
                         {genres.data
                           ? genres.data
                               .map((genre: Genre) => genre.name)
                               .join(", ")
-                          : "Not specified"}
+                          : "Information unavailable"}
                       </p>
                     </div>
                     <div className="flex flex-row mt-4">
@@ -683,33 +693,34 @@ export default function GameInfoView({
                     </div>
                     <div className="block mt-4">
                       <p className="text-gray-500 text-xl font-semibold mb-1">
-                        {gameModeList.data ? "Game Modes" : ""}
+                        Game Modes
                       </p>
                       <p className="text text-xl font-normal block">
-                        {gameModeList.data
+                        {gameModeList.data &&
+                        !("status" in gameModeList.data[0])
                           ? gameModeList.data
                               .map(({ name }: { name: string }) => name)
                               .join(", ")
-                          : "Not specified"}
+                          : "Information unavailable"}
                       </p>
                     </div>
                     <div className="block mt-4">
                       <p className="text-gray-500 text-xl font-semibold mb-1">
-                        {playPerspectiveList.data ? "Player Perspectives" : ""}
+                        Player Perspectives
                       </p>
                       <p className="text text-xl font-normal block">
-                        {console.log(playPerspectiveList?.data.length)}
                         {playPerspectiveList.data &&
-                        playPerspectiveList.data.length > 0
+                        !("status" in playPerspectiveList.data[0])
                           ? playPerspectiveList.data
-                              .map(({ name }: { name: string }) => name)
+                              .map(({ name }: { name: string }) => {
+                                !!name ? name : "";
+                              })
                               .join(", ")
-                          : "Not specified"}
+                          : "Information unavailable"}
                       </p>
                     </div>
                   </div>
                 </div>
-                {/* //TODO: Change the typeface to 'Inter' */}
                 <div className="flex flex-col basis-4/12 justify-center">
                   <div className="block">
                     <p className="text-gray-500 text-xl font-semibold block mb-1">
