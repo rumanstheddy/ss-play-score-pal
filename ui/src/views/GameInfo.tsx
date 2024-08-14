@@ -115,7 +115,10 @@ export default function GameInfoView({
 
   const game = gameData ? gameData[0] : null;
 
-  const releaseDate = new Date(game?.first_release_date);
+  const releaseDate =
+    game?.first_release_date && !!game?.first_release_date
+      ? new Date(game?.first_release_date)
+      : undefined;
 
   const gameSummary = game?.summary;
 
@@ -134,27 +137,30 @@ export default function GameInfoView({
   const otherResults = useQueries({
     queries: [
       {
-        queryKey: ["getGenreByGenreId", gameGenres],
+        queryKey: ["fetchGenreByGenreId", gameGenres],
         queryFn: () => fetchGenresById({ filters: genreQFilter }),
         enabled: gameGenres.length > 0,
+        refetchOnWindowFocus: false,
       },
       {
-        queryKey: ["getInvolvedCompanies", gameCompanies],
+        queryKey: ["fetchInvolvedCompanies", gameCompanies],
         queryFn: () =>
           fetchInvolvedCompanies({
             fields: involvedCompQFields,
             filters: involvedCompQFilter,
           }),
         enabled: gameCompanies.length > 0,
+        refetchOnWindowFocus: false,
       },
       {
-        queryKey: ["getCompanyByCompId", gameCompanies],
+        queryKey: ["fetchCompanyByCompanyId", gameCompanies],
         queryFn: () =>
           fetchCompanies({
             fields: compNameQFields,
             filters: compNameQFilter,
           }),
         enabled: gameCompanies.length > 0,
+        refetchOnWindowFocus: false,
       },
       {
         queryKey: ["fetchCovers", gameId],
@@ -173,6 +179,7 @@ export default function GameInfoView({
             filters: platformQFilter,
           }),
         enabled: platforms.length > 0,
+        refetchOnWindowFocus: false,
       },
       {
         queryKey: ["fetchArtworks", gameId],
@@ -181,6 +188,7 @@ export default function GameInfoView({
             fields: artQFields,
             filters: artQFilter,
           }),
+        refetchOnWindowFocus: false,
       },
       {
         queryKey: ["fetchVideos", gameId],
@@ -189,6 +197,7 @@ export default function GameInfoView({
             fields: videoQFields,
             filters: artQFilter,
           }),
+        refetchOnWindowFocus: false,
       },
       {
         queryKey: ["fetchGameModes", gameId],
@@ -197,6 +206,7 @@ export default function GameInfoView({
             fields: gameModeQFields,
             filters: gameModeQFilter,
           }),
+        refetchOnWindowFocus: false,
       },
       {
         queryKey: ["fetchPlayerPerspectives", gameId],
@@ -205,6 +215,7 @@ export default function GameInfoView({
             fields: gameModeQFields,
             filters: playPerspectiveQFilter,
           }),
+        refetchOnWindowFocus: false,
       },
       {
         queryKey: ["fetchThemes", gameId],
@@ -213,6 +224,7 @@ export default function GameInfoView({
             fields: gameModeQFields,
             filters: themeQFilter,
           }),
+        refetchOnWindowFocus: false,
       },
       {
         queryKey: ["fetchReleaseDates", gameId],
@@ -220,6 +232,7 @@ export default function GameInfoView({
           fetchReleaseDates({
             fields: releaseDatesQFields,
             filters: coverQFilter,
+            sort: ["date", "desc"],
           }),
         refetchOnWindowFocus: false,
       },
@@ -230,6 +243,7 @@ export default function GameInfoView({
             fields: websiteQFields,
             filters: coverQFilter,
             limit: 20,
+            sort: ["category", "asc"],
           }),
         refetchOnWindowFocus: false,
       },
@@ -260,24 +274,24 @@ export default function GameInfoView({
 
     const releaseDateInfo: Release[] = [];
 
-    releases.forEach((release: Partial<Release>) => {
-      const platformDetails: Platform | undefined = platforms.find(
-        (platform: Platform) => platform.id === release.platform
-      );
+    if (platforms && releases) {
+      releases.forEach((release: Partial<Release>) => {
+        const platformDetails: Platform | undefined = platforms.find(
+          (platform: Platform) => platform.id === release.platform
+        );
 
-      releaseDateInfo.push({
-        id: release?.id,
-        game: release?.game,
-        date: release?.date,
-        platform: release?.platform,
-        platformName: platformDetails?.name,
+        releaseDateInfo.push({
+          id: release?.id,
+          game: release?.game,
+          date: release?.date,
+          platform: release?.platform,
+          platformName: platformDetails?.name,
+        });
       });
-    });
+    }
 
     return releaseDateInfo;
   };
-
-  console.log("websiteList?.data", websiteList?.data);
 
   const buildCompanyList = () =>
     involvedCompanies.data?.map((company: Company) => {
@@ -338,11 +352,10 @@ export default function GameInfoView({
 
   artworkUrl = artworkUrl.replace("thumb", "1080p");
 
-  const trailerUrl: string = `https://www.youtube.com/embed/${
-    videosList.data && videosList.data[0] ? videosList.data[0].video_id : ""
-  }`;
-
-  // console.log("trailerUrl", trailerUrl);
+  const trailerUrl: string =
+    videosList.data && videosList.data[0]
+      ? `https://www.youtube.com/embed/${videosList.data[0].video_id}`
+      : "";
 
   const dateConverter = (dateNumber: number) => {
     const date: Date = new Date(dateNumber * 1000);
@@ -390,29 +403,9 @@ export default function GameInfoView({
 
     const category = game?.category;
 
-    return categoryNames[category];
-  };
+    console.log("category", game?.category);
 
-  const getWebsiteType = () => {
-    const websiteCategories = [
-      "official",
-      "wikia",
-      "wikipedia",
-      "facebook",
-      "twitter",
-      "twitch",
-      "instagram",
-      "youtube",
-      "iphone",
-      "ipad",
-      "android",
-      "steam",
-      "reddit",
-      "itch",
-      "epicgames",
-      "gog",
-      "discord",
-    ];
+    return categoryNames[category];
   };
 
   const iconMap: Record<number, React.ComponentType> = {
@@ -510,7 +503,7 @@ export default function GameInfoView({
 
     return (
       <p className="block">
-        {list ? (
+        {list && list.length > 0 ? (
           list.map((company: Partial<Company>, i: number) => {
             return company ? (
               <div className="text inline font-semibold" key={company.id}>
@@ -622,26 +615,30 @@ export default function GameInfoView({
                       : "Information unavailable"}
                   </div>
                 </div>
-                <Dialog>
-                  <DialogTrigger>
-                    <Button
-                      className="rounded-lg bg-white text-center text-black text-xl tracking-tight hover:bg-slate-400"
-                      type="button"
-                      onClick={() => console.log("Clicked!")}
-                    >
-                      <Play className="h-6 w-6 mr-2" />
-                      Watch Trailer
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="bg-black text px-0 py-0 max-w-3xl">
-                    <div className="aspect-w-16 aspect-h-9">
-                      <iframe
-                        src={trailerUrl}
-                        className="w-full aspect-[16/9] rounded-xl"
-                      ></iframe>
-                    </div>
-                  </DialogContent>
-                </Dialog>
+                {trailerUrl && !!trailerUrl ? (
+                  <Dialog>
+                    <DialogTrigger>
+                      <Button
+                        className="rounded-lg bg-white text-center text-black text-xl tracking-tight hover:bg-slate-400"
+                        type="button"
+                        onClick={() => console.log("Clicked!")}
+                      >
+                        <Play className="h-6 w-6 mr-2" />
+                        Watch Trailer
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="bg-black text px-0 py-0 max-w-3xl">
+                      <div className="aspect-w-16 aspect-h-9">
+                        <iframe
+                          src={trailerUrl}
+                          className="w-full aspect-[16/9] rounded-xl"
+                        ></iframe>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                ) : (
+                  <></>
+                )}
               </div>
               <div className="flex flex-row justify-between mt-16 mx-20">
                 <div className="flex flex-row w-6/12">
@@ -712,9 +709,7 @@ export default function GameInfoView({
                         {playPerspectiveList.data &&
                         !("status" in playPerspectiveList.data[0])
                           ? playPerspectiveList.data
-                              .map(({ name }: { name: string }) => {
-                                !!name ? name : "";
-                              })
+                              .map(({ name }: { name: string }) => name)
                               .join(", ")
                           : "Information unavailable"}
                       </p>
@@ -734,29 +729,39 @@ export default function GameInfoView({
                     </p>
                     <p className="text-xl">{displayCompanyListItems(false)}</p>
                   </div>
-                  <fieldset className="border px-4 pb-4 mt-6 rounded-sm">
-                    <legend className="text-gray-500 text-xl font-bold px-2">
-                      Releases
-                    </legend>
-                    <div className="flex flex-col">
-                      {buildReleaseDateList().map((release: Release) => {
-                        return (
-                          <div
-                            className="flex flex-row justify-between"
-                            key={release.id}
-                          >
-                            <span className="text text-xl mt-2">
-                              {release.platformName}
-                            </span>
-                            <span className="text text-xl mt-2">
-                              {/* //TODO: Fix the date changing positions on page refresh sometimes */}
-                              {dateConverter(release.date as unknown as number)}
-                            </span>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </fieldset>
+
+                  {buildReleaseDateList() &&
+                  buildReleaseDateList().length > 0 ? (
+                    <fieldset className="border px-4 pb-4 mt-6 rounded-sm">
+                      <legend className="text-gray-500 text-xl font-bold px-2">
+                        Releases
+                      </legend>
+                      <div className="flex flex-col text-xl">
+                        {buildReleaseDateList().map((release: Release) => {
+                          return (
+                            <div
+                              className="flex flex-row justify-between"
+                              key={release.id}
+                            >
+                              <span className="text mt-2">
+                                {release.platformName}
+                              </span>
+                              <span className="text mt-2">
+                                {release.date
+                                  ? dateConverter(
+                                      release.date as unknown as number
+                                    )
+                                  : "To Be Announced"}
+                              </span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </fieldset>
+                  ) : (
+                    <></>
+                  )}
+
                   <div className="flex flex-row mt-10 justify-around items-center">
                     {websiteList.data ? (
                       websiteList.data.map((website: Website) => (

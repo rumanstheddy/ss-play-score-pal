@@ -17,6 +17,7 @@ type ProviderFnArgs = {
   limit?: number;
   search?: string;
   filters?: string[];
+  sort?: string[];
 };
 
 // ** Use this provider file only for fetching Data inside client components
@@ -27,11 +28,15 @@ export const buildQuery = ({
   limit,
   search,
   filters,
+  sort,
 }: ProviderFnArgs): string => {
   let query: string = "fields " + (fields ? fields.join(",") : "*") + ";";
   query += limit ? "limit " + limit + ";" : "";
   query += search ? `search "${search}"` + ";" : "";
   query += filters ? "where " + filters.join(",") + ";" : "";
+  query += sort ? "sort " + sort.join(" ") + ";" : "";
+
+  console.log("query", query);
 
   return query;
 };
@@ -52,8 +57,9 @@ export const fetchGames = async ({
   limit,
   search,
   filters,
+  sort,
 }: ProviderFnArgs) => {
-  const query = buildQuery({ fields, limit, search, filters });
+  const query = buildQuery({ fields, limit, search, filters, sort });
 
   const response = await fetchData("games", query);
 
@@ -67,8 +73,9 @@ export const fetchScreenshots = async ({
   limit,
   search,
   filters,
+  sort,
 }: ProviderFnArgs) => {
-  const query = buildQuery({ fields, limit, search, filters });
+  const query = buildQuery({ fields, limit, search, filters, sort });
 
   const response = await fetchData("screenshots", query);
 
@@ -82,8 +89,9 @@ export const fetchCovers = async ({
   limit,
   search,
   filters,
+  sort,
 }: ProviderFnArgs) => {
-  const query = buildQuery({ fields, limit, search, filters });
+  const query = buildQuery({ fields, limit, search, filters, sort });
 
   const response = await fetchData("covers", query);
 
@@ -97,8 +105,9 @@ export const fetchArtworks = async ({
   limit,
   search,
   filters,
+  sort,
 }: ProviderFnArgs) => {
-  const query = buildQuery({ fields, limit, search, filters });
+  const query = buildQuery({ fields, limit, search, filters, sort });
 
   const response = await fetchData("artworks", query);
 
@@ -112,8 +121,9 @@ export const fetchReleaseDates = async ({
   limit,
   search,
   filters,
+  sort,
 }: ProviderFnArgs) => {
-  const query = buildQuery({ fields, limit, search, filters });
+  const query = buildQuery({ fields, limit, search, filters, sort });
 
   const response = await fetchData("release_dates", query);
 
@@ -127,8 +137,9 @@ export const fetchGenresById = async ({
   limit,
   search,
   filters,
+  sort,
 }: ProviderFnArgs) => {
-  const query = buildQuery({ fields, limit, search, filters });
+  const query = buildQuery({ fields, limit, search, filters, sort });
 
   const response = await fetchData("genres", query);
 
@@ -142,8 +153,9 @@ export const fetchInvolvedCompanies = async ({
   limit,
   search,
   filters,
+  sort,
 }: ProviderFnArgs) => {
-  const query = buildQuery({ fields, limit, search, filters });
+  const query = buildQuery({ fields, limit, search, filters, sort });
 
   const response = await fetchData("involved_companies", query);
 
@@ -157,8 +169,9 @@ export const fetchCompanies = async ({
   limit,
   search,
   filters,
+  sort,
 }: ProviderFnArgs) => {
-  const query = buildQuery({ fields, limit, search, filters });
+  const query = buildQuery({ fields, limit, search, filters, sort });
 
   const response = await fetchData("companies", query);
 
@@ -172,8 +185,9 @@ export const fetchPlatforms = async ({
   limit,
   search,
   filters,
+  sort,
 }: ProviderFnArgs) => {
-  const query = buildQuery({ fields, limit, search, filters });
+  const query = buildQuery({ fields, limit, search, filters, sort });
 
   const response = await fetchData("platforms", query);
 
@@ -187,8 +201,9 @@ export const fetchVideos = async ({
   limit,
   search,
   filters,
+  sort,
 }: ProviderFnArgs) => {
-  const query = buildQuery({ fields, limit, search, filters });
+  const query = buildQuery({ fields, limit, search, filters, sort });
 
   const response = await fetchData("game_videos", query);
 
@@ -202,8 +217,9 @@ export const fetchGameModes = async ({
   limit,
   search,
   filters,
+  sort,
 }: ProviderFnArgs) => {
-  const query = buildQuery({ fields, limit, search, filters });
+  const query = buildQuery({ fields, limit, search, filters, sort });
 
   const response = await fetchData("game_modes", query);
 
@@ -217,8 +233,9 @@ export const fetchPerspectives = async ({
   limit,
   search,
   filters,
+  sort,
 }: ProviderFnArgs) => {
-  const query = buildQuery({ fields, limit, search, filters });
+  const query = buildQuery({ fields, limit, search, filters, sort });
 
   const response = await fetchData("player_perspectives", query);
 
@@ -232,8 +249,9 @@ export const fetchThemes = async ({
   limit,
   search,
   filters,
+  sort,
 }: ProviderFnArgs) => {
-  const query = buildQuery({ fields, limit, search, filters });
+  const query = buildQuery({ fields, limit, search, filters, sort });
 
   const response = await fetchData("themes", query);
 
@@ -247,8 +265,9 @@ export const fetchWebsites = async ({
   limit,
   search,
   filters,
+  sort,
 }: ProviderFnArgs) => {
-  const query = buildQuery({ fields, limit, search, filters });
+  const query = buildQuery({ fields, limit, search, filters, sort });
 
   const response = await fetchData("websites", query);
 

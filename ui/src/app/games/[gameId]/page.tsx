@@ -9,6 +9,8 @@ import {
   fetchThemes,
   fetchReleaseDates,
   fetchWebsites,
+  fetchCompanies,
+  fetchPlatforms,
 } from "@/providers/IGDB/IgdbProvider";
 import GameInfoView from "@/views/GameInfo";
 import {
@@ -53,7 +55,7 @@ export default async function GameInfo({
     `game = ${gameId} & (developer=true | publisher=true)`,
   ];
 
-  //** As we are pre-fetching data from a Server Component, I am using this helper method
+  //** As we are pre-fetching data from a Server Component using this helper method.
   const gameData = await igdbProxyFetch(
     "games",
     buildQuery({
@@ -78,32 +80,37 @@ export default async function GameInfo({
 
   const game = gameData[0];
 
-  const companyIds = companyData?.map((el: Company) => el.company);
-
   const genres = game.genres ? [...game.genres] : [];
-  const platforms = game.platforms ? [...game.platforms] : [];
-
   const genreQFilter = [`id = (${genres.join(",")})`];
-
-  const compNameQFields = ["name", "url"];
-
-  const compNameQFilter = [`id = (${companyIds.join(",")})`];
-
-  const platformQFields = ["abbreviation", "name"];
-
-  const platformQFilter = [`id = (${platforms.join(",")})`];
 
   await queryClient.prefetchQuery({
     queryKey: ["fetchGenreByGenreId", genres],
     queryFn: () => fetchGenresById({ filters: genreQFilter }),
   });
 
+  const companyIds = companyData?.map((el: Company) => el.company);
+  const compNameQFields = ["name", "url"];
+  const compNameQFilter = [`id = (${companyIds.join(",")})`];
+
   await queryClient.prefetchQuery({
     queryKey: ["fetchCompanyByCompanyId", companyIds],
     queryFn: () =>
-      fetchGenresById({
+      fetchCompanies({
         fields: compNameQFields,
         filters: compNameQFilter,
+      }),
+  });
+
+  const platforms = game.platforms ? [...game.platforms] : [];
+  const platformQFields = ["abbreviation", "name"];
+  const platformQFilter = [`id = (${platforms.join(",")})`];
+
+  await queryClient.prefetchQuery({
+    queryKey: ["fetchPlatformNames", platforms],
+    queryFn: () =>
+      fetchPlatforms({
+        fields: platformQFields,
+        filters: platformQFilter,
       }),
   });
 
@@ -165,6 +172,7 @@ export default async function GameInfo({
       fetchReleaseDates({
         fields: releaseDatesQFields,
         filters: coverQFilter,
+        sort: ["date", "desc"],
       }),
   });
 
@@ -178,6 +186,7 @@ export default async function GameInfo({
         fields: websiteQFields,
         filters: coverQFilter,
         limit: 20,
+        sort: ["category", "asc"],
       }),
   });
 
