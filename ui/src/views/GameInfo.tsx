@@ -463,24 +463,6 @@ export default function GameInfoView({
   };
 
   const buildIcon = (iconCategory: number) => {
-    // import { FaGlobe } from "react-icons/fa";
-    // import { SiFandom } from "react-icons/si";
-    // import { SiWikipedia } from "react-icons/si";
-    // import { SiFacebook } from "react-icons/si";
-    // import { SiTwitter } from "react-icons/si";
-    // import { SiTwitch } from "react-icons/si";
-    // import { SiInstagram } from "react-icons/si";
-    // import { SiYoutube } from "react-icons/si";
-    // import { SiApple } from "react-icons/si";
-    // import { SiAndroid } from "react-icons/si";
-    // import { SiSteam } from "react-icons/si";
-    // import { SiReddit } from "react-icons/si";
-    // import { SiItchdotio } from "react-icons/si";
-    // import { SiEpicgames } from "react-icons/si";
-    // import { SiGogdotcom } from "react-icons/si";
-    // import { SiDiscord } from "react-icons/si";
-    // import { FaExternalLinkAlt } from "react-icons/fa";
-
     const Icon = iconMap[iconCategory];
 
     if (!Icon) {
@@ -531,7 +513,7 @@ export default function GameInfoView({
   const displayGamePlatforms = () => {
     const platforms = platformNamesList?.data as Platform[];
     return (
-      <div className=" text-gray-500 block">
+      <div className=" text-gray-400 block">
         <p className="text-xl inline font-semibold">Platforms</p>
         <div className="block mt-1">
           {platforms ? (
@@ -587,6 +569,7 @@ export default function GameInfoView({
       ) : (
         <div className="relative min-h-screen">
           {/* Background layer */}
+          {/* //TODO: Make the artwork random maybe? */}
           <div
             style={{ backgroundImage: `url(${artworkUrl ? artworkUrl : ""})` }}
             className="absolute inset-0 bg-cover bg-center"
@@ -609,7 +592,6 @@ export default function GameInfoView({
                     </div>
                   </div>
                   <div className="text text-2xl font-semibold tracking-tight mt-4">
-                    {/* //TODO:Fix all info unavailable cases */}
                     {releaseDate
                       ? dateConverter(releaseDate as unknown as number)
                       : "Information unavailable"}
@@ -670,11 +652,8 @@ export default function GameInfoView({
                         </div>
                       </div>
                     </div>
-                    <div className="flex flex-row mt-8 flex-wrap">
-                      {displayThemeBadges()}
-                    </div>
                     <div className="block mt-4">
-                      <p className="text-gray-500 text-xl font-semibold mb-1">
+                      <p className="text-gray-400 text-xl font-semibold mb-1">
                         Genres
                       </p>
                       <p className="text text-xl font-normal block">
@@ -689,7 +668,7 @@ export default function GameInfoView({
                       {displayGamePlatforms()}
                     </div>
                     <div className="block mt-4">
-                      <p className="text-gray-500 text-xl font-semibold mb-1">
+                      <p className="text-gray-400 text-xl font-semibold mb-1">
                         Game Modes
                       </p>
                       <p className="text text-xl font-normal block">
@@ -702,7 +681,7 @@ export default function GameInfoView({
                       </p>
                     </div>
                     <div className="block mt-4">
-                      <p className="text-gray-500 text-xl font-semibold mb-1">
+                      <p className="text-gray-400 text-xl font-semibold mb-1">
                         Player Perspectives
                       </p>
                       <p className="text text-xl font-normal block">
@@ -714,17 +693,20 @@ export default function GameInfoView({
                           : "Information unavailable"}
                       </p>
                     </div>
+                    <div className="flex flex-row mt-8 flex-wrap">
+                      {displayThemeBadges()}
+                    </div>
                   </div>
                 </div>
                 <div className="flex flex-col basis-4/12 justify-center">
                   <div className="block">
-                    <p className="text-gray-500 text-xl font-semibold block mb-1">
+                    <p className="text-gray-400 text-xl font-semibold block mb-1">
                       Developers
                     </p>
                     <p className="text-xl">{displayCompanyListItems(true)}</p>
                   </div>
                   <div className="block mt-4">
-                    <p className="text-gray-500 text-xl font-semibold block mb-1">
+                    <p className="text-gray-400 text-xl font-semibold block mb-1">
                       Publishers
                     </p>
                     <p className="text-xl">{displayCompanyListItems(false)}</p>
@@ -733,7 +715,7 @@ export default function GameInfoView({
                   {buildReleaseDateList() &&
                   buildReleaseDateList().length > 0 ? (
                     <fieldset className="border px-4 pb-4 mt-6 rounded-sm">
-                      <legend className="text-gray-500 text-xl font-bold px-2">
+                      <legend className="text-gray-400 text-xl font-bold px-2">
                         Releases
                       </legend>
                       <div className="flex flex-col text-xl">
@@ -775,6 +757,7 @@ export default function GameInfoView({
                       <></>
                     )}
                   </div>
+                  {/* //TODO: Add text box to add a review */}
                 </div>
               </div>
             </div>
