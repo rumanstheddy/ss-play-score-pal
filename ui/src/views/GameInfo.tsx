@@ -27,6 +27,7 @@ import { Play } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Suspense, lazy } from "react";
 import { FaExternalLinkAlt } from "react-icons/fa";
+import { Textarea } from "@/components/ui/textarea";
 
 interface IGameInfoProps {
   gameId: string;
@@ -757,8 +758,17 @@ export default function GameInfoView({
                       <></>
                     )}
                   </div>
-                  {/* //TODO: Add text box to add a review */}
                 </div>
+              </div>
+            </div>
+            {/* //TODO: Add text box to add a review */}
+            <div className="flex flex-col gap-2 mt-20 mx-20">
+              <p className="text-gray-400 text-xl font-semibold mb-1">
+                Review
+              </p>
+              <Textarea placeholder="Add your review here" />
+              <div className="">
+                <Button>Submit</Button>
               </div>
             </div>
           </div>
