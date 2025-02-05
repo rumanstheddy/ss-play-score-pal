@@ -5,6 +5,13 @@ const userRoutes = require("./routes/user.routes");
 const playscoreRoutes = require("./routes/playscore.routes");
 const authRoutes = require("./routes/auth.routes");
 
+const { ApolloServer } = require("apollo-server-express");
+
+// const typeDefs = require("./graphql/typeDefs");
+// const resolvers = require("./graphql/resolvers");
+
+// const server = new ApolloServer({ typeDefs, resolvers });
+
 const express = require("express");
 const { default: mongoose } = require("mongoose");
 
@@ -21,10 +28,10 @@ const db = mongoose.connection;
 const port = process.env.PORT;
 
 db.on("error", (error) => console.log(error));
-db.on("open", () => app.listen(port));
-db.on("open", () =>
-  console.log(`Connected to Db, server started at port: ${port}`)
-);
+db.on("open", () => {
+  app.listen(port);
+  console.log(`Connected to Db, server started at port: ${port}`);
+});
 
 app.use(gameRoutes);
 app.use(userRoutes);
