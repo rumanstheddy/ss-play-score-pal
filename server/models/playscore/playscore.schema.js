@@ -3,6 +3,8 @@ const mongoose = require("mongoose");
 
 const isNotEmpty = (str) => !(!str || /^\s*$/.test(str));
 
+// TODO: Change the gameId object to accept IGDB game id, maybe to string?
+
 module.exports = new mongoose.Schema(
   {
     gameId: {
@@ -28,7 +30,7 @@ module.exports = new mongoose.Schema(
     review: String,
     isRecommended: {
       type: String,
-      enum: ["Yes", "OnSale", "No"],
+      enum: ["YES", "ONSALE", "NO"],
       required: true,
     },
   },
