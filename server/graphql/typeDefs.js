@@ -1,6 +1,4 @@
-const { gql } = require("apollo-server");
-
-module.exports = gql`
+module.exports = `
   enum Recommendation {
     YES
     ONSALE
@@ -53,7 +51,7 @@ module.exports = gql`
     searchGames(searchQuery: String!): [Game]
   }
 
-  type PlayScoreInput {
+  input PlayScoreInput {
     gameId: String!
     userId: String!
     rating: Float!
@@ -61,13 +59,13 @@ module.exports = gql`
     isRecommended: [Recommendation]!
   }
 
-  type EditPlayScoreInput {
+  input EditPlayScoreInput {
     rating: Float
     review: String
     isRecommended: [Recommendation]
   }
 
-  type UserInput {
+  input UserInput {
     firstName: String!
     lastName: String!
     email: String!
@@ -76,7 +74,7 @@ module.exports = gql`
     isVerified: Boolean
   }
 
-  type GameInput {
+  input GameInput {
     name: String!
     developer: String
     publisher: String
@@ -93,7 +91,7 @@ module.exports = gql`
     createUser(user: UserInput!): User
     updateUser(id: ID!, user: UserInput): User
     deleteUser(id: ID!): User
-    
+
     createGame(game: GameInput!): Game
     updateGame(id: ID!, game: GameInput): Game
     deleteGame(id: ID!): Game
