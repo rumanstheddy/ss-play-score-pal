@@ -6,6 +6,7 @@ module.exports = `
   }
 
   type PlayScore {
+    _id: ID!
     gameId: String!
     userId: String!
     rating: Float!
@@ -21,16 +22,18 @@ module.exports = `
   }
 
   type User {
+    _id: ID!
     firstName: String!
     lastName: String!
     email: String!
     password: String!
-    userType: [UserType]
+    userType: UserType
     isVerified: Boolean
     createdAt: String
   }
 
   type Game {
+    _id: ID!
     name: String!
     developer: String
     publisher: String
@@ -70,7 +73,7 @@ module.exports = `
     lastName: String!
     email: String!
     password: String!
-    userType: [UserType]
+    userType: UserType
     isVerified: Boolean
   }
 
