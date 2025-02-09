@@ -11,8 +11,18 @@ const getPlayScoresByGameId = async (gameId) =>
 const getPlayScoresByUserId = async (userId) =>
   await playScoreModel.find({ userId: userId });
 
-const createPlayScore = async (playScore) =>
-  await playScoreModel.create(playScore);
+const createPlayScore = async (playScore) => {
+  const playScoreExists = await playScoreModel.findOne({
+    userId: playScore.userId,
+    gameId: playScore.gameId,
+  });
+
+  if (!!playScoreExists) {
+    throw new Error("You have already reviewed this game.");
+  }
+
+  return await playScoreModel.create(playScore);
+};
 
 const updatePlayScore = async (psId, playScore) => {
   return await playScoreModel.updateOne(

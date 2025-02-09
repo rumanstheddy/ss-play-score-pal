@@ -3,15 +3,11 @@ const mongoose = require("mongoose");
 
 const isNotEmpty = (str) => !(!str || /^\s*$/.test(str));
 
-// TODO: Change the gameId object to accept IGDB game id, maybe to string?
-
 module.exports = new mongoose.Schema(
   {
     gameId: {
-      type: ObjectId,
-      ref: "GameModel",
+      type: String,
       required: [true, "A valid gameId is required."],
-      immutable: true,
       validate: [isNotEmpty, "gameId cannot be empty"],
     },
     userId: {

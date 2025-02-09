@@ -11,7 +11,7 @@ module.exports = `
     userId: String!
     rating: Float!
     review: String
-    isRecommended: [Recommendation]!
+    isRecommended: Recommendation!
     createdAt: String
     updatedAt: String
   }
@@ -59,13 +59,13 @@ module.exports = `
     userId: String!
     rating: Float!
     review: String
-    isRecommended: [Recommendation]!
+    isRecommended: Recommendation!
   }
 
   input EditPlayScoreInput {
     rating: Float
     review: String
-    isRecommended: [Recommendation]
+    isRecommended: Recommendation
   }
 
   input UserInput {
