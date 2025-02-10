@@ -5,11 +5,11 @@ require("dotenv").config();
 // const playscoreRoutes = require("./routes/playscore.routes");
 // const authRoutes = require("./routes/auth.routes");
 const { ApolloServer } = require("@apollo/server");
+const { startStandaloneServer } = require("@apollo/server/standalone");
 
 const typeDefs = require("./graphql/typeDefs");
 const resolvers = require("./graphql/resolvers");
 
-const { startStandaloneServer } = require("@apollo/server/standalone");
 
 const server = new ApolloServer({ typeDefs, resolvers });
 

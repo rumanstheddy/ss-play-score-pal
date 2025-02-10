@@ -248,6 +248,22 @@ export default function GameInfoView({
           }),
         refetchOnWindowFocus: false,
       },
+      
+      // ** Successfully querying with gql server
+      // {
+      //   queryKey: ["users"],
+      //   queryFn: async () => {
+      //     const response = await fetch("http://localhost:4000", {
+      //       method: "POST",
+      //       headers: { "Content-Type": "application/json" },
+      //       body: JSON.stringify({
+      //         query: "query UsersQuery { users { _id firstName lastName } }",
+      //       }),
+      //     });
+      //     const data = await response.json();
+      //     return data.data.users;
+      //   },
+      // },
     ],
   });
 
@@ -267,7 +283,10 @@ export default function GameInfoView({
     themeList = { data: [] },
     releaseDateList = { data: [] },
     websiteList = { data: [] },
+    users,
   ] = otherResults.map((result) => result || { data: [] });
+
+  console.log("$$$$$$$$$$$$$$$$$$$$$$$$ users: ", users);
 
   const buildReleaseDateList = (): Release[] => {
     const platforms = platformNamesList?.data as Platform[];
@@ -761,11 +780,8 @@ export default function GameInfoView({
                 </div>
               </div>
             </div>
-            {/* //TODO: Add text box to add a review */}
             <div className="flex flex-col gap-2 mt-20 mx-20">
-              <p className="text-gray-400 text-xl font-semibold mb-1">
-                Review
-              </p>
+              <p className="text-gray-400 text-xl font-semibold mb-1">Review</p>
               <Textarea placeholder="Add your review here" />
               <div className="">
                 <Button>Submit</Button>
