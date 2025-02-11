@@ -26,6 +26,8 @@ const {
   deleteGame,
 } = require("../services/game.service");
 
+const { login } = require("../services/auth.service");
+
 module.exports = {
   Query: {
     async playScore(_, { id }) {
@@ -63,6 +65,10 @@ module.exports = {
     async searchGames(_, { searchQuery }) {
       return await searchGame(searchQuery);
     },
+
+    async login(_, { email, password }) {
+      return await login(email, password);
+    },
   },
 
   Mutation: {
@@ -78,7 +84,7 @@ module.exports = {
       return await deletePlayScore(id);
     },
 
-    async createUser(_, { user }) {
+    async signup(_, { user }) {
       return await createUser(user);
     },
 

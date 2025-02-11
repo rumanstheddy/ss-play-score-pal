@@ -52,6 +52,7 @@ module.exports = `
     games: [Game]
     game(id: ID!): Game
     searchGames(searchQuery: String!): [Game]
+    login(email: String!, password: String!): User
   }
 
   input PlayScoreInput {
@@ -73,8 +74,6 @@ module.exports = `
     lastName: String!
     email: String!
     password: String!
-    userType: UserType
-    isVerified: Boolean
   }
 
   input GameInput {
@@ -90,8 +89,8 @@ module.exports = `
     createPlayScore(playScore: PlayScoreInput!): PlayScore
     updatePlayScore(id: ID!, playScore: EditPlayScoreInput): PlayScore
     deletePlayScore(id: ID!): PlayScore
-
-    createUser(user: UserInput!): User
+    
+    signup(user: UserInput!): User
     updateUser(id: ID!, user: UserInput): User
     deleteUser(id: ID!): User
 
