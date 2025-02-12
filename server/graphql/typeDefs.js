@@ -42,6 +42,11 @@ module.exports = `
     genre: [String]
   }
 
+  type DeleteAcknowledgement {
+    acknowledged: Boolean
+    deletedCount: Int
+  }
+
   type Query {
     playScore(id: ID!): PlayScore
     playScoresByGameId(gameId: String!): [PlayScore]
@@ -92,7 +97,7 @@ module.exports = `
     
     signup(user: UserInput!): User
     updateUser(id: ID!, user: UserInput): User
-    deleteUser(id: ID!): User
+    deleteUser(id: ID!): DeleteAcknowledgement
 
     createGame(game: GameInput!): Game
     updateGame(id: ID!, game: GameInput): Game

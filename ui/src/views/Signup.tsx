@@ -22,7 +22,7 @@ export default function SignupView(): React.ReactElement {
 
   const successMsgStr: string = "You've registered successfully!";
 
-  interface IsignupBody {
+  interface Iuser {
     firstName: string;
     lastName: string;
     email: string;
@@ -30,23 +30,32 @@ export default function SignupView(): React.ReactElement {
   }
 
   const signUp = async (): Promise<Response> => {
-    const body: IsignupBody = {
+    const userBody: Iuser = {
       firstName: fName,
       lastName: lName,
       email: email,
       password: password,
     };
 
-    const response: Response = await fetch("http://localhost:4000/signup", {
+    const res = await fetch("http://localhost:4000", {
       method: "POST",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
+      body: JSON.stringify({
+        query: `mutation UserMutation($user: UserInput!) {
+          signup(user : $user) {
+              _id
+              firstName
+              lastName
+              email
+          }
+        }`,
+        variables: {
+          user: userBody,
+        },
+      }),
+      headers: { "Content-Type": "application/json" },
     });
 
-    return response;
+    return res;
   };
 
   const clearFields = (): void => {
@@ -57,10 +66,15 @@ export default function SignupView(): React.ReactElement {
   };
 
   const onSubmit = async () => {
-    const response: Response = await signUp();
-    if (response.status === 201) setIsSignupSuccess(true);
+    const response = await signUp();
+    console.log(response);
+
+    // TODO: Add error handling, replace resoponse.ok with different if check
+
+    if (response.ok) setIsSignupSuccess(true);
     clearFields();
   };
+
 
   const displaySuccessMsg = (): React.ReactElement =>
     isSignupSuccess ? (

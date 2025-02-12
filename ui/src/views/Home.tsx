@@ -13,8 +13,12 @@ import Link from "next/link";
 import { useState } from "react";
 
 type CustomUser = {
-  firstName?: string | null | undefined;
-  lastName?: string | null | undefined;
+  data: {
+    login: {
+      firstName?: string | null | undefined;
+      lastName?: string | null | undefined;
+    };
+  };
 };
 
 export interface CustomSession extends Session {
@@ -39,13 +43,16 @@ type Game = {
 };
 
 export default function HomeView(): React.ReactElement {
-  const { data: session } = useSession() as { data: CustomSession | null };
+  const { data: session, status } = useSession() as {
+    data: CustomSession | null;
+    status: string;
+  };
 
   const [searchText, setSearchText]: [string, (searchText: string) => void] =
     useState<string>("");
 
   const welcomeMsg = session?.user
-    ? "Welcome, " + session.user.firstName + "!"
+    ? "Welcome, " + session.user.data.login.firstName + "!"
     : "Playscore Pal";
 
   const args: ProviderFnArgs = {
@@ -79,11 +86,12 @@ export default function HomeView(): React.ReactElement {
     }
   };
 
+  // TODO: Fix the home page default screen for logged in status
   return (
     <div className="flex flex-col justify-center min-h-screen">
       <>
         <NavBar
-          name={session?.user ? session.user.firstName : ""}
+          name={session?.user ? session.user.data.login.firstName : ""}
           isLoggedIn={!!(session && session.user)}
         />
         <h1 className="mb-6 scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl text text-center">
@@ -100,7 +108,7 @@ export default function HomeView(): React.ReactElement {
           {displaySearchResults()}
         </div>
       </>
-      {session?.user ? (
+      {status === "authenticated" ? (
         <></>
       ) : (
         <>

@@ -69,7 +69,7 @@ export default async function GameInfo({
     buildQuery({ fields: involvedCompQFields, filters: involvedCompQFilter })
   );
 
-  // TODO: Hydrate the component with other data as well
+  // TODO: Hydrate the component with other data
 
   const queryClient = new QueryClient();
 

@@ -28,11 +28,19 @@ export const authOptions: NextAuthOptions = {
           string
         >;
 
-        const res = await fetch("http://localhost:4000/login", {
+        const res = await fetch("http://localhost:4000", {
           method: "POST",
-          body: JSON.stringify({ email, password }),
+          body: JSON.stringify({
+            query:
+              "query loginQuery ($email: String!, $password: String!) { login(email : $email, password : $password) { _id firstName lastName } }",
+            variables: {
+              email: email,
+              password: password,
+            },
+          }),
           headers: { "Content-Type": "application/json" },
         });
+
         const user = await res.json();
 
         // If no error and we have user data, return it
