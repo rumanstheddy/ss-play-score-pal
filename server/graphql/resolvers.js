@@ -1,4 +1,5 @@
-// TODO: Finish adding resolvers
+const { GraphQLError } = require("graphql");
+
 const {
   createPlayScore,
   getPlayScore,
@@ -85,6 +86,29 @@ module.exports = {
     },
 
     async signup(_, { user }) {
+      const searchResult = await searchUser(user.email);
+      if (searchResult.length > 0) {
+        throw new GraphQLError(
+          "An account with that e-mail address already exists!",
+          {
+            extensions: {
+              code: "BAD_USER_INPUT",
+            },
+          }
+        );
+      }
+
+      if (user.password.length < 6) {
+        throw new GraphQLError(
+          "Your password should be at least 6 characters in length!",
+          {
+            extensions: {
+              code: "BAD_USER_INPUT",
+            },
+          }
+        );
+      }
+
       return await createUser(user);
     },
 

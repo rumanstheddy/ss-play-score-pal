@@ -16,21 +16,27 @@ export default function PopUpMsg({
 }: IpopUpMsgProps): React.ReactElement<IpopUpMsgProps> {
   const msgColor: string = isSuccess ? "green" : "red";
   const styleClasses: string =
-    "text-center rounded-lg bg-" + msgColor + "-500 px-4 py-1 mb-12";
+    "flex justify-center items-center text-center rounded-lg bg-" +
+    msgColor +
+    "-500 px-4 py-1 mb-12";
 
   return (
     <div className={styleClasses}>
-      <span className="text">{message}</span>
-      <Link
-        href={link}
-        className="pl-2 text-blue-600 hover:underline hover:text-blue-700"
-      >
-        Login
-      </Link>
-      <CircleX
-        className="text h-5 w-5 inline-block ml-3 mb-0.5 hover:cursor-pointer hover:text-gray-300"
-        onClick={() => setShouldDisplay(false)}
-      />
+      <span className="text">
+        {message}
+        <Link
+          href={link}
+          className="pl-2 text-blue-600 hover:underline hover:text-blue-700"
+        >
+          Login
+        </Link>
+      </span>
+      <div>
+        <CircleX
+          className="text h-6 w-6 inline-block ml-3 mb-0.5 hover:cursor-pointer hover:text-gray-400"
+          onClick={() => setShouldDisplay(false)}
+        />
+      </div>
     </div>
   );
 }

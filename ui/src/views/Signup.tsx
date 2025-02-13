@@ -7,20 +7,18 @@ import TextLink from "@/components/TextLink";
 import { Button } from "@/components/ui/button";
 
 export default function SignupView(): React.ReactElement {
-  const [fName, setFname]: [string, (fName: string) => void] =
-    useState<string>("");
-  const [lName, setLname]: [string, (lName: string) => void] =
-    useState<string>("");
-  const [email, setEmail]: [string, (email: string) => void] =
-    useState<string>("");
-  const [password, setPassword]: [string, (password: string) => void] =
-    useState<string>("");
-  const [isSignupSuccess, setIsSignupSuccess]: [
-    boolean,
-    (isSignupSuccess: boolean) => void
-  ] = useState<boolean>(false);
+  const [fName, setFname] = useState<string>("");
+  const [lName, setLname] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+
+  const [displayPopUp, setDisplayPopUp] = useState<boolean>(false);
+  const [signupSucess, setSignupSucess] = useState<boolean>(false);
+  const [statusMsg, setStatusMsg] = useState<string>("");
 
   const successMsgStr: string = "You've registered successfully!";
+  const diffPasswordsStr: string = "Passwords do not match!";
 
   interface Iuser {
     firstName: string;
@@ -63,26 +61,41 @@ export default function SignupView(): React.ReactElement {
     setLname("");
     setEmail("");
     setPassword("");
+    setConfirmPassword("");
   };
 
   const onSubmit = async () => {
     const response = await signUp();
-    console.log(response);
+    const data = await response.json();
 
-    // TODO: Add error handling, replace resoponse.ok with different if check
+    if (password !== confirmPassword) {
+      setSignupSucess(false);
+      setStatusMsg(diffPasswordsStr);
+      setDisplayPopUp(true);
+      clearFields();
+      return;
+    }
 
-    if (response.ok) setIsSignupSuccess(true);
+    if (data.errors) {
+      setSignupSucess(false);
+      setStatusMsg(data.errors[0].message as string);
+    } else {
+      setSignupSucess(true);
+      setStatusMsg(successMsgStr);
+    }
+
+    setDisplayPopUp(true);
+
     clearFields();
   };
 
-
-  const displaySuccessMsg = (): React.ReactElement =>
-    isSignupSuccess ? (
+  const displayPopUpMsg = (): React.ReactElement =>
+    displayPopUp ? (
       <PopUpMsg
-        message={successMsgStr}
+        message={statusMsg}
         link="/login"
-        setShouldDisplay={setIsSignupSuccess}
-        isSuccess={true}
+        setShouldDisplay={setDisplayPopUp}
+        isSuccess={signupSucess}
       />
     ) : (
       <></>
@@ -91,11 +104,11 @@ export default function SignupView(): React.ReactElement {
   return (
     <div className="flex justify-center min-h-screen">
       <div className="content-center w-1/3">
-        {displaySuccessMsg()}
-        <h1 className="scroll-m-20 pb-2 text-4xl font-semibold tracking-tight first:mt-0 text text-center mb-3">
+        {displayPopUpMsg()}
+        <h1 className="scroll-m-20 pb-2 text-4xl font-semibold tracking-tight first:mt-0 text text-center">
           Sign Up
         </h1>
-        <div className="flex flex-col mt-8">
+        <div className="flex flex-col mt-5">
           <InputField
             name="input_fName"
             label="First Name:"
@@ -133,6 +146,16 @@ export default function SignupView(): React.ReactElement {
             placeholder="Enter a password"
             input={password}
             setInput={setPassword}
+          />
+        </div>
+        <div className="flex flex-col mt-4">
+          <InputField
+            name="input_confirm_pw"
+            label="Confirm Password:"
+            type="password"
+            placeholder="Enter a password"
+            input={confirmPassword}
+            setInput={setConfirmPassword}
           />
         </div>
         <div className="flex justify-center mt-8">

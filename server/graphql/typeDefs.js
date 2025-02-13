@@ -51,12 +51,15 @@ module.exports = `
     playScore(id: ID!): PlayScore
     playScoresByGameId(gameId: String!): [PlayScore]
     playScoresByUserId(userId: String!): [PlayScore]
+
     users: [User]
     user(id: ID!): User
     searchUsers(searchQuery: String!): [User]
+    
     games: [Game]
     game(id: ID!): Game
     searchGames(searchQuery: String!): [Game]
+    
     login(email: String!, password: String!): User
   }
 
