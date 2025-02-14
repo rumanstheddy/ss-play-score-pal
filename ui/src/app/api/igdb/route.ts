@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
   }
 
   const query = await req.json();
-  const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/${path}`;
+  const url = `${process.env.NEXT_PUBLIC_GAMES_API_BASE_URL}/${path}`;
 
   try {
     const response = await fetch(url, {

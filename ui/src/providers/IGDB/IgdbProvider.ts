@@ -36,8 +36,6 @@ export const buildQuery = ({
   query += filters ? "where " + filters.join(",") + ";" : "";
   query += sort ? "sort " + sort.join(" ") + ";" : "";
 
-  console.log("query", query);
-
   return query;
 };
 

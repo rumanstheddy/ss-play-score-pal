@@ -25,9 +25,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Play } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { Suspense, lazy } from "react";
-import { FaExternalLinkAlt } from "react-icons/fa";
-import { Textarea } from "@/components/ui/textarea";
+import TextField from "@/components/TextField";
+import SocialIcon from "@/components/SocialIcon";
 
 interface IGameInfoProps {
   gameId: string;
@@ -248,7 +247,7 @@ export default function GameInfoView({
           }),
         refetchOnWindowFocus: false,
       },
-      
+
       // ** Successfully querying with gql server
       // {
       //   queryKey: ["users"],
@@ -285,8 +284,6 @@ export default function GameInfoView({
     websiteList = { data: [] },
     users,
   ] = otherResults.map((result) => result || { data: [] });
-
-  console.log("$$$$$$$$$$$$$$$$$$$$$$$$ users: ", users);
 
   const buildReleaseDateList = (): Release[] => {
     const platforms = platformNamesList?.data as Platform[];
@@ -423,77 +420,7 @@ export default function GameInfoView({
 
     const category = game?.category;
 
-    console.log("category", game?.category);
-
     return categoryNames[category];
-  };
-
-  const iconMap: Record<number, React.ComponentType> = {
-    1: lazy(() =>
-      import("react-icons/fa").then((mod) => ({ default: mod.FaGlobe }))
-    ),
-    2: lazy(() =>
-      import("react-icons/si").then((mod) => ({ default: mod.SiFandom }))
-    ),
-    3: lazy(() =>
-      import("react-icons/si").then((mod) => ({ default: mod.SiWikipedia }))
-    ),
-    4: lazy(() =>
-      import("react-icons/si").then((mod) => ({ default: mod.SiFacebook }))
-    ),
-    5: lazy(() =>
-      import("react-icons/si").then((mod) => ({ default: mod.SiTwitter }))
-    ),
-    6: lazy(() =>
-      import("react-icons/si").then((mod) => ({ default: mod.SiTwitch }))
-    ),
-    8: lazy(() =>
-      import("react-icons/si").then((mod) => ({ default: mod.SiInstagram }))
-    ),
-    9: lazy(() =>
-      import("react-icons/si").then((mod) => ({ default: mod.SiYoutube }))
-    ),
-    10: lazy(() =>
-      import("react-icons/si").then((mod) => ({ default: mod.SiApple }))
-    ),
-    11: lazy(() =>
-      import("react-icons/tb").then((mod) => ({ default: mod.TbDeviceIpad }))
-    ),
-    12: lazy(() =>
-      import("react-icons/si").then((mod) => ({ default: mod.SiAndroid }))
-    ),
-    13: lazy(() =>
-      import("react-icons/si").then((mod) => ({ default: mod.SiSteam }))
-    ),
-    14: lazy(() =>
-      import("react-icons/si").then((mod) => ({ default: mod.SiReddit }))
-    ),
-    15: lazy(() =>
-      import("react-icons/si").then((mod) => ({ default: mod.SiItchdotio }))
-    ),
-    16: lazy(() =>
-      import("react-icons/si").then((mod) => ({ default: mod.SiEpicgames }))
-    ),
-    17: lazy(() =>
-      import("react-icons/si").then((mod) => ({ default: mod.SiGogdotcom }))
-    ),
-    18: lazy(() =>
-      import("react-icons/si").then((mod) => ({ default: mod.SiDiscord }))
-    ),
-  };
-
-  const buildIcon = (iconCategory: number) => {
-    const Icon = iconMap[iconCategory];
-
-    if (!Icon) {
-      return <FaExternalLinkAlt size={40} />; // Return a fallback if the icon isn't in the map
-    }
-
-    return (
-      <Suspense fallback={<div></div>}>
-        <Icon size={40} />
-      </Suspense>
-    );
   };
 
   const displayCompanyListItems = (isDeveloper: boolean) => {
@@ -577,7 +504,7 @@ export default function GameInfoView({
   return (
     <>
       <NavBar
-        name={session?.user ? session.user.firstName : ""}
+        name={session?.user ? session.user.data.login.firstName : ""}
         isLoggedIn={!!(session && session.user)}
       />
       {isAnyLoading ? (
@@ -594,9 +521,9 @@ export default function GameInfoView({
             style={{ backgroundImage: `url(${artworkUrl ? artworkUrl : ""})` }}
             className="absolute inset-0 bg-cover bg-center"
           ></div>
-          {/* Content layer */}
+          {/* //**Content layer */}
           <div className="relative z-10 flex flex-col justify-start min-h-screen backdrop-blur-sm bg-black/75">
-            <div className="flex flex-col justify-start mt-32">
+            <div className="flex flex-col justify-start my-28">
               <div className="flex flex-row justify-between items-center mx-20">
                 <div className="flex flex-col">
                   <div className="flex flex-row items-center">
@@ -620,14 +547,10 @@ export default function GameInfoView({
                 {trailerUrl && !!trailerUrl ? (
                   <Dialog>
                     <DialogTrigger>
-                      <Button
-                        className="rounded-lg bg-white text-center text-black text-xl tracking-tight hover:bg-slate-400"
-                        type="button"
-                        onClick={() => console.log("Clicked!")}
-                      >
+                      <div className="flex items-center rounded-lg bg-white text-center text-black text-xl tracking-tight hover:bg-slate-400 px-4 py-2">
                         <Play className="h-6 w-6 mr-2" />
                         Watch Trailer
-                      </Button>
+                      </div>
                     </DialogTrigger>
                     <DialogContent className="bg-black text px-0 py-0 max-w-3xl">
                       <div className="aspect-w-16 aspect-h-9">
@@ -769,7 +692,7 @@ export default function GameInfoView({
                       websiteList.data.map((website: Website) => (
                         <Link href={website.url} key={website.id}>
                           <div className="text">
-                            {buildIcon(website.category)}
+                            <SocialIcon iconCategory={website.category} />
                           </div>
                         </Link>
                       ))
@@ -780,13 +703,7 @@ export default function GameInfoView({
                 </div>
               </div>
             </div>
-            <div className="flex flex-col gap-2 mt-20 mx-20">
-              <p className="text-gray-400 text-xl font-semibold mb-1">Review</p>
-              <Textarea placeholder="Add your review here" />
-              <div className="">
-                <Button>Submit</Button>
-              </div>
-            </div>
+            <TextField title="Review" placeholder="Add your review here" />
           </div>
         </div>
       )}

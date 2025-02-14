@@ -1,6 +1,7 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import NextAuth from "next-auth/next";
+import { login } from "@/providers/PlayScoreProvider/PlayScoreProvider";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -28,23 +29,27 @@ export const authOptions: NextAuthOptions = {
           string
         >;
 
-        const res = await fetch("http://localhost:4000", {
-          method: "POST",
-          body: JSON.stringify({
-            query:
-              "query loginQuery ($email: String!, $password: String!) { login(email : $email, password : $password) { _id firstName lastName } }",
-            variables: {
-              email: email,
-              password: password,
-            },
-          }),
-          headers: { "Content-Type": "application/json" },
+        // const res = await fetch("http://localhost:4000", {
+        //   method: "POST",
+        //   body: JSON.stringify({
+        //     query:
+        //       "query loginQuery ($email: String!, $password: String!) { login(email : $email, password : $password) { _id firstName lastName } }",
+        //     variables: {
+        //       email: email,
+        //       password: password,
+        //     },
+        //   }),
+        //   headers: { "Content-Type": "application/json" },
+        // });
+
+        const user = await login({
+          fields: "_id firstName lastName",
+          parameters: { $email: "String!", $password: "String!" },
+          variables: { email: email, password: password },
         });
 
-        const user = await res.json();
-
         // If no error and we have user data, return it
-        if (res.ok && user) {
+        if (user) {
           return user;
         }
         // Return null if user data could not be retrieved
