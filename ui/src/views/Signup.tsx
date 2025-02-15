@@ -40,10 +40,10 @@ export default function SignupView(): React.ReactElement {
       body: JSON.stringify({
         query: `mutation UserMutation($user: UserInput!) {
           signup(user : $user) {
-              _id
-              firstName
-              lastName
-              email
+            _id
+            firstName
+            lastName
+            email
           }
         }`,
         variables: {

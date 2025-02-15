@@ -42,15 +42,17 @@ export const authOptions: NextAuthOptions = {
         //   headers: { "Content-Type": "application/json" },
         // });
 
-        const user = await login({
+        const data = await login({
           fields: "_id firstName lastName",
           parameters: { $email: "String!", $password: "String!" },
           variables: { email: email, password: password },
         });
 
+        console.log("data", data.data);
+
         // If no error and we have user data, return it
-        if (user) {
-          return user;
+        if (!data.errors && data.data) {
+          return data.data;
         }
         // Return null if user data could not be retrieved
         return null;

@@ -1,6 +1,7 @@
 "use client";
 
 import InputField from "@/components/InputField";
+import PopUpMsg from "@/components/PopUpMsg";
 import TextLink from "@/components/TextLink";
 import { Button } from "@/components/ui/button";
 import { signIn } from "next-auth/react";
@@ -12,20 +13,47 @@ export default function LoginView(): React.ReactElement {
   const [password, setPassword]: [string, (password: string) => void] =
     useState<string>("");
 
+  const [displayPopUp, setDisplayPopUp] = useState<boolean>(false);
+
+  const errorMessage: string = "Invalid email or password!";
+
+  const clearFields = (): void => {
+    setEmail("");
+    setPassword("");
+  };
+
   const onSubmit = async () => {
     const result = await signIn("credentials", {
       email: email,
       password: password,
-      redirect: true,
+      redirect: false,
       callbackUrl: "/",
     });
 
-    if (result?.error) console.log(result.error);
+    if (result?.ok) {
+      window.location.href = "/";
+    } else {
+      setDisplayPopUp(true);
+      clearFields();
+    }
   };
+
+  const displayErrorPopUp = (): React.ReactElement =>
+    displayPopUp ? (
+      <PopUpMsg
+        message={errorMessage}
+        // link="/login"
+        setShouldDisplay={setDisplayPopUp}
+        isSuccess={false}
+      />
+    ) : (
+      <></>
+    );
 
   return (
     <div className="flex justify-center min-h-screen">
       <div className="content-center w-1/3">
+        {displayErrorPopUp()}
         <h1 className="scroll-m-20 pb-2 text-4xl font-bold tracking-tight first:mt-0 text text-center mb-3">
           Login
         </h1>

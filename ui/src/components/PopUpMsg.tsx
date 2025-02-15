@@ -4,7 +4,7 @@ import { CircleX } from "lucide-react";
 interface IpopUpMsgProps {
   isSuccess: boolean;
   message: string;
-  link: string;
+  link?: string;
   setShouldDisplay(shouldDisplay: boolean): void;
 }
 
@@ -24,12 +24,15 @@ export default function PopUpMsg({
     <div className={styleClasses}>
       <span className="text">
         {message}
-        <Link
-          href={link}
-          className="pl-2 text-blue-600 hover:underline hover:text-blue-700"
-        >
-          Login
-        </Link>
+        {link && (
+          <Link
+            href={link}
+            className="pl-2 text-blue-600 hover:underline hover:text-blue-700"
+          >
+            {link.split("/")[1].charAt(0).toUpperCase() +
+              link.split("/")[1].split(link.split("/")[1].charAt(0))[1]}
+          </Link>
+        )}
       </span>
       <div>
         <CircleX

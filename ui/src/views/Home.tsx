@@ -13,11 +13,9 @@ import Link from "next/link";
 import { useState } from "react";
 
 type CustomUser = {
-  data: {
-    login: {
-      firstName?: string | null | undefined;
-      lastName?: string | null | undefined;
-    };
+  login: {
+    firstName?: string | null | undefined;
+    lastName?: string | null | undefined;
   };
 };
 
@@ -51,8 +49,10 @@ export default function HomeView(): React.ReactElement {
   const [searchText, setSearchText]: [string, (searchText: string) => void] =
     useState<string>("");
 
+  console.log("session", session);
+
   const welcomeMsg = session?.user
-    ? "Welcome, " + session.user.data.login.firstName + "!"
+    ? "Welcome, " + session.user.login.firstName + "!"
     : "Playscore Pal";
 
   const args: ProviderFnArgs = {
@@ -91,7 +91,7 @@ export default function HomeView(): React.ReactElement {
     <div className="flex flex-col justify-center min-h-screen">
       <>
         <NavBar
-          name={session?.user ? session.user.data.login.firstName : ""}
+          name={session?.user ? session.user.login.firstName : ""}
           isLoggedIn={!!(session && session.user)}
         />
         <h1 className="mb-6 scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl text text-center">
