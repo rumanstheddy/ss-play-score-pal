@@ -55,7 +55,7 @@ export default async function GameInfo({
     `game = ${gameId} & (developer=true | publisher=true)`,
   ];
 
-  //** As we are pre-fetching data from a Server Component using this helper method.
+  //** As we are pre-fetching data from a Server Component using this helper function.
   const gameData = await igdbProxyFetch(
     "games",
     buildQuery({

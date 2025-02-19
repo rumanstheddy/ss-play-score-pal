@@ -1,7 +1,7 @@
 import { headers } from "@/providers/IGDB/IgdbProvider";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(req: NextRequest) {
+export const POST = async (req: NextRequest) => {
   const path = req.nextUrl.searchParams.get("path");
 
   if (!path) {
@@ -31,4 +31,4 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     return NextResponse.json({ error: error });
   }
-}
+};

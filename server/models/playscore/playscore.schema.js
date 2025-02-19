@@ -23,6 +23,7 @@ module.exports = new mongoose.Schema(
       min: [0, "The rating cannot be lesser than 0"],
       max: [10, "The rating cannot be greater than 10"],
     },
+    // TODO: Character limit for review?
     review: String,
     isRecommended: {
       type: String,

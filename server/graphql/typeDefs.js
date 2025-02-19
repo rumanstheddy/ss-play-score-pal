@@ -96,7 +96,7 @@ module.exports = `
   type Mutation {
     createPlayScore(playScore: PlayScoreInput!): PlayScore
     updatePlayScore(id: ID!, playScore: EditPlayScoreInput): PlayScore
-    deletePlayScore(id: ID!): PlayScore
+    deletePlayScore(id: ID!): DeleteAcknowledgement
     
     signup(user: UserInput!): User
     updateUser(id: ID!, user: UserInput): User

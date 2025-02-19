@@ -14,6 +14,7 @@ import { useState } from "react";
 
 type CustomUser = {
   login: {
+    _id?: string | null | undefined;
     firstName?: string | null | undefined;
     lastName?: string | null | undefined;
   };
@@ -48,8 +49,6 @@ export default function HomeView(): React.ReactElement {
 
   const [searchText, setSearchText]: [string, (searchText: string) => void] =
     useState<string>("");
-
-  console.log("session", session);
 
   const welcomeMsg = session?.user
     ? "Welcome, " + session.user.login.firstName + "!"

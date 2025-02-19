@@ -39,7 +39,14 @@ const updatePlayScore = async (psId, playScore) => {
   );
 };
 
-const deletePlayScore = async (id) => playScoreModel.deleteOne({ _id: id });
+const deletePlayScore = async (id) => {
+  const result = playScoreModel.deleteOne({ _id: id });
+
+  if (result.deletedCount === 0)
+    throw new Error(`No playscore found with Id: ${id}`);
+
+  return result;
+};
 
 // Mongoose Middleware
 playscoreSchema.post("save", (doc) => {

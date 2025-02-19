@@ -20,7 +20,6 @@ userSchema.pre("updateOne", async function (next) {
 
     const update = this.getUpdate().$set;
     if (update.password) {
-      console.log(update);
       const salt = await bcrypt.genSalt();
       update.password = await bcrypt.hash(update.password, salt);
     }

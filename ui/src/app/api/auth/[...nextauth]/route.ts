@@ -48,8 +48,6 @@ export const authOptions: NextAuthOptions = {
           variables: { email: email, password: password },
         });
 
-        console.log("data", data.data);
-
         // If no error and we have user data, return it
         if (!data.errors && data.data) {
           return data.data;
@@ -59,6 +57,8 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
+
+  // TODO: Check decryption operation failed error message
 
   callbacks: {
     async jwt({ token, user }) {

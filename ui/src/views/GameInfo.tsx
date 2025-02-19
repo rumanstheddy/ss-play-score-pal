@@ -21,12 +21,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { CustomSession } from "./Home";
 import { useSession } from "next-auth/react";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Play } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import TextField from "@/components/TextField";
 import SocialIcon from "@/components/SocialIcon";
+import ReviewForm from "@/components/ReviewForm";
+import ReviewList from "@/components/ReviewList";
 
 interface IGameInfoProps {
   gameId: string;
@@ -504,7 +504,7 @@ export default function GameInfoView({
   return (
     <>
       <NavBar
-        name={session?.user ? session.user.data.login.firstName : ""}
+        name={session?.user ? session.user.login.firstName : ""}
         isLoggedIn={!!(session && session.user)}
       />
       {isAnyLoading ? (
@@ -522,7 +522,7 @@ export default function GameInfoView({
             className="absolute inset-0 bg-cover bg-center"
           ></div>
           {/* //**Content layer */}
-          <div className="relative z-10 flex flex-col justify-start min-h-screen backdrop-blur-sm bg-black/75">
+          <div className="relative z-10 flex flex-col justify-start min-h-screen backdrop-blur-sm bg-black/75 mb-16">
             <div className="flex flex-col justify-start my-28">
               <div className="flex flex-row justify-between items-center mx-20">
                 <div className="flex flex-col">
@@ -686,7 +686,6 @@ export default function GameInfoView({
                   ) : (
                     <></>
                   )}
-
                   <div className="flex flex-row mt-10 justify-around items-center">
                     {websiteList.data ? (
                       websiteList.data.map((website: Website) => (
@@ -703,7 +702,15 @@ export default function GameInfoView({
                 </div>
               </div>
             </div>
-            <TextField title="Review" placeholder="Add your review here" />
+            <div>
+              <ReviewForm
+                title="Review"
+                placeholder="Add your review here"
+                userId={session && session.user ? session?.user.login._id : ""}
+                gameId={gameId}
+              />
+              <ReviewList gameId={gameId} />
+            </div>
           </div>
         </div>
       )}

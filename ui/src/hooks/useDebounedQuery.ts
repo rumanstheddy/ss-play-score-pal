@@ -32,7 +32,7 @@ export default function useDebouncedQuery<T>(
     };
   }, [search, delay]);
 
-  return useQuery<T>({
+  return useQuery({
     queryKey: [...queryKey, debouncedText],
     queryFn: () =>
       providerFn({ fields, limit, search: debouncedText, filters }),
