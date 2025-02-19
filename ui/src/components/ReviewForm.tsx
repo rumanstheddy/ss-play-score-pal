@@ -3,6 +3,8 @@ import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
 import { useState } from "react";
 import { createPlayScore } from "@/providers/PlayScoreProvider/PlayScoreProvider";
+import RatingSelector from "./RatingSelector";
+import RecommendationSelector from "./RecommendationSelector";
 
 interface ReviewFormProps {
   title?: string;
@@ -19,6 +21,8 @@ export default function ReviewForm({
 }: ReviewFormProps): React.ReactElement {
   const [shouldSubmit, setShouldSubmit] = useState<boolean>(false);
   const [textareaValue, setTextareaValue] = useState<string>("");
+  const [rating, setRating] = useState<number | null>(null);
+  const [recommendation, setRecommendation] = useState<string | null>(null);
 
   const { isSuccess } = useQuery({
     queryKey: ["submitReview"],
@@ -31,8 +35,9 @@ export default function ReviewForm({
           playScore: {
             gameId: gameId,
             userId: userId,
-            isRecommended: "YES", // TODO: Create a component for selecting isRecommended
-            rating: 1, // TODO: Create a component for selecting a rating
+            // TODO: Handle errors for empty recommendation and rating
+            isRecommended: recommendation,
+            rating: rating,
             review: textareaValue,
           },
         },
@@ -51,21 +56,36 @@ export default function ReviewForm({
     setShouldSubmit(true);
     if (isSuccess) {
       setTextareaValue("");
+      setRating(null);
+      setRecommendation(null);
     }
   };
 
   return (
-    <div className="flex flex-col gap-4 mx-20">
-      <p className="text-gray-400 text-xl font-semibold mb-1">{title}</p>
-      <Textarea
-        placeholder={placeholder}
-        value={textareaValue}
-        onChange={(e) => setTextareaValue(e.target.value)}
+    <div className="flex flex-col gap-6 mx-20 mb-12">
+      <p className="text-gray-400 text-xl font-semibold">{title}</p>
+      <RatingSelector onSelectRating={setRating} selectedRating={rating} />
+      <RecommendationSelector
+        selectedOption={recommendation}
+        setSelectedOption={setRecommendation}
       />
-      <div className="">
-        <Button type="button" onClick={handleSubmit}>
-          Submit
-        </Button>
+      <div className="flex flex-col gap-4">
+        <p className="text-gray-400 text-md font-semibold">Review</p>
+        <Textarea
+          placeholder={placeholder}
+          value={textareaValue}
+          onChange={(e) => setTextareaValue(e.target.value)}
+        />
+        <div>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleSubmit}
+            className="hover:border hover:bg-slate-900 hover:text-white"
+          >
+            Submit
+          </Button>
+        </div>
       </div>
     </div>
   );

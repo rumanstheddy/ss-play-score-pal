@@ -16,7 +16,7 @@ export default function ReviewItem({
   updatedAt,
 }: ReviewItemProps): React.ReactElement {
   return (
-    <div className="text-white bg-background text-foreground p-4 rounded-lg shadow-sm border border-border">
+    <li className="text-white bg-background text-foreground p-4 rounded-lg shadow-sm border border-border">
       {/* Row 1: User Name */}
       <div className="text-lg font-semibold mb-2">{userName}</div>
 
@@ -30,6 +30,6 @@ export default function ReviewItem({
 
       {/* Row 3: Review */}
       <div className="text-muted-foreground">{review}</div>
-    </div>
+    </li>
   );
 }
