@@ -7,7 +7,7 @@ interface ReviewItemProps {
   updatedAt: string;
 }
 
-export default function ReviewItem({
+export default function PlayScoreItem({
   userName,
   rating,
   review,

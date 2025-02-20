@@ -10,7 +10,6 @@ const { startStandaloneServer } = require("@apollo/server/standalone");
 const typeDefs = require("./graphql/typeDefs");
 const resolvers = require("./graphql/resolvers");
 
-
 const server = new ApolloServer({ typeDefs, resolvers });
 
 // const express = require("express");
@@ -22,7 +21,7 @@ const { default: mongoose } = require("mongoose");
 // const cors = require("cors");
 // app.use(cors());
 
-mongoose.connect(process.env.DB_URL);
+mongoose.connect(process.env.DB_URL, { appName: "ss-play-score-pal-cluster" });
 
 const db = mongoose.connection;
 
@@ -30,7 +29,7 @@ const port = process.env.PORT;
 
 db.on("error", (error) => console.log(error));
 db.on("open", async () => {
-  const { url } = await startStandaloneServer(server, { 
+  const { url } = await startStandaloneServer(server, {
     listen: port,
   });
   console.log(`Connected to Db, server ready at: ${url}`);

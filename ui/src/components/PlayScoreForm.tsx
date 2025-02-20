@@ -1,10 +1,11 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
 import { useState } from "react";
 import { createPlayScore } from "@/providers/PlayScoreProvider/PlayScoreProvider";
 import RatingSelector from "./RatingSelector";
 import RecommendationSelector from "./RecommendationSelector";
+import { Loader2 } from "lucide-react";
 
 interface ReviewFormProps {
   title?: string;
@@ -13,7 +14,7 @@ interface ReviewFormProps {
   userId?: string | null | undefined;
 }
 
-export default function ReviewForm({
+export default function PlayScoreForm({
   title,
   placeholder,
   gameId,
@@ -24,9 +25,10 @@ export default function ReviewForm({
   const [rating, setRating] = useState<number | null>(null);
   const [recommendation, setRecommendation] = useState<string | null>(null);
 
-  const { isSuccess } = useQuery({
-    queryKey: ["submitReview"],
-    queryFn: () =>
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: () =>
       createPlayScore({
         fields:
           "_id createdAt gameId isRecommended rating review updatedAt userId",
@@ -35,31 +37,35 @@ export default function ReviewForm({
           playScore: {
             gameId: gameId,
             userId: userId,
-            // TODO: Handle errors for empty recommendation and rating
             isRecommended: recommendation,
             rating: rating,
             review: textareaValue,
           },
         },
       }),
-    enabled: shouldSubmit,
+    onSuccess: () => {
+      // Refetch the reviews list after submission
+      queryClient.invalidateQueries({ queryKey: ["playScores", gameId] });
+      setTextareaValue("");
+      setRating(null);
+      setRecommendation(null);
+    },
   });
 
   const handleSubmit = () => {
     if (!userId) {
-      // TODO: Error handling for userId not present (user not logged in)
       console.log("User not logged in");
       return;
     }
 
-    // TODO: Error handling for review already submitted for gameId and userId
-    setShouldSubmit(true);
-    if (isSuccess) {
-      setTextareaValue("");
-      setRating(null);
-      setRecommendation(null);
-    }
+    mutation.mutate();
   };
+
+  const isPending = mutation.isPending;
+
+  // TODO: Error handling for userId not present (user not logged in)
+
+  // TODO: Error handling for review already submitted for gameId and userId
 
   return (
     <div className="flex flex-col gap-6 mx-20 mb-12">
@@ -82,8 +88,10 @@ export default function ReviewForm({
             variant="outline"
             onClick={handleSubmit}
             className="hover:border hover:bg-slate-900 hover:text-white"
+            disabled={isPending}
           >
-            Submit
+            {isPending ? <Loader2 className="animate-spin" /> : ""}
+            {isPending ? "Please wait" : "Submit"}
           </Button>
         </div>
       </div>

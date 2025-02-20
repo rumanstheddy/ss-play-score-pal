@@ -25,8 +25,8 @@ import { Badge } from "@/components/ui/badge";
 import { Play } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import SocialIcon from "@/components/SocialIcon";
-import ReviewForm from "@/components/ReviewForm";
-import ReviewList from "@/components/ReviewList";
+import PlayScoreForm from "@/components/PlayScoreForm";
+import PlayScoreList from "@/components/PlayScoreList";
 
 interface IGameInfoProps {
   gameId: string;
@@ -697,13 +697,13 @@ export default function GameInfoView({
             </div>
           </div>
           <div className="my-16">
-            <ReviewForm
+            <PlayScoreForm
               title="Add your Playscore"
               placeholder="Your thoughts about the game"
               userId={session && session.user ? session?.user.login._id : ""}
               gameId={gameId}
             />
-            <ReviewList gameId={gameId} />
+            <PlayScoreList gameId={gameId} />
           </div>
         </>
       )}

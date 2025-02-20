@@ -20,8 +20,7 @@ type Review = {
 
 type User = { firstName: string; lastName: string; email: string };
 
-export const useReviewData = (gameId: string) => {
-  // Fetch play scores
+export const usePlayScoreData = (gameId: string) => {
   const {
     data: playScores,
     isLoading: isPlayScoresLoading,
@@ -38,11 +37,9 @@ export const useReviewData = (gameId: string) => {
 
   const playScoresData = playScores?.data?.playScoresByGameId;
 
-  // Extract userIds from playScores
   const userIds =
     playScoresData?.map((playScore: PlayScore) => playScore.userId) || [];
 
-  // Fetch user details for each userId
   const {
     data: users,
     isLoading: isUsersLoading,
@@ -59,16 +56,16 @@ export const useReviewData = (gameId: string) => {
           })
         )
       ),
-    enabled: !!userIds.length, // Only run if userIds exist
+    enabled: !!userIds.length,
   });
 
   // Combine playScores and users data
-  const reviewsWithUserDetails = playScoresData
-    ?.map((playScore: PlayScore, index: number) => ({
+  const reviewsWithUserDetails = playScoresData?.map(
+    (playScore: PlayScore, index: number) => ({
       ...playScore,
-      user: users?.[index].data.user, // Attach user details to each playScore
-    }))
-    .filter((review: Review) => review.user); // Filter out reviews where user is undefined
+      user: users?.[index].data.user,
+    })
+  );
 
   return {
     reviewsWithUserDetails,

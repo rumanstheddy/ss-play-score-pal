@@ -1,5 +1,5 @@
-import ReviewItem from "./ReviewItem"; // Assuming you have a separate ReviewItem component
-import { useReviewData } from "@/hooks/useReviewData"; // Adjust the import path as needed
+import ReviewItem from "./PlayScoreItem"; // Assuming you have a separate ReviewItem component
+import { usePlayScoreData } from "@/hooks/usePlayScoreData"; // Adjust the import path as needed
 
 type Review = {
   _id: string;
@@ -13,12 +13,12 @@ type Review = {
 
 type User = { firstName: string; lastName: string; email: string };
 
-export default function ReviewList({
+export default function PlayScoreList({
   gameId,
 }: {
   gameId: string;
 }): React.ReactElement {
-  const { reviewsWithUserDetails, isLoading, isError } = useReviewData(
+  const { reviewsWithUserDetails, isLoading, isError } = usePlayScoreData(
     gameId as string
   );
 
