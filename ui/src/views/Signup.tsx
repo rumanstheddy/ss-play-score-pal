@@ -5,6 +5,7 @@ import InputField from "@/components/InputField";
 import PopUpMsg from "@/components/PopUpMsg";
 import TextLink from "@/components/TextLink";
 import { Button } from "@/components/ui/button";
+import { signup } from "@/providers/PlayScore/PlayScoreProvider";
 
 export default function SignupView(): React.ReactElement {
   const [fName, setFname] = useState<string>("");
@@ -16,6 +17,7 @@ export default function SignupView(): React.ReactElement {
   const [displayPopUp, setDisplayPopUp] = useState<boolean>(false);
   const [signupSucess, setSignupSucess] = useState<boolean>(false);
   const [statusMsg, setStatusMsg] = useState<string>("");
+  const [link, setLink] = useState("");
 
   const successMsgStr: string = "You've registered successfully!";
   const diffPasswordsStr: string = "Passwords do not match!";
@@ -27,7 +29,12 @@ export default function SignupView(): React.ReactElement {
     password: string;
   }
 
-  const signUp = async (): Promise<Response> => {
+  type SignupError = {
+    message: string;
+    extensions: Record<string, string>;
+  };
+
+  const signUp = async () => {
     const userBody: Iuser = {
       firstName: fName,
       lastName: lName,
@@ -35,22 +42,12 @@ export default function SignupView(): React.ReactElement {
       password: password,
     };
 
-    const res = await fetch("http://localhost:4000", {
-      method: "POST",
-      body: JSON.stringify({
-        query: `mutation UserMutation($user: UserInput!) {
-          signup(user : $user) {
-            _id
-            firstName
-            lastName
-            email
-          }
-        }`,
-        variables: {
-          user: userBody,
-        },
-      }),
-      headers: { "Content-Type": "application/json" },
+    const res = await signup({
+      fields: "_id firstName lastName email",
+      parameters: { $user: "UserInput!" },
+      variables: {
+        user: userBody,
+      },
     });
 
     return res;
@@ -65,46 +62,55 @@ export default function SignupView(): React.ReactElement {
   };
 
   const onSubmit = async () => {
-    const response = await signUp();
-    const data = await response.json();
-
     if (password !== confirmPassword) {
-      setSignupSucess(false);
-      setStatusMsg(diffPasswordsStr);
-      setDisplayPopUp(true);
-      clearFields();
+      handleSignupError(diffPasswordsStr);
       return;
     }
 
-    if (data.errors) {
-      setSignupSucess(false);
-      setStatusMsg(data.errors[0].message as string);
-    } else {
-      setSignupSucess(true);
-      setStatusMsg(successMsgStr);
+    try {
+      const data = await signUp();
+
+      if (data.errors) {
+        const error: SignupError = data.errors[0];
+        const link =
+          error.extensions.code === "USER_ALREADY_EXISTS" ? "/login" : "";
+        handleSignupError(error.message, link);
+      } else {
+        handleSignupSuccess(successMsgStr, "/login");
+      }
+    } catch (err) {
+      console.error("Signup failed:", err);
+      handleSignupError("An unexpected error occurred. Please try again.");
+    } finally {
+      clearFields();
     }
-
-    setDisplayPopUp(true);
-
-    clearFields();
   };
 
-  const displayPopUpMsg = (): React.ReactElement =>
-    displayPopUp ? (
-      <PopUpMsg
-        message={statusMsg}
-        link="/login"
-        setShouldDisplay={setDisplayPopUp}
-        isSuccess={signupSucess}
-      />
-    ) : (
-      <></>
-    );
+  const handleSignupError = (message: string, link?: string) => {
+    setSignupSucess(false);
+    setStatusMsg(message);
+    setLink(link ?? "");
+    setDisplayPopUp(true);
+  };
+
+  const handleSignupSuccess = (message: string, link: string) => {
+    setSignupSucess(true);
+    setStatusMsg(message);
+    setLink(link);
+    setDisplayPopUp(true);
+  };
 
   return (
     <div className="flex justify-center min-h-screen">
       <div className="content-center w-1/3">
-        {displayPopUpMsg()}
+        {displayPopUp && (
+          <PopUpMsg
+            message={statusMsg}
+            link={link}
+            setShouldDisplay={setDisplayPopUp}
+            isSuccess={signupSucess}
+          />
+        )}
         <h1 className="scroll-m-20 pb-2 text-4xl font-semibold tracking-tight first:mt-0 text text-center">
           Sign Up
         </h1>

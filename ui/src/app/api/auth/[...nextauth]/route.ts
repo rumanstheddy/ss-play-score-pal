@@ -1,7 +1,7 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import NextAuth from "next-auth/next";
-import { login } from "@/providers/PlayScoreProvider/PlayScoreProvider";
+import { login } from "@/providers/PlayScore/PlayScoreProvider";
 
 export const authOptions: NextAuthOptions = {
   providers: [

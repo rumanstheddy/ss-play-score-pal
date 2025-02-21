@@ -92,7 +92,7 @@ module.exports = {
           "An account with that e-mail address already exists!",
           {
             extensions: {
-              code: "BAD_USER_INPUT",
+              code: "USER_ALREADY_EXISTS",
             },
           }
         );

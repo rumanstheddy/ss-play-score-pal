@@ -21,7 +21,7 @@ const { default: mongoose } = require("mongoose");
 // const cors = require("cors");
 // app.use(cors());
 
-mongoose.connect(process.env.DB_URL, { appName: "ss-play-score-pal-cluster" });
+mongoose.connect(process.env.DB_URL);
 
 const db = mongoose.connection;
 

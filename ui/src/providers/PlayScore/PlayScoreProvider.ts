@@ -83,6 +83,32 @@ export const login = async <T>({
   return await res.json();
 };
 
+export const signup = async <T>({
+  fields,
+  parameters,
+  variables,
+}: Partial<GqlQueryArgs<T>>) => {
+  const query = buildGqlQuery({
+    isQuery: false,
+    fields,
+    name: "Signup",
+    functionName: "signup",
+    parameters,
+    variables,
+  });
+
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}`, {
+    method: "POST",
+    body: JSON.stringify({
+      query: query,
+      variables: variables,
+    }),
+    headers: { "Content-Type": "application/json" },
+  });
+
+  return await res.json();
+};
+
 export const createPlayScore = async <T>({
   fields,
   parameters,

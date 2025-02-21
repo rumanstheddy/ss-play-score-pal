@@ -1,7 +1,7 @@
 import {
   getPlayScoresForGame,
   getUser,
-} from "@/providers/PlayScoreProvider/PlayScoreProvider";
+} from "@/providers/PlayScore/PlayScoreProvider";
 import { useQuery } from "@tanstack/react-query";
 
 type PlayScore = {

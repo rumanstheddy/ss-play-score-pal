@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
 import { useState } from "react";
-import { createPlayScore } from "@/providers/PlayScoreProvider/PlayScoreProvider";
+import { createPlayScore } from "@/providers/PlayScore/PlayScoreProvider";
 import RatingSelector from "./RatingSelector";
 import RecommendationSelector from "./RecommendationSelector";
 import { Loader2 } from "lucide-react";
@@ -20,7 +20,6 @@ export default function PlayScoreForm({
   gameId,
   userId,
 }: ReviewFormProps): React.ReactElement {
-  const [shouldSubmit, setShouldSubmit] = useState<boolean>(false);
   const [textareaValue, setTextareaValue] = useState<string>("");
   const [rating, setRating] = useState<number | null>(null);
   const [recommendation, setRecommendation] = useState<string | null>(null);

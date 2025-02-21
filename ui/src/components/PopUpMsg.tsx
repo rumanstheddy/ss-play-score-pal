@@ -8,6 +8,10 @@ interface IpopUpMsgProps {
   setShouldDisplay(shouldDisplay: boolean): void;
 }
 
+const createTitleFromLink = (link: string) =>
+  link.split("/")[1].charAt(0).toUpperCase() +
+  link.split("/")[1].split(link.split("/")[1].charAt(0))[1];
+
 export default function PopUpMsg({
   message,
   link,
@@ -29,8 +33,7 @@ export default function PopUpMsg({
             href={link}
             className="pl-2 text-blue-600 hover:underline hover:text-blue-700"
           >
-            {link.split("/")[1].charAt(0).toUpperCase() +
-              link.split("/")[1].split(link.split("/")[1].charAt(0))[1]}
+            {createTitleFromLink(link)}
           </Link>
         )}
       </span>
