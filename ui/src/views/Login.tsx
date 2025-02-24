@@ -54,7 +54,7 @@ export default function LoginView(): React.ReactElement {
     <div className="flex justify-center min-h-screen">
       <div className="content-center w-1/3">
         {displayErrorPopUp()}
-        <h1 className="scroll-m-20 pb-2 text-4xl font-bold tracking-tight first:mt-0 text text-center mb-3">
+        <h1 className="scroll-m-20 pb-2 text-4xl font-bold tracking-tight first:mt-0 text text-center mb-3 mt-12">
           Login
         </h1>
         <div className="flex flex-col mt-8">

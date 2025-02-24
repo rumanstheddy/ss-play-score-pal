@@ -33,19 +33,25 @@ export default function PlayScoreList({
   return (
     <div className="mx-20 mt-4">
       <p className="text-gray-400 text-xl font-semibold my-6">PlayScores</p>
-      <ul className="flex flex-col gap-4">
-        {reviewsWithUserDetails?.map((review: Review) => (
-          <ReviewItem
-            key={review._id}
-            userName={`${review.user?.firstName} ${review.user?.lastName}`}
-            isRecommended={review.isRecommended}
-            rating={review.rating}
-            review={review.review}
-            createdAt={review.createdAt}
-            updatedAt={review.updatedAt}
-          />
-        ))}
-      </ul>
+      {reviewsWithUserDetails.length > 0 ? (
+        <ul className="flex flex-col gap-4">
+          {reviewsWithUserDetails.map((review: Review) => (
+            <ReviewItem
+              key={review._id}
+              userName={`${review.user?.firstName} ${review.user?.lastName}`}
+              isRecommended={review.isRecommended}
+              rating={review.rating}
+              review={review.review}
+              createdAt={review.createdAt}
+              updatedAt={review.updatedAt}
+            />
+          ))}
+        </ul>
+      ) : (
+        <p className="text-white text-md">
+          No reviews available for this product yet.
+        </p>
+      )}
     </div>
   );
 }

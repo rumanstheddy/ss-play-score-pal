@@ -22,7 +22,7 @@ export default function PopUpMsg({
   const styleClasses: string =
     "flex justify-center items-center text-center rounded-lg bg-" +
     msgColor +
-    "-500 px-4 py-1 mb-12";
+    "-500 px-4 py-1";
 
   return (
     <div className={styleClasses}>

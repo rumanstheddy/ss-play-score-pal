@@ -103,15 +103,17 @@ export default function SignupView(): React.ReactElement {
   return (
     <div className="flex justify-center min-h-screen">
       <div className="content-center w-1/3">
-        {displayPopUp && (
+        {displayPopUp ? (
           <PopUpMsg
             message={statusMsg}
             link={link}
             setShouldDisplay={setDisplayPopUp}
             isSuccess={signupSucess}
           />
+        ) : (
+          <></>
         )}
-        <h1 className="scroll-m-20 pb-2 text-4xl font-semibold tracking-tight first:mt-0 text text-center">
+        <h1 className="scroll-m-20 pb-2 text-4xl font-semibold tracking-tight first:mt-0 text text-center mt-12">
           Sign Up
         </h1>
         <div className="flex flex-col mt-5">

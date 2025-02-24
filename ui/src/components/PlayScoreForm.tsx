@@ -6,6 +6,7 @@ import { createPlayScore } from "@/providers/PlayScore/PlayScoreProvider";
 import RatingSelector from "./RatingSelector";
 import RecommendationSelector from "./RecommendationSelector";
 import { Loader2 } from "lucide-react";
+import PopUpMsg from "./PopUpMsg";
 
 interface ReviewFormProps {
   title?: string;
@@ -23,6 +24,11 @@ export default function PlayScoreForm({
   const [textareaValue, setTextareaValue] = useState<string>("");
   const [rating, setRating] = useState<number | null>(null);
   const [recommendation, setRecommendation] = useState<string | null>(null);
+
+  const [displayPopUp, setDisplayPopUp] = useState<boolean>(false);
+  const [submitSucess, setSubmitSucess] = useState<boolean>(false);
+  const [statusMsg, setStatusMsg] = useState<string>("");
+  const [link, setLink] = useState("");
 
   const queryClient = useQueryClient();
 
@@ -51,13 +57,31 @@ export default function PlayScoreForm({
     },
   });
 
-  const handleSubmit = () => {
+  const onSubmit = () => {
     if (!userId) {
-      console.log("User not logged in");
+      handleSubmitError(
+        "You need to be logged in to submit a Playscore.",
+        "/login"
+      );
       return;
     }
 
     mutation.mutate();
+    handleSubmitSuccess("Playscore submitted succesfully!");
+  };
+
+  const handleSubmitError = (message: string, link?: string) => {
+    setSubmitSucess(false);
+    setStatusMsg(message);
+    setLink(link ?? "");
+    setDisplayPopUp(true);
+  };
+
+  const handleSubmitSuccess = (message: string) => {
+    setSubmitSucess(true);
+    setStatusMsg(message);
+    setLink("");
+    setDisplayPopUp(true);
   };
 
   const isPending = mutation.isPending;
@@ -68,6 +92,16 @@ export default function PlayScoreForm({
 
   return (
     <div className="flex flex-col gap-6 mx-20 mb-12">
+      {displayPopUp ? (
+        <PopUpMsg
+          message={statusMsg}
+          link={link}
+          setShouldDisplay={setDisplayPopUp}
+          isSuccess={submitSucess}
+        />
+      ) : (
+        <></>
+      )}
       <p className="text-gray-400 text-xl font-semibold">{title}</p>
       <RatingSelector onSelectRating={setRating} selectedRating={rating} />
       <RecommendationSelector
@@ -85,7 +119,7 @@ export default function PlayScoreForm({
           <Button
             type="button"
             variant="outline"
-            onClick={handleSubmit}
+            onClick={onSubmit}
             className="hover:border hover:bg-slate-900 hover:text-white"
             disabled={isPending}
           >
