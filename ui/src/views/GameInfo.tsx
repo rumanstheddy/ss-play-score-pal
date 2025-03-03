@@ -705,7 +705,12 @@ export default function GameInfoView({
               userId={session && session.user ? session?.user.login._id : ""}
               gameId={gameId}
             />
-            <PlayScoreList gameId={gameId} />
+            <PlayScoreList
+              gameId={gameId}
+              loggedUser={
+                session && session.user ? session?.user.login._id : ""
+              }
+            />
           </div>
         </>
       )}

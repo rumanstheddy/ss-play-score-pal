@@ -9,14 +9,17 @@ type Review = {
   rating: number;
   review: string;
   user: User;
+  userId: string;
 };
 
 type User = { firstName: string; lastName: string; email: string };
 
 export default function PlayScoreList({
   gameId,
+  loggedUser,
 }: {
   gameId: string;
+  loggedUser: string | null | undefined;
 }): React.ReactElement {
   const { reviewsWithUserDetails, isLoading, isError } = usePlayScoreData(
     gameId as string
@@ -44,6 +47,7 @@ export default function PlayScoreList({
               review={review.review}
               createdAt={review.createdAt}
               updatedAt={review.updatedAt}
+              isLoggedUser={review.userId === loggedUser}
             />
           ))}
         </ul>

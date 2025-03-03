@@ -1,3 +1,5 @@
+import { Button } from "./ui/button";
+
 interface ReviewItemProps {
   userName: string;
   rating: number;
@@ -5,6 +7,7 @@ interface ReviewItemProps {
   isRecommended: string;
   createdAt: string;
   updatedAt: string;
+  isLoggedUser: boolean;
 }
 
 export default function PlayScoreItem({
@@ -14,6 +17,7 @@ export default function PlayScoreItem({
   isRecommended,
   createdAt,
   updatedAt,
+  isLoggedUser,
 }: ReviewItemProps): React.ReactElement {
   return (
     <li className="text-white bg-background text-foreground p-4 rounded-lg shadow-sm border border-border">
@@ -30,6 +34,26 @@ export default function PlayScoreItem({
 
       {/* Row 3: Review */}
       <div className="text-muted-foreground">{review}</div>
+      {isLoggedUser ? (
+        <div className="mt-4 flex gap-4">
+          <Button
+            type="button"
+            variant="outline"
+            className="hover:border text-black hover:bg-slate-900 hover:text-white"
+          >
+            Edit
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            className="hover:border bg-red-600 hover:bg-red-900 hover:text-white"
+          >
+            Delete
+          </Button>
+        </div>
+      ) : (
+        <></>
+      )}
     </li>
   );
 }
