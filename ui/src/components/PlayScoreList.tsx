@@ -1,3 +1,5 @@
+import { useState } from "react";
+import PlayScoreForm from "./PlayScoreForm";
 import ReviewItem from "./PlayScoreItem"; // Assuming you have a separate ReviewItem component
 import { usePlayScoreData } from "@/hooks/usePlayScoreData"; // Adjust the import path as needed
 
@@ -24,6 +26,8 @@ export default function PlayScoreList({
   const { reviewsWithUserDetails, isLoading, isError } = usePlayScoreData(
     gameId as string
   );
+  const [isEditing, setIsEditing] = useState(false);
+  const [existingReview, setExistingReview] = useState<Partial<Review>>({});
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -33,29 +37,48 @@ export default function PlayScoreList({
     return <div>Error fetching data.</div>;
   }
 
+  const shouldEdit = (value: boolean, existingReview: Partial<Review>) => {
+    setIsEditing(value);
+    setExistingReview(existingReview);
+  };
+
   return (
-    <div className="mx-20 mt-4">
-      <p className="text-gray-400 text-xl font-semibold my-6">PlayScores</p>
-      {reviewsWithUserDetails.length > 0 ? (
-        <ul className="flex flex-col gap-4">
-          {reviewsWithUserDetails.map((review: Review) => (
-            <ReviewItem
-              key={review._id}
-              userName={`${review.user?.firstName} ${review.user?.lastName}`}
-              isRecommended={review.isRecommended}
-              rating={review.rating}
-              review={review.review}
-              createdAt={review.createdAt}
-              updatedAt={review.updatedAt}
-              isLoggedUser={review.userId === loggedUser}
-            />
-          ))}
-        </ul>
-      ) : (
-        <p className="text-white text-md">
-          No reviews available for this product yet.
-        </p>
-      )}
-    </div>
+    <>
+      <div className="mx-20">
+        <p className="text-gray-400 text-xl font-semibold my-6">PlayScores</p>
+        {reviewsWithUserDetails.length > 0 ? (
+          <ul className="flex flex-col gap-4">
+            {reviewsWithUserDetails.map((review: Review) => (
+              <ReviewItem
+                key={review._id}
+                _id={review._id}
+                userName={`${review.user?.firstName} ${review.user?.lastName}`}
+                isRecommended={review.isRecommended}
+                rating={review.rating}
+                review={review.review}
+                createdAt={review.createdAt}
+                updatedAt={review.updatedAt}
+                isLoggedUser={review.userId === loggedUser}
+                shouldEdit={shouldEdit}
+                isEditing={isEditing}
+              />
+            ))}
+          </ul>
+        ) : (
+          <p className="text-white text-md">
+            No reviews available for this product yet.
+          </p>
+        )}
+      </div>
+      <PlayScoreForm
+        title="Add your Playscore"
+        placeholder="Your thoughts about the game"
+        userId={loggedUser}
+        gameId={gameId}
+        existingReview={existingReview}
+        isEditing={isEditing}
+        setIsEditing={setIsEditing}
+      />
+    </>
   );
 }
