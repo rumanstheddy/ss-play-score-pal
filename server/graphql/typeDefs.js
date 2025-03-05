@@ -47,6 +47,11 @@ module.exports = `
     deletedCount: Int
   }
 
+  type UpdateAcknowledgement {
+    acknowledged: Boolean,
+    modifiedCount: Int,
+  }
+
   type Query {
     playScore(id: ID!): PlayScore
     playScoresByGameId(gameId: String!): [PlayScore]
@@ -95,7 +100,7 @@ module.exports = `
 
   type Mutation {
     createPlayScore(playScore: PlayScoreInput!): PlayScore
-    updatePlayScore(id: ID!, playScore: EditPlayScoreInput): PlayScore
+    updatePlayScore(id: ID!, playScore: EditPlayScoreInput): UpdateAcknowledgement
     deletePlayScore(id: ID!): DeleteAcknowledgement
     
     signup(user: UserInput!): User

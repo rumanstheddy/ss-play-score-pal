@@ -52,21 +52,26 @@ export default function PlayScoreForm({
   // Prefill the form when editing
   useEffect(() => {
     if (isEditing && existingReview) {
-      setTextareaValue(existingReview.review);
-      setRating(existingReview.rating);
-      setRecommendation(existingReview.isRecommended);
+      setTextareaValue(existingReview.review || "");
+      setRating(existingReview.rating || null);
+      setRecommendation(existingReview.isRecommended || null);
     }
   }, [isEditing, existingReview]);
 
   const mutation = useMutation({
     mutationFn: () =>
       isEditing
-        ? updatePlayScore(existingReview?._id as string, {
-            gameId,
-            userId,
-            isRecommended: recommendation,
-            rating,
-            review: textareaValue,
+        ? updatePlayScore({
+            fields: "acknowledged modifiedCount",
+            parameters: { $id: "ID!", $playScore: "EditPlayScoreInput" },
+            variables: {
+              id: existingReview._id,
+              playScore: {
+                rating: rating,
+                review: textareaValue,
+                isRecommended: recommendation,
+              },
+            },
           })
         : createPlayScore({
             fields:
