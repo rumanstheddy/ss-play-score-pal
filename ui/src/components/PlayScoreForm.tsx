@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   createPlayScore,
   updatePlayScore,
@@ -49,12 +49,21 @@ export default function PlayScoreForm({
 
   const queryClient = useQueryClient();
 
+  const scrollRef = useRef<HTMLParagraphElement | null>(null);
+
+  const scrollToForm = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollIntoView();
+    }
+  };
+
   // Prefill the form when editing
   useEffect(() => {
     if (isEditing && existingReview) {
       setTextareaValue(existingReview.review || "");
       setRating(existingReview.rating || null);
       setRecommendation(existingReview.isRecommended || null);
+      scrollToForm();
     }
   }, [isEditing, existingReview]);
 
@@ -114,6 +123,13 @@ export default function PlayScoreForm({
     mutation.mutate();
   };
 
+  const onCancel = () => {
+    setIsEditing(false);
+    setTextareaValue("");
+    setRating(null);
+    setRecommendation(null);
+  };
+
   const handleSubmitError = (message: string, link?: string) => {
     setSubmitSuccess(false);
     setStatusMsg(message);
@@ -140,7 +156,9 @@ export default function PlayScoreForm({
           isSuccess={submitSuccess}
         />
       )}
-      <p className="text-gray-400 text-xl font-semibold">{title}</p>
+      <p className="text-gray-400 text-xl font-semibold" ref={scrollRef}>
+        Add your Playscore
+      </p>
       <RatingSelector onSelectRating={setRating} selectedRating={rating} />
       <RecommendationSelector
         selectedOption={recommendation}
@@ -149,11 +167,11 @@ export default function PlayScoreForm({
       <div className="flex flex-col gap-4">
         <p className="text-gray-400 text-md font-semibold">Review</p>
         <Textarea
-          placeholder={placeholder}
+          placeholder="Your thoughts about the game"
           value={textareaValue}
           onChange={(e) => setTextareaValue(e.target.value)}
         />
-        <div>
+        <div className="flex gap-4">
           <Button
             type="button"
             variant="outline"
@@ -164,6 +182,18 @@ export default function PlayScoreForm({
             {isPending ? <Loader2 className="animate-spin" /> : ""}
             {isPending ? "Please wait" : isEditing ? "Update" : "Submit"}
           </Button>
+          {isEditing ? (
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onCancel}
+              className="hover:border hover:bg-slate-900 hover:text-white"
+            >
+              Cancel
+            </Button>
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     </div>

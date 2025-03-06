@@ -567,7 +567,7 @@ export default function GameInfoView({
                     <div className="flex flex-col mx-10">
                       {/* //TODO: Need an outline for the circle */}
                       <div className="flex flex-row">
-                        <div className="flex flex-col justify-center">
+                        {/* <div className="flex flex-col justify-center">
                           <div className="text flex flex-col bg-green-500 rounded-full w-36 h-36 items-center justify-center tracking-tight">
                             <span className="text-6xl mt-3 font-extrabold">
                               8.9
@@ -576,7 +576,7 @@ export default function GameInfoView({
                               Critic
                             </span>
                           </div>
-                        </div>
+                        </div> */}
                         <div className="flex flex-col justify-center ml-4">
                           <div className="text flex flex-col bg-green-500 rounded-full w-36 h-36 items-center justify-center tracking-tight">
                             <span className="text-6xl mt-3 font-extrabold">

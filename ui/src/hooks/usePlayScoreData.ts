@@ -29,7 +29,7 @@ export const usePlayScoreData = (gameId: string) => {
     queryKey: ["playScores", gameId],
     queryFn: () =>
       getPlayScoresForGame({
-        fields: "_id userId rating review isRecommended createdAt",
+        fields: "_id userId rating review isRecommended createdAt updatedAt",
         parameters: { $gameId: "String!" },
         variables: { gameId: gameId },
       }),

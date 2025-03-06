@@ -23,9 +23,8 @@ export default function PlayScoreList({
   gameId: string;
   loggedUser: string | null | undefined;
 }): React.ReactElement {
-  const { reviewsWithUserDetails, isLoading, isError } = usePlayScoreData(
-    gameId as string
-  );
+  const { reviewsWithUserDetails, isLoading, isError } =
+    usePlayScoreData(gameId);
   const [isEditing, setIsEditing] = useState(false);
   const [existingReview, setExistingReview] = useState<Partial<Review>>({});
 
@@ -45,7 +44,7 @@ export default function PlayScoreList({
   return (
     <>
       <div className="mx-20">
-        <p className="text-gray-400 text-xl font-semibold my-6">PlayScores</p>
+        <p className="text-gray-400 text-xl font-semibold my-6">Playscores</p>
         {reviewsWithUserDetails.length > 0 ? (
           <ul className="flex flex-col gap-4">
             {reviewsWithUserDetails.map((review: Review) => (
@@ -71,8 +70,6 @@ export default function PlayScoreList({
         )}
       </div>
       <PlayScoreForm
-        title="Add your Playscore"
-        placeholder="Your thoughts about the game"
         userId={loggedUser}
         gameId={gameId}
         existingReview={existingReview}
