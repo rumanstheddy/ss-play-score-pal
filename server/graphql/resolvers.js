@@ -1,5 +1,10 @@
 const { GraphQLError } = require("graphql");
 
+const mongoose = require("mongoose");
+const playScoreModel = require("../models/playscore/playscore.model");
+const gameModel = require("../models/game/game.model");
+const userModel = require("../models/user/user.model");
+
 const {
   createPlayScore,
   getPlayScore,
@@ -19,15 +24,75 @@ const {
 } = require("../services/user.service");
 
 const {
-  getGame,
-  getAllGames,
-  searchGame,
+  getGameByIgdbID,
   createGame,
-  updateGame,
-  deleteGame,
+  updateGameByIgdbID,
 } = require("../services/game.service");
 
 const { login } = require("../services/auth.service");
+
+// const calculateAverageUserRating = async (gameId, session) => {
+//   const playScores = await playScoreModel.find({ gameId }).session(session);
+
+//   // console.log(playScores);
+
+//   const userPlayScores = await Promise.all(
+//     playScores.map(async (playScore) => {
+//       const user = await userModel
+//         .findOne({ _id: playScore.userId })
+//         .session(session);
+//       console.log(user === null ? playScore._id : "");
+//       return user && user.userType === "USER" ? playScore : null;
+//     })
+//   );
+
+//   // console.log(userPlayScores);
+
+//   // const validPlayScores = userPlayScores.filter((ps) => ps !== null);
+
+//   // if (validPlayScores.length === 0) return 0;
+
+//   const totalRating = userPlayScores.reduce((sum, ps) => sum + ps.rating, 0);
+//   return totalRating / userPlayScores.length;
+// };
+
+// const calculateUserRatings = async () => {
+//   const session = await mongoose.startSession();
+//   session.startTransaction();
+
+//   try {
+//     // Fetch all unique gameIds from the PlayScore collection
+//     const uniqueGameIds = await playScoreModel
+//       .distinct("gameId")
+//       .session(session);
+
+//     // Iterate over each unique gameId
+//     for (const gameId of uniqueGameIds) {
+//       // Calculate the average user rating
+//       const averageRating = await calculateAverageUserRating(gameId, session);
+
+//       // Create or update the Game document
+//       await gameModel
+//         .updateOne(
+//           { igdbID: gameId }, // Use igdbID as the unique identifier
+//           { $set: { userRating: averageRating } },
+//           { upsert: true, session } // Create the document if it doesn't exist
+//         )
+//         .session(session);
+//     }
+
+//     // Commit the transaction
+//     await session.commitTransaction();
+//     session.endSession();
+
+//     return "User ratings calculated and updated successfully!";
+//   } catch (error) {
+//     // Abort the transaction on error
+//     await session.abortTransaction();
+//     session.endSession();
+//     throw error;
+//   }
+// };
 
 module.exports = {
   Query: {
@@ -55,16 +120,8 @@ module.exports = {
       return await searchUser(searchQuery);
     },
 
-    async games() {
-      return await getAllGames();
-    },
-
-    async game(_, { id }) {
-      return await getGame(id);
-    },
-
-    async searchGames(_, { searchQuery }) {
-      return await searchGame(searchQuery);
+    async game(_, { igdbID }) {
+      return await getGameByIgdbID(igdbID);
     },
 
     async login(_, { email, password }) {
@@ -124,12 +181,10 @@ module.exports = {
       return await createGame(game);
     },
 
-    async updateGame(_, { id, game }) {
-      return await updateGame(id, game);
+    async updateGame(_, { igdbID, game }) {
+      return await updateGameByIgdbID(igdbID, game);
     },
 
-    async deleteGame(_, { id }) {
-      return await deleteGame(id);
-    },
+    // calculateUserRatings,
   },
 };

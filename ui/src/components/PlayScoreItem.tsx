@@ -8,6 +8,7 @@ import {
   Tag,
   CalendarPlus,
   CalendarCog,
+  CircleUserRound,
 } from "lucide-react"; // Import Lucide icons
 
 interface ReviewItemProps {
@@ -59,13 +60,16 @@ export default function PlayScoreItem({
     <li className="text-white bg-background text-foreground p-6 rounded-lg shadow-md border border-border">
       <div className="flex items-center justify-between mb-4">
         <div className="flex-col items-center">
-          <div className="text-lg font-semibold mb-2">{userName}</div>
+          <div className="flex items-start text-md font-semibold mb-4">
+            {/* <CircleUserRound className="h-5 w-5 text-white" /> */}
+            {userName}
+          </div>
           {/* <div className="flex items-center text-sm text-gray-400">
             <Calendar className="h-4 w-4 mr-1" />
             {createdAtDate}
           </div> */}
           <div className="flex items-center gap-2">
-            <div className="flex w-min bg-yellow-500 rounded-md px-2 pt-1.5 pb-1">
+            <div className="flex w-min bg-[color:--bg-color-rating] rounded-md px-2 pt-1.5 pb-1">
               <Star className="h-5 w-5 text-white mr-1" />
               <span className="font-bold">{rating}</span>
             </div>
@@ -124,7 +128,7 @@ export default function PlayScoreItem({
         </div>
       </div> */}
 
-      <div className="text-muted-foreground mt-8">{review}</div>
+      <div className="text-md mt-8 ">{review}</div>
 
       {isLoggedUser && (
         <div className="mt-8 flex gap-2">

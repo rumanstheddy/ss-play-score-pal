@@ -44,7 +44,7 @@ export default function PlayScoreList({
   return (
     <>
       <div className="mx-20">
-        <p className="text-gray-400 text-xl font-semibold my-6">Playscores</p>
+        <h2 className="text-gray-400 text-xl font-semibold my-6">Playscores</h2>
         {reviewsWithUserDetails.length > 0 ? (
           <ul className="flex flex-col gap-4">
             {reviewsWithUserDetails.map((review: Review) => (

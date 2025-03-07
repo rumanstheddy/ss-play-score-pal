@@ -414,7 +414,7 @@ export default function GameInfoView({
     isDeveloper ? list.push(developers[0]) : list.push(...publishers);
 
     return (
-      <p className="block">
+      <div className="block">
         {list && list.length > 0 ? (
           list.map((company: Partial<Company>, i: number) => {
             return company ? (
@@ -436,7 +436,7 @@ export default function GameInfoView({
         ) : (
           <span className="text tracking-tight">Information unavailable</span>
         )}
-      </p>
+      </div>
     );
   };
 
@@ -637,15 +637,17 @@ export default function GameInfoView({
                       <p className="text-gray-400 text-xl font-semibold block mb-1">
                         Developers
                       </p>
-                      <p className="text-xl">{displayCompanyListItems(true)}</p>
+                      <div className="text-xl">
+                        {displayCompanyListItems(true)}
+                      </div>
                     </div>
                     <div className="block mt-4">
                       <p className="text-gray-400 text-xl font-semibold block mb-1">
                         Publishers
                       </p>
-                      <p className="text-xl">
+                      <div className="text-xl">
                         {displayCompanyListItems(false)}
-                      </p>
+                      </div>
                     </div>
 
                     {buildReleaseDateList() &&

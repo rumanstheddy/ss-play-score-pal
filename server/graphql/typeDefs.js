@@ -34,12 +34,9 @@ module.exports = `
 
   type Game {
     _id: ID!
-    name: String!
-    developer: String
-    publisher: String
-    releaseDate: Int
-    summary: String
-    genre: [String]
+    igdbID: String!
+    userRating: Float
+    criticRating: Float
   }
 
   type DeleteAcknowledgement {
@@ -61,10 +58,8 @@ module.exports = `
     user(id: ID!): User
     searchUsers(searchQuery: String!): [User]
     
-    games: [Game]
-    game(id: ID!): Game
-    searchGames(searchQuery: String!): [Game]
-    
+    game(igdbID: String!): Game
+
     login(email: String!, password: String!): User
   }
 
@@ -90,12 +85,9 @@ module.exports = `
   }
 
   input GameInput {
-    name: String!
-    developer: String
-    publisher: String
-    releaseDate: Int
-    summary: String
-    genre: [String]
+    igdbID: String!
+    userScore: Float
+    criticScore: Float
   }
 
   type Mutation {
@@ -108,7 +100,8 @@ module.exports = `
     deleteUser(id: ID!): DeleteAcknowledgement
 
     createGame(game: GameInput!): Game
-    updateGame(id: ID!, game: GameInput): Game
-    deleteGame(id: ID!): Game
+    updateGame(igdbID: String!, game: GameInput): UpdateAcknowledgement
   }
-`;
+  `;
+
+// calculateUserRatings: String
