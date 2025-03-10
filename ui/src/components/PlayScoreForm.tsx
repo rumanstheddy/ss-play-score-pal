@@ -30,8 +30,6 @@ interface ReviewFormProps {
 }
 
 export default function PlayScoreForm({
-  title,
-  placeholder,
   gameId,
   userId,
   isEditing,
@@ -67,7 +65,7 @@ export default function PlayScoreForm({
     }
   }, [isEditing, existingReview]);
 
-  const mutation = useMutation({
+  const { isPending, mutate } = useMutation({
     mutationFn: () =>
       isEditing
         ? updatePlayScore({
@@ -120,7 +118,7 @@ export default function PlayScoreForm({
       return;
     }
 
-    mutation.mutate();
+    mutate();
   };
 
   const onCancel = () => {
@@ -143,8 +141,6 @@ export default function PlayScoreForm({
     setLink("");
     setDisplayPopUp(true);
   };
-
-  const isPending = mutation.isPending;
 
   return (
     <div className="flex flex-col gap-6 mx-20 mt-12">

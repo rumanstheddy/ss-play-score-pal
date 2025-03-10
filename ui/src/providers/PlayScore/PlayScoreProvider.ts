@@ -147,7 +147,7 @@ export const getPlayScoresForGame = async <T>({
   return await res.json();
 };
 
-export const updatePlayScore =  async <T>({
+export const updatePlayScore = async <T>({
   fields,
   parameters,
   variables,
@@ -176,6 +176,25 @@ export const getUser = async <T>({
     fields,
     name: "User",
     functionName: "user",
+    parameters,
+    variables,
+  });
+
+  const res = await fetchData(query, variables);
+
+  return await res.json();
+};
+
+export const getGame = async <T>({
+  fields,
+  parameters,
+  variables,
+}: Partial<GqlQueryArgs<T>>) => {
+  const query = buildGqlQuery({
+    isQuery: true,
+    fields,
+    name: "Game",
+    functionName: "game",
     parameters,
     variables,
   });

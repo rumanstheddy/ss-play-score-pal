@@ -26,6 +26,7 @@ import { Play } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import SocialIcon from "@/components/SocialIcon";
 import PlayScoreList from "@/components/PlayScoreList";
+import Rating from "@/components/Rating";
 
 interface IGameInfoProps {
   gameId: string;
@@ -567,23 +568,24 @@ export default function GameInfoView({
                     <div className="flex flex-col mx-10">
                       {/* //TODO: Need an outline for the circle */}
                       <div className="flex flex-row">
-                        {/* <div className="flex flex-col justify-center">
-                          <div className="text flex flex-col bg-green-500 rounded-full w-36 h-36 items-center justify-center tracking-tight">
+                        <div className="flex flex-col justify-center">
+                          {/* <div className="text flex flex-col bg-green-500 rounded-full w-36 h-36 items-center justify-center tracking-tight">
                             <span className="text-6xl mt-3 font-extrabold">
                               8.9
                             </span>
                             <span className="text-md tracking-tight">
                               Critic
                             </span>
-                          </div>
-                        </div> */}
+                          </div> */}
+                          <Rating gameId={gameId} isUserRating={true} />
+                        </div>
                         <div className="flex flex-col justify-center ml-4">
-                          <div className="text flex flex-col bg-green-500 rounded-full w-36 h-36 items-center justify-center tracking-tight">
+                          {/* <div className="text flex flex-col bg-green-500 rounded-full w-36 h-36 items-center justify-center tracking-tight">
                             <span className="text-6xl mt-3 font-extrabold">
                               9.1
                             </span>
                             <span className="text-md tracking-tight">User</span>
-                          </div>
+                          </div> */}
                         </div>
                       </div>
                       <div className="block mt-4">
