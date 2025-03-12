@@ -27,8 +27,11 @@ module.exports = new mongoose.Schema(
       required: true,
       minlength: [6, "Your password should be at least 6 characters in length"],
     },
-    userType: { type: String, enum: ["USER", "ADMIN"], default: "USER" },
-    isVerified: { type: Boolean, default: false },
+    userType: {
+      type: String,
+      enum: ["USER", "CRITIC", "ADMIN"],
+      default: "USER",
+    },
   },
   { timestamps: { createdAt: true, updatedAt: false } },
   { collection: "User" }

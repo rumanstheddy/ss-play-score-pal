@@ -31,7 +31,7 @@ const {
 
 const { login } = require("../services/auth.service");
 
-// const calculateAverageUserRating = async (gameId, session) => {
+// const calculateAverageRating = async (gameId, session, userType) => {
 //   const playScores = await playScoreModel.find({ gameId }).session(session);
 
 //   // console.log(playScores);
@@ -41,22 +41,27 @@ const { login } = require("../services/auth.service");
 //       const user = await userModel
 //         .findOne({ _id: playScore.userId })
 //         .session(session);
-//       console.log(user === null ? playScore._id : "");
-//       return user && user.userType === "USER" ? playScore : null;
+//       return user && user.userType === userType ? playScore : null;
 //     })
 //   );
 
 //   // console.log(userPlayScores);
 
-//   // const validPlayScores = userPlayScores.filter((ps) => ps !== null);
+//   const validPlayScores = userPlayScores.filter((ps) => ps !== null);
 
-//   // if (validPlayScores.length === 0) return 0;
+//   // console.log(validPlayScores);
 
-//   const totalRating = userPlayScores.reduce((sum, ps) => sum + ps.rating, 0);
-//   return totalRating / userPlayScores.length;
+//   if (validPlayScores.length === 0) return 0;
+
+//   console.log(userType === "CRITIC" ? validPlayScores : "");
+//   const totalRating = validPlayScores.reduce((sum, ps) => sum + ps.rating, 0);
+//   console.log(
+//     userType === "CRITIC" ? totalRating / validPlayScores.length : ""
+//   );
+//   return totalRating / validPlayScores.length;
 // };
 
-// const calculateUserRatings = async () => {
+// const calculateRatings = async () => {
 //   const session = await mongoose.startSession();
 //   session.startTransaction();
 
@@ -69,13 +74,30 @@ const { login } = require("../services/auth.service");
 //     // Iterate over each unique gameId
 //     for (const gameId of uniqueGameIds) {
 //       // Calculate the average user rating
-//       const averageRating = await calculateAverageUserRating(gameId, session);
+//       const averageUserRating = await calculateAverageRating(
+//         gameId,
+//         session,
+//         "USER"
+//       );
+//       const averageCriticRating = await calculateAverageRating(
+//         gameId,
+//         session,
+//         "CRITIC"
+//       );
+
+//       // console.log(averageUserRating);
+//       console.log(averageCriticRating);
 
 //       // Create or update the Game document
 //       await gameModel
 //         .updateOne(
 //           { igdbID: gameId }, // Use igdbID as the unique identifier
-//           { $set: { userRating: averageRating } },
+//           {
+//             $set: {
+//               userRating: averageUserRating,
+//               criticRating: averageCriticRating,
+//             },
+//           },
 //           { upsert: true, session } // Create the document if it doesn't exist
 //         )
 //         .session(session);
@@ -185,6 +207,6 @@ module.exports = {
       return await updateGameByIgdbID(igdbID, game);
     },
 
-    // calculateUserRatings,
+    // calculateRatings,
   },
 };

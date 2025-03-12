@@ -177,14 +177,17 @@ export default async function GameInfo({
   });
 
   const websiteQFields = ["category", "url"];
-  // const websiteQFilter = [`game = ${gameId}`];
+  const websiteQFilter = [
+    `game = ${gameId}`,
+    `category = (1,2,10,12,13,16,17)`,
+  ];
 
   await queryClient.prefetchQuery({
     queryKey: ["fetchWebsites", gameId],
     queryFn: () =>
       fetchWebsites({
         fields: websiteQFields,
-        filters: coverQFilter,
+        filters: websiteQFilter,
         limit: 20,
         sort: ["category", "asc"],
       }),
@@ -211,6 +214,7 @@ export default async function GameInfo({
         themeQFilter={themeQFilter}
         releaseDatesQFields={releaseDatesQFields}
         websiteQFields={websiteQFields}
+        websiteQFilter={websiteQFilter}
       />
     </HydrationBoundary>
   );

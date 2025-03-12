@@ -10,7 +10,7 @@ export default function Rating({
   isUserRating: boolean;
 }): React.ReactElement {
   const { data: gameData, isLoading } = useQuery({
-    queryKey: ["game", gameId],
+    queryKey: ["game", gameId, isUserRating],
     queryFn: () =>
       getGame({
         parameters: { $igdbID: "String!" },

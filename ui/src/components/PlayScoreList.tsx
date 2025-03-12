@@ -1,6 +1,6 @@
 import { useState } from "react";
 import PlayScoreForm from "./PlayScoreForm";
-import ReviewItem from "./PlayScoreItem"; // Assuming you have a separate ReviewItem component
+import PlayScoreItem from "./PlayScoreItem"; // Assuming you have a separate ReviewItem component
 import { usePlayScoreData } from "@/hooks/usePlayScoreData"; // Adjust the import path as needed
 
 type Review = {
@@ -14,7 +14,12 @@ type Review = {
   userId: string;
 };
 
-type User = { firstName: string; lastName: string; email: string };
+type User = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  userType: string;
+};
 
 export default function PlayScoreList({
   gameId,
@@ -48,7 +53,7 @@ export default function PlayScoreList({
         {reviewsWithUserDetails.length > 0 ? (
           <ul className="flex flex-col gap-4">
             {reviewsWithUserDetails.map((review: Review) => (
-              <ReviewItem
+              <PlayScoreItem
                 key={review._id}
                 _id={review._id}
                 userName={`${review.user?.firstName} ${review.user?.lastName}`}
@@ -60,6 +65,7 @@ export default function PlayScoreList({
                 isLoggedUser={review.userId === loggedUser}
                 shouldEdit={shouldEdit}
                 isEditing={isEditing}
+                userType={review.user?.userType}
               />
             ))}
           </ul>

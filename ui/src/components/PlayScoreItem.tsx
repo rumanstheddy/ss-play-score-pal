@@ -9,6 +9,7 @@ import {
   CalendarPlus,
   CalendarCog,
   CircleUserRound,
+  BadgeCheck,
 } from "lucide-react"; // Import Lucide icons
 
 interface ReviewItemProps {
@@ -25,6 +26,7 @@ interface ReviewItemProps {
     existingReview: Partial<ReviewItemProps>
   ) => void;
   isEditing: boolean;
+  userType: string;
 }
 
 type Recommendation = {
@@ -44,6 +46,7 @@ export default function PlayScoreItem({
   isLoggedUser,
   shouldEdit,
   isEditing,
+  userType,
 }: ReviewItemProps): React.ReactElement {
   const createdAtDate = new Date(Number(createdAt)).toLocaleDateString();
   const updatedAtDate = updatedAt
@@ -63,6 +66,11 @@ export default function PlayScoreItem({
           <div className="flex items-start text-md font-semibold mb-4">
             {/* <CircleUserRound className="h-5 w-5 text-white" /> */}
             {userName}
+            {userType === "CRITIC" ? (
+              <BadgeCheck className="h-5 w-5 ml-1" />
+            ) : (
+              ""
+            )}
           </div>
           {/* <div className="flex items-center text-sm text-gray-400">
             <Calendar className="h-4 w-4 mr-1" />

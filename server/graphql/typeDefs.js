@@ -18,6 +18,7 @@ module.exports = `
 
   enum UserType {
     USER
+    CRITIC
     ADMIN
   }
 
@@ -82,6 +83,7 @@ module.exports = `
     lastName: String!
     email: String!
     password: String!
+    userType: UserType
   }
 
   input GameInput {
@@ -101,7 +103,6 @@ module.exports = `
 
     createGame(game: GameInput!): Game
     updateGame(igdbID: String!, game: GameInput): UpdateAcknowledgement
-  }
-  `;
-
-// calculateUserRatings: String
+    }
+    `;
+// calculateRatings: String

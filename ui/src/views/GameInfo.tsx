@@ -47,6 +47,7 @@ interface IGameInfoProps {
   themeQFilter: string[];
   releaseDatesQFields: string[];
   websiteQFields: string[];
+  websiteQFilter: string[];
 }
 
 type Genre = {
@@ -102,6 +103,7 @@ export default function GameInfoView({
   themeQFilter,
   releaseDatesQFields,
   websiteQFields,
+  websiteQFilter,
 }: IGameInfoProps): React.ReactElement {
   const { data: session } = useSession() as { data: CustomSession | null };
   const { data: gameData, isLoading: isGameLoading } = useQuery({
@@ -241,7 +243,7 @@ export default function GameInfoView({
         queryFn: () =>
           fetchWebsites({
             fields: websiteQFields,
-            filters: coverQFilter,
+            filters: websiteQFilter,
             limit: 20,
             sort: ["category", "asc"],
           }),
@@ -512,8 +514,8 @@ export default function GameInfoView({
               className="absolute inset-0 bg-cover bg-center"
             ></div>
             {/* //**Content layer */}
-            <div className="relative z-10 flex flex-col justify-start min-h-screen backdrop-blur-sm bg-black/75">
-              <div className="flex flex-col justify-start mt-28">
+            <div className="relative z-10 flex flex-col justify-start min-h-screen backdrop-blur-sm bg-black/50">
+              <div className="flex flex-col justify-start mt-24 mb-12">
                 <div className="flex flex-row justify-between items-center mx-20">
                   <div className="flex flex-col">
                     <div className="flex flex-row items-center">
@@ -557,17 +559,20 @@ export default function GameInfoView({
                 </div>
                 <div className="flex flex-row justify-between mt-16 mx-20">
                   <div className="flex flex-row w-6/12">
+                    {/* <div className="w-[300px] h-[400px]"> */}
                     <Image
                       src={gameCoverUrl}
                       alt="Cover art for the selected game"
-                      width={400}
-                      height={1} //? placeholder
+                      width={900}
+                      height={1200} //? placeholder
                       className="rounded-xl"
                       placeholder="empty"
+                      layout="intrinsic"
                     />
+                    {/* </div> */}
                     <div className="flex flex-col mx-10">
                       {/* //TODO: Need an outline for the circle */}
-                      <div className="flex flex-row">
+                      <div className="flex flex-row just">
                         <div className="flex flex-col justify-center">
                           {/* <div className="text flex flex-col bg-green-500 rounded-full w-36 h-36 items-center justify-center tracking-tight">
                             <span className="text-6xl mt-3 font-extrabold">
@@ -586,6 +591,7 @@ export default function GameInfoView({
                             </span>
                             <span className="text-md tracking-tight">User</span>
                           </div> */}
+                          <Rating gameId={gameId} isUserRating={false} />
                         </div>
                       </div>
                       <div className="block mt-4">
@@ -688,7 +694,10 @@ export default function GameInfoView({
                         websiteList.data.map((website: Website) => (
                           <Link href={website.url} key={website.id}>
                             <div className="text">
-                              <SocialIcon iconCategory={website.category} />
+                              <SocialIcon
+                                iconCategory={website.category}
+                                size={40}
+                              />
                             </div>
                           </Link>
                         ))
@@ -701,7 +710,7 @@ export default function GameInfoView({
               </div>
             </div>
           </div>
-          <div className="my-16">
+          <div className="my-8">
             <PlayScoreList
               gameId={gameId}
               loggedUser={

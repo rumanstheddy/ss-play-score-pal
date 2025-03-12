@@ -4,13 +4,13 @@ const playscoreSchema = require("../models/playscore/playscore.schema");
 const gameModel = require("../models/game/game.model");
 const userModel = require("../models/user/user.model");
 
-const calculateAverageUserRating = async (gameId, session) => {
+const calculateAverageRating = async (gameId, session, userType) => {
   const playScores = await playScoreModel.find({ gameId }).session(session);
 
   const userPlayScores = await Promise.all(
     playScores.map(async (playScore) => {
       const user = await userModel.findById(playScore.userId).session(session);
-      return user && user.userType === "USER" ? playScore : null;
+      return user && user.userType === userType ? playScore : null;
     })
   );
 
@@ -51,17 +51,21 @@ const createPlayScore = async (playScore) => {
     // Create the PlayScore
     const newPlayScore = await playScoreModel.create(playScore, { session });
 
+    const userType = await userModel.findById(playScore.userId);
+
     // Calculate and update the average user rating for the game
-    const averageRating = await calculateAverageUserRating(
+    const averageRating = await calculateAverageRating(
       playScore.gameId,
-      session
+      session,
+      userType
     );
+
+    const newRating = {
+      [`${userType === "USER" ? "user" : "critic"}Rating`]: averageRating,
+    };
+
     await gameModel
-      .updateOne(
-        { igdbID: playScore.gameId },
-        { $set: { userRating: averageRating } },
-        { session }
-      )
+      .updateOne({ igdbID: playScore.gameId }, { $set: newRating }, { session })
       .session(session);
 
     // Commit the transaction
@@ -108,15 +112,23 @@ const updatePlayScore = async (psId, playScore) => {
       throw new Error("PlayScore not found.");
     }
 
+    const userType = await userModel.findById(playScore.userId);
+
     // Calculate and update the average user rating for the game
-    const averageRating = await calculateAverageUserRating(
+    const averageRating = await calculateAverageRating(
       updatedPlayScore.gameId,
-      session
+      session,
+      userType
     );
+
+    const newRating = {
+      [`${userType === "USER" ? "user" : "critic"}Rating`]: averageRating,
+    };
+
     await gameModel
       .updateOne(
         { igdbID: updatedPlayScore.gameId },
-        { $set: { userRating: averageRating } },
+        { $set: newRating },
         { session }
       )
       .session(session);
@@ -148,17 +160,21 @@ const deletePlayScore = async (id) => {
       .deleteOne({ _id: id }, { session })
       .session(session);
 
+    const userType = await userModel.findById(playScore.userId);
+
     // Calculate and update the average user rating for the game
-    const averageRating = await calculateAverageUserRating(
+    const averageRating = await calculateAverageRating(
       playScore.gameId,
-      session
+      session,
+      userType
     );
+
+    const newRating = {
+      [`${userType === "USER" ? "user" : "critic"}Rating`]: averageRating,
+    };
+
     await gameModel
-      .updateOne(
-        { igdbID: playScore.gameId },
-        { $set: { userRating: averageRating } },
-        { session }
-      )
+      .updateOne({ igdbID: playScore.gameId }, { $set: newRating }, { session })
       .session(session);
 
     // Commit the transaction

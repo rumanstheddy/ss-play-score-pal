@@ -33,7 +33,7 @@ export const buildQuery = ({
   let query: string = "fields " + (fields ? fields.join(",") : "*") + ";";
   query += limit ? "limit " + limit + ";" : "";
   query += search ? `search "${search}"` + ";" : "";
-  query += filters ? "where " + filters.join(",") + ";" : "";
+  query += filters ? "where " + filters.join("&") + ";" : "";
   query += sort ? "sort " + sort.join(" ") + ";" : "";
 
   return query;

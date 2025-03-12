@@ -50,7 +50,7 @@ export const usePlayScoreData = (gameId: string) => {
       Promise.all(
         userIds.map((userId: string) =>
           getUser({
-            fields: "firstName lastName email",
+            fields: "firstName lastName email userType",
             parameters: { $id: "ID!" },
             variables: { id: userId },
           })
