@@ -33,8 +33,8 @@ export default function Rating({
   );
 
   return (
-    <div className="text flex flex-col bg-green-500 rounded-full w-36 h-36 items-center justify-center tracking-tight">
-      <span className="text-6xl mt-3 font-extrabold">
+    <div className="text flex flex-col bg-green-500 rounded-full w-24 h-24 items-center justify-center tracking-tight">
+      <span className="text-4xl mt-3 font-extrabold">
         {isLoading ? <Loader2 className="animate-spin" /> : rating}
       </span>
       <span className="text-md tracking-tight">

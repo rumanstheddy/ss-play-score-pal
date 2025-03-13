@@ -492,7 +492,7 @@ export default function GameInfoView({
   return (
     <>
       <NavBar
-        name={session?.user ? session.user.login.firstName : ""}
+        name={session?.user ? session.user.firstName : ""}
         isLoggedIn={!!(session && session.user)}
       />
       {isAnyLoading ? (
@@ -714,7 +714,7 @@ export default function GameInfoView({
             <PlayScoreList
               gameId={gameId}
               loggedUser={
-                session && session.user ? session?.user.login._id : ""
+                session && session.user ? session?.user._id : ""
               }
             />
           </div>

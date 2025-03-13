@@ -1,97 +1,76 @@
 "use client";
 
+import { signIn } from "next-auth/react";
+import { useState } from "react";
 import InputField from "@/components/InputField";
 import PopUpMsg from "@/components/PopUpMsg";
 import TextLink from "@/components/TextLink";
 import { Button } from "@/components/ui/button";
-import { signIn } from "next-auth/react";
-import { useState } from "react";
 
 export default function LoginView(): React.ReactElement {
-  const [email, setEmail]: [string, (email: string) => void] =
-    useState<string>("");
-  const [password, setPassword]: [string, (password: string) => void] =
-    useState<string>("");
-
-  const [displayPopUp, setDisplayPopUp] = useState<boolean>(false);
-
-  const errorMessage: string = "Invalid email or password!";
-
-  const clearFields = (): void => {
-    setEmail("");
-    setPassword("");
-  };
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [displayPopUp, setDisplayPopUp] = useState(false);
 
   const onSubmit = async () => {
     const result = await signIn("credentials", {
-      email: email,
-      password: password,
-      redirect: false,
-      callbackUrl: "/",
+      email,
+      password,
+      redirect: false, // Avoid client-side redirects
     });
 
     if (result?.ok) {
-      window.location.href = "/";
+      window.location.replace("/"); // Client-side redirect after login success
     } else {
       setDisplayPopUp(true);
-      clearFields();
+      setEmail("");
+      setPassword("");
     }
   };
-
-  const displayErrorPopUp = (): React.ReactElement =>
-    displayPopUp ? (
-      <PopUpMsg
-        message={errorMessage}
-        // link="/login"
-        setShouldDisplay={setDisplayPopUp}
-        isSuccess={false}
-      />
-    ) : (
-      <></>
-    );
 
   return (
     <div className="flex justify-center min-h-screen">
       <div className="content-center w-1/3">
-        {displayErrorPopUp()}
-        <h1 className="scroll-m-20 pb-2 text-4xl font-bold tracking-tight first:mt-0 text text-center mb-3 mt-12">
+        {displayPopUp && (
+          <PopUpMsg
+            message="Invalid email or password!"
+            setShouldDisplay={setDisplayPopUp}
+            isSuccess={false}
+          />
+        )}
+        <h1 className="text-4xl font-bold text-center my-8 text-white">
           Login
         </h1>
-        <div className="flex flex-col mt-8">
-          <InputField
-            input={email}
-            label="Email:"
-            name="input_email"
-            type="email"
-            placeholder="Enter your email"
-            setInput={setEmail}
-          />
-        </div>
-        <div className="flex flex-col mt-8">
-          <InputField
-            name="input_pw"
-            label="Password:"
-            type="password"
-            placeholder="Enter a password"
-            input={password}
-            setInput={setPassword}
-          />
-        </div>
-        <div className="flex flex-row justify-center mt-8">
+        <InputField
+          name="input_email"
+          label="Email:"
+          type="email"
+          input={email}
+          setInput={setEmail}
+          placeholder="Enter your email address"
+        />
+        <InputField
+          name="input_pw"
+          label="Password:"
+          type="password"
+          input={password}
+          setInput={setPassword}
+          placeholder="Enter your password"
+        />
+        <div className="flex justify-center mt-8">
           <Button
-            className="rounded-lg bg-white py-3 px-6 text-center text-black text-md hover:bg-slate-400"
-            type="button"
-            onClick={() => onSubmit()}
+            className="bg-white text-black hover:bg-slate-400"
+            onClick={onSubmit}
           >
             Login
           </Button>
         </div>
-        <div className="flex flex-col">
+        <div className="flex justify-center mt-8">
           <TextLink
             link="/"
-            spanStyle="text-center mt-8 text-"
-            linkStyle="text-blue-500 hover:underline hover:text-blue-700"
             text="Back"
+            spanStyle="text-center"
+            linkStyle="text-blue-500 hover:underline"
           />
         </div>
       </div>

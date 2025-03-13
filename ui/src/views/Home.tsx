@@ -8,16 +8,13 @@ import useDebouncedQuery from "@/hooks/useDebounedQuery";
 import { fetchGames } from "@/providers/IGDB/IgdbProvider";
 import { UserRoundPlus } from "lucide-react";
 import { Session } from "next-auth";
-import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
 
 type CustomUser = {
-  login: {
-    _id?: string | null | undefined;
-    firstName?: string | null | undefined;
-    lastName?: string | null | undefined;
-  };
+  _id?: string | null | undefined;
+  firstName?: string | null | undefined;
+  lastName?: string | null | undefined;
 };
 
 export interface CustomSession extends Session {
@@ -32,7 +29,6 @@ type ProviderFnArgs = {
   fields: string[];
   limit: number;
   search: string;
-  // filters: string[];
 };
 
 type Game = {
@@ -41,24 +37,21 @@ type Game = {
   summary: string;
 };
 
-export default function HomeView(): React.ReactElement {
-  const { data: session, status } = useSession() as {
-    data: CustomSession | null;
-    status: string;
-  };
-
-  const [searchText, setSearchText]: [string, (searchText: string) => void] =
-    useState<string>("");
+export default function HomeView({
+  session,
+}: {
+  session: CustomSession | null;
+}): React.ReactElement {
+  const [searchText, setSearchText] = useState<string>("");
 
   const welcomeMsg = session?.user
-    ? "Welcome, " + session.user.login.firstName + "!"
+    ? "Welcome, " + session.user.firstName + "!"
     : "Playscore Pal";
 
   const args: ProviderFnArgs = {
     fields: ["name", "summary"],
     limit: 5,
     search: searchText,
-    // filters: ["platforms.summary = null"],
   };
 
   const { isLoading, data: results } = useDebouncedQuery(
@@ -85,12 +78,11 @@ export default function HomeView(): React.ReactElement {
     }
   };
 
-  // TODO: Fix the home page default screen for logged in status
   return (
     <div className="flex flex-col justify-center min-h-screen">
       <>
         <NavBar
-          name={session?.user ? session.user.login.firstName : ""}
+          name={session?.user ? session.user.firstName : ""}
           isLoggedIn={!!(session && session.user)}
         />
         <h1 className="mb-6 scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl text text-center">
@@ -107,9 +99,7 @@ export default function HomeView(): React.ReactElement {
           {displaySearchResults()}
         </div>
       </>
-      {status === "authenticated" ? (
-        <></>
-      ) : (
+      {!session && (
         <>
           <div className="mt-12">
             <div className="flex flex-row justify-center">

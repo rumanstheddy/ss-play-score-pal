@@ -8,7 +8,6 @@ import {
   Tag,
   CalendarPlus,
   CalendarCog,
-  CircleUserRound,
   BadgeCheck,
 } from "lucide-react"; // Import Lucide icons
 

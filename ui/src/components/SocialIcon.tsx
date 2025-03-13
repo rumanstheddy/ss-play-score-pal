@@ -10,9 +10,7 @@ import {
   siSteam,
 } from "simple-icons";
 
-type IconMapType = SimpleIcon;
-
-const iconMap: Record<number, IconMapType> = {
+const iconMap: Record<number, SimpleIcon> = {
   2: siFandom,
   10: siApple,
   12: siAndroid,

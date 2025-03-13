@@ -71,7 +71,7 @@ export default function PlayScoreList({
           </ul>
         ) : (
           <p className="text-white text-md">
-            No reviews available for this product yet.
+            No Playscores available for this product yet.
           </p>
         )}
       </div>
