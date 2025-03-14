@@ -60,8 +60,6 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
 
-  // TODO: Check decryption operation failed error message
-
   callbacks: {
     async jwt({ token, user }) {
       user && (token.user = user);

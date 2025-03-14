@@ -506,7 +506,7 @@ export default function GameInfoView({
           <div className="relative">
             {/* Background layer */}
             {/* //TODO: Make the artwork random maybe? */}
-            {/* //TODO: Fix the height of the top section */}
+            {/* // TODO: Fix the size of the artwork */}
             <div
               style={{
                 backgroundImage: `url(${artworkUrl ? artworkUrl : ""})`,
@@ -515,7 +515,7 @@ export default function GameInfoView({
             ></div>
             {/* //**Content layer */}
             <div className="relative z-10 flex flex-col justify-start min-h-screen backdrop-blur-sm bg-black/50">
-              <div className="flex flex-col justify-start mt-24 mb-12">
+              <div className="flex flex-col justify-start my-24">
                 <div className="flex flex-row justify-between items-center mx-20">
                   <div className="flex flex-col">
                     <div className="flex flex-row items-center">
@@ -571,7 +571,6 @@ export default function GameInfoView({
                     />
                     {/* </div> */}
                     <div className="flex flex-col mx-10">
-                      {/* //TODO: Need an outline for the circle */}
                       <div className="flex flex-row just">
                         <div className="flex flex-col justify-center">
                           {/* <div className="text flex flex-col bg-green-500 rounded-full w-36 h-36 items-center justify-center tracking-tight">
@@ -713,9 +712,7 @@ export default function GameInfoView({
           <div className="my-8">
             <PlayScoreList
               gameId={gameId}
-              loggedUser={
-                session && session.user ? session?.user._id : ""
-              }
+              loggedUser={session && session.user ? session?.user._id : ""}
             />
           </div>
         </>

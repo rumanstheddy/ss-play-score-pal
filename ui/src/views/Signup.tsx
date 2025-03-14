@@ -42,7 +42,14 @@ export default function SignupView(): React.ReactElement {
       const res = await signup({
         fields: "_id firstName lastName email",
         parameters: { $user: "UserInput!" },
-        variables: { user: form },
+        variables: {
+          user: {
+            firstName: form.firstName,
+            lastName: form.lastName,
+            email: form.email,
+            password: form.password,
+          },
+        },
       });
 
       if (res.errors) {
