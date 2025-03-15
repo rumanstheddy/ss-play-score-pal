@@ -1,25 +1,12 @@
-import HomeView from "@/views/Home";
-import { Session, getServerSession } from "next-auth";
+import Search from "@/views/Search";
+import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import NavBar from "@/components/NavBar";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { UserRoundPlus } from "lucide-react";
 import TextLink from "@/components/TextLink";
-
-type CustomUser = {
-  _id?: string | null | undefined;
-  firstName?: string | null | undefined;
-  lastName?: string | null | undefined;
-};
-
-export interface CustomSession extends Session {
-  user?: CustomUser & {
-    name?: string | null | undefined;
-    email?: string | null | undefined;
-    image?: string | null | undefined;
-  };
-}
+import { CustomSession } from "@/types/types";
 
 export default async function Home() {
   // Get session on the server
@@ -30,44 +17,45 @@ export default async function Home() {
     : "Playscore Pal";
 
   return (
-    <div className="flex flex-col justify-center min-h-screen">
+    <div className="flex flex-col justify-center min-h-screen bg-gradient-to-br bg-black text-white">
       <NavBar
         name={session?.user ? session.user.firstName : ""}
         isLoggedIn={!!(session && session.user)}
       />
-      <h1 className="mb-6 scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl text text-center">
-        {welcomeMsg}
-      </h1>
-      <HomeView />
-      {!session && (
-        <>
-          <div className="mt-12">
-            <div className="flex flex-row justify-center">
-              <Link href={"/signup"}>
-                <Button
-                  className="rounded-lg bg-white w-30 py-3 px-6 align-middle text-black
-              hover:bg-slate-400"
-                  type="button"
-                >
-                  <UserRoundPlus className="h-4 w-4 mr-2" />
-                  <div>Sign Up</div>
-                </Button>
-              </Link>
-            </div>
-            <div className="flex flex-row justify-center items-center">
-              <span className="text text-center mt-10 text-sm">
-                Already a member?
-              </span>
+      <div className="flex flex-col items-center justify-center flex-grow px-4">
+        <h1 className="mb-6 p-2 scroll-m-20 text-5xl font-extrabold tracking-tight lg:text-6xl text-center bg-clip-text text-transparent bg-gradient-to-r from-gray-200 via-gray-300 to-gray-400">
+          {welcomeMsg}
+        </h1>
+        <h2 className="mb-4 scroll-m-20 text-2xl font-semibold tracking-tight lg:text-3xl text-center text-gray-200">
+          Where gamers share their Playscore!
+        </h2>
+        <p className="mb-8 scroll-m-20 text-lg font-normal text-center text-gray-300">
+          Share your thoughts 💭 and review ✍️ your favorite games!
+        </p>
+        {/* Call-to-action button */}
+        {!session && (
+          <div className="flex flex-col items-center space-y-4">
+            <Link href={"/signup"}>
+              <Button
+                className="rounded-lg bg-white text-black hover:bg-gray-200 transition-transform transform hover:scale-105"
+                type="button"
+              >
+                <UserRoundPlus className="h-4 w-4 mr-2" />
+                <div>Sign Up to Get Started</div>
+              </Button>
+            </Link>
+            <div className="flex flex-row items-center space-x-2">
+              <span className="text-sm text-gray-300">Already a member?</span>
               <TextLink
-                spanStyle="text-center text-sm mt-10 ml-1.5"
-                linkStyle="text-blue-500 hover:underline hover:text-blue-700"
+                spanStyle="text-sm"
+                linkStyle="text-blue-400 hover:underline hover:text-blue-300"
                 link="/login"
                 text="Login"
               />
             </div>
           </div>
-        </>
-      )}
+        )}
+      </div>
     </div>
   );
 }

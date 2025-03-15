@@ -19,7 +19,7 @@ import {
 import { useQueries, useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
-import { CustomSession } from "./Home";
+import { CustomSession } from "@/types/types";
 import { useSession } from "next-auth/react";
 import { Badge } from "@/components/ui/badge";
 import { Play } from "lucide-react";

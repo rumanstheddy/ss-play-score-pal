@@ -17,7 +17,7 @@ type Game = {
   summary: string;
 };
 
-export default function HomeView(): React.ReactElement {
+export default function Search(): React.ReactElement {
   const [searchText, setSearchText] = useState<string>("");
 
   const args: ProviderFnArgs = {
