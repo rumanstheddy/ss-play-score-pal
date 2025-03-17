@@ -38,7 +38,7 @@ export default function Search(): React.ReactElement {
     }
     if (results && results.length > 0) {
       return (
-        <div className="self-center w-2/4 py-2 text-center rounded-md bg-white text-black">
+        <ul className="self-center w-2/4 py-2 text-center rounded-md bg-white list-none">
           {results.map((result: Game) => (
             <SearchResult
               key={result.id}
@@ -46,7 +46,7 @@ export default function Search(): React.ReactElement {
               name={result.name}
             />
           ))}
-        </div>
+        </ul>
       );
     }
   };

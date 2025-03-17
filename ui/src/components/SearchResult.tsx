@@ -1,4 +1,3 @@
-"use client";
 import Link from "next/link";
 
 interface ISearchResultProps {
@@ -11,10 +10,12 @@ export default function SearchResult({
   name,
 }: ISearchResultProps): React.ReactElement {
   return (
-    <Link href={link}>
-      <div className="hover:bg-gray-300 hover:cursor-pointer">
+    <li className="hover:bg-gray-300 hover:cursor-pointer text-black ">
+      <Link href={link}>
+        {/* <div className=" "> */}
         <p className="block py-3 hover:font-semibold">{name}</p>
-      </div>
-    </Link>
+        {/* </div> */}
+      </Link>
+    </li>
   );
 }

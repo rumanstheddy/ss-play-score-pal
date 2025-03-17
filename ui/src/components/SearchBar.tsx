@@ -13,7 +13,7 @@ export default function SearchBar({
   return (
     <>
       <Input
-        className={"placeholder:text-center p-2 w-2/4 mt-8 mb-1 text-center text-md"}
+        className={"placeholder:text-center p-2 w-2/4 mt-8 mb-1 text-center text-md text-black"}
         name="searchBar"
         type="text"
         placeholder={placeHolder}

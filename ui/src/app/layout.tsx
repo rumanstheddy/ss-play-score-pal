@@ -4,6 +4,7 @@ import "./globals.css";
 import { Session, getServerSession } from "next-auth";
 import NextAuthProvider from "../providers/NextAuth/NextAuthProvider";
 import ReactQueryClientProvider from "../providers/ReactQuery/ReactQueryClientProvider";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route"; // Import authOptions
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,7 +18,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session: Session | null = await getServerSession();
+  const session: Session | null = await getServerSession(authOptions);
 
   return (
     <html lang="en">

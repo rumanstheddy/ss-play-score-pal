@@ -1,4 +1,4 @@
-import Search from "@/views/Search";
+import Search from "@/components/Search";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import NavBar from "@/components/NavBar";
@@ -29,9 +29,12 @@ export default async function Home() {
         <h2 className="mb-4 scroll-m-20 text-2xl font-semibold tracking-tight lg:text-3xl text-center text-gray-200">
           Where gamers share their Playscore!
         </h2>
-        <p className="mb-8 scroll-m-20 text-lg font-normal text-center text-gray-300">
-          Share your thoughts 💭 and review ✍️ your favorite games!
+        <p className="scroll-m-20 text-lg font-normal text-center text-gray-300">
+          Share your thoughts and review your favorite games!
         </p>
+        <div className="w-[100%] mb-8">
+          <Search />
+        </div>
         {/* Call-to-action button */}
         {!session && (
           <div className="flex flex-col items-center space-y-4">
@@ -41,10 +44,10 @@ export default async function Home() {
                 type="button"
               >
                 <UserRoundPlus className="h-4 w-4 mr-2" />
-                <div>Sign Up to Get Started</div>
+                <div>Sign Up</div>
               </Button>
             </Link>
-            <div className="flex flex-row items-center space-x-2">
+            <div className="flex flex-row items-center gap-1">
               <span className="text-sm text-gray-300">Already a member?</span>
               <TextLink
                 spanStyle="text-sm"

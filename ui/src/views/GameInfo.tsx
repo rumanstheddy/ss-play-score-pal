@@ -468,17 +468,18 @@ export default function GameInfoView({
     return themeList.data ? (
       themeList.data.map(
         ({ id, name }: { id: number; name: string }, index: number) => {
-          return !!id && !!name ? (
-            <Badge
-              className={`bg-gray-500 rounded-md m-1 ${
-                index === 0 ? "ml-0" : ""
-              }`}
-              key={id}
-            >
-              <span className="text-white text-base px-1 py-1">{name}</span>
-            </Badge>
-          ) : (
-            <></>
+          return (
+            !!id &&
+            !!name && (
+              <Badge
+                className={`bg-gray-500 rounded-md m-1 ${
+                  index === 0 ? "ml-0" : ""
+                }`}
+                key={id}
+              >
+                <span className="text-white text-base px-1 py-1">{name}</span>
+              </Badge>
+            )
           );
         }
       )
