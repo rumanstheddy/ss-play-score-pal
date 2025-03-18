@@ -21,7 +21,7 @@
     "dotenv": "^16.4.5",
     "lucide-react": "^0.391.0",
     "next": "^15.2.2",
-    "next-auth": "^4.24.7",
+    "next-auth": "^4.24.11",
     "next-themes": "^0.3.0",
     "react": "^18",
     "react-dom": "^18",

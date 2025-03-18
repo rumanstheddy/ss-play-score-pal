@@ -37,6 +37,9 @@ const config = {
         DEFAULT: colors.white,
       },
     },
+    screens: {
+      "4xl": "1920px",
+    },
   },
   plugins: [require("tailwindcss-animate")],
 } satisfies Config;

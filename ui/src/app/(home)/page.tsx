@@ -29,10 +29,10 @@ export default async function Home() {
         <h2 className="mb-4 scroll-m-20 text-2xl font-semibold tracking-tight lg:text-3xl text-center text-gray-200">
           Where gamers share their Playscore!
         </h2>
-        <p className="scroll-m-20 text-lg font-normal text-center text-gray-300">
+        <p className="scroll-m-20 text-lg font-normal text-center text-gray-300 mb-2 4xl:mb-4">
           Share your thoughts and review your favorite games!
         </p>
-        <div className="w-[100%] mb-8">
+        <div className="w-[100%] mb-10 4xl:mb-12">
           <Search />
         </div>
         {/* Call-to-action button */}
