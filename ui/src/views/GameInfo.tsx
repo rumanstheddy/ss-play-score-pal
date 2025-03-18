@@ -348,10 +348,20 @@ export default function GameInfoView({
 
   gameCoverUrl = gameCoverUrl.replace("thumb", "720p");
 
+  // console.log(gameCover.data);
+  const randomNumber = Math.floor(
+    Math.random() *
+      (artworksList.data && artworksList.data.length > 0
+        ? artworksList.data.length - 1
+        : 0)
+  );
+
   let artworkUrl: string =
-    artworksList.data && artworksList.data[0]
-      ? `https:${artworksList.data[0].url}`
+    artworksList.data && artworksList.data[randomNumber]
+      ? `https:${artworksList.data[randomNumber].url}`
       : "";
+
+  // console.log(artworksList.data);
 
   artworkUrl = artworkUrl.replace("thumb", "1080p");
 
@@ -423,7 +433,9 @@ export default function GameInfoView({
             return company ? (
               <div className="text inline font-semibold" key={company.id}>
                 <Link
-                  className="hover:text-blue-500 tracking-tight hover:underline whitespace-pre-wrap"
+                  className={`tracking-tight hover:underline whitespace-pre-wrap ${
+                    company.url && `hover:text-blue-500`
+                  }`}
                   href={`${company.url}`}
                 >
                   {company.name}
@@ -431,7 +443,7 @@ export default function GameInfoView({
                 {i !== list.length - 1 ? "," + " " : ""}
               </div>
             ) : (
-              <span className="text tracking-tight">
+              <span className="text tracking-tight" key={i}>
                 Information unavailable
               </span>
             );
@@ -507,7 +519,6 @@ export default function GameInfoView({
           <div className="relative">
             {/* Background layer */}
             {/* //TODO: Make the artwork random maybe? */}
-            {/* // TODO: Fix the size of the artwork */}
             <div
               style={{
                 backgroundImage: `url(${artworkUrl ? artworkUrl : ""})`,
@@ -560,18 +571,19 @@ export default function GameInfoView({
                 </div>
                 <div className="flex flex-row justify-between mt-16 mx-20">
                   <div className="flex flex-row w-6/12">
-                    {/* <div className="w-[300px] h-[400px]"> */}
-                    <Image
-                      src={gameCoverUrl}
-                      alt="Cover art for the selected game"
-                      width={900}
-                      height={1200} //? placeholder
-                      className="rounded-xl"
-                      placeholder="empty"
-                      layout="intrinsic"
-                    />
+                    {/* <div className="w-[600px] h-[800px]"> */}
+                    <div className="w-[100%] h-[100%] 4xl:w-[50%] 4xl:h-[50%]">
+                      <Image
+                        src={gameCoverUrl}
+                        alt="Cover art for the selected game"
+                        width={900}
+                        height={1200} //? placeholder
+                        className="rounded-xl object-contain"
+                        placeholder="empty"
+                      />
+                    </div>
                     {/* </div> */}
-                    <div className="flex flex-col mx-10">
+                    <div className="flex flex-col mx-10 justify-center">
                       <div className="flex flex-row just">
                         <div className="flex flex-col justify-center">
                           {/* <div className="text flex flex-col bg-green-500 rounded-full w-36 h-36 items-center justify-center tracking-tight">
