@@ -1,5 +1,6 @@
 import { headers } from "@/providers/IGDB/IgdbProvider";
 import { NextRequest, NextResponse } from "next/server";
+import { buildQuery } from "@/providers/IGDB/IgdbProvider";
 
 export const POST = async (req: NextRequest) => {
   const path = req.nextUrl.searchParams.get("path");
@@ -8,7 +9,8 @@ export const POST = async (req: NextRequest) => {
     return NextResponse.json({ error: "Path is required" }, { status: 400 });
   }
 
-  const query = await req.json();
+  const { fields, limit, search, filters, sort } = await req.json();
+  const query = buildQuery({ fields, limit, search, filters, sort });
   const url = `${process.env.NEXT_PUBLIC_GAMES_API_BASE_URL}/${path}`;
 
   try {

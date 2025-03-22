@@ -13,3 +13,9 @@ type CustomUser = {
   firstName?: string | null | undefined;
   lastName?: string | null | undefined;
 };
+
+export type Platform = {
+  id: number;
+  abbreviation: string;
+  name: string;
+};

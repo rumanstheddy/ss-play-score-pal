@@ -48,8 +48,6 @@ export const authOptions: NextAuthOptions = {
           variables: { email: email, password: password },
         });
 
-        console.log("Login Response:", data); // Debugging
-
         // If no error and we have user data, return it
         if (!data.errors && data.data?.login) {
           return data.data.login;

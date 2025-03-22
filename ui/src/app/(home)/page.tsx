@@ -26,17 +26,24 @@ export default async function Home() {
         <h1 className="mb-6 p-2 scroll-m-20 text-5xl font-extrabold tracking-tight lg:text-6xl text-center bg-clip-text text-transparent bg-gradient-to-r from-gray-200 via-gray-300 to-gray-400">
           {welcomeMsg}
         </h1>
-        <h2 className="mb-4 scroll-m-20 text-2xl font-semibold tracking-tight lg:text-3xl text-center text-gray-200">
-          Where gamers share their Playscore!
-        </h2>
-        <p className="scroll-m-20 text-lg font-normal text-center text-gray-300 mb-2 4xl:mb-4">
-          Share your thoughts and review your favorite games!
-        </p>
+        {!session ? (
+          <>
+            <h2 className="mb-4 scroll-m-20 text-2xl font-semibold tracking-tight lg:text-3xl text-center text-gray-200">
+              Where gamers share their Playscore!
+            </h2>
+            <p className="scroll-m-20 text-lg font-normal text-center text-gray-300 mb-2 4xl:mb-4">
+              Share your thoughts and review your favorite games!
+            </p>
+          </>
+        ) : (
+          <></>
+        )}
+
         <div className="w-[100%] mb-10 4xl:mb-12">
           <Search />
         </div>
         {/* Call-to-action button */}
-        {!session && (
+        {!session ? (
           <div className="flex flex-col items-center space-y-4">
             <Link href={"/signup"}>
               <Button
@@ -57,6 +64,8 @@ export default async function Home() {
               />
             </div>
           </div>
+        ) : (
+          <></>
         )}
       </div>
     </div>

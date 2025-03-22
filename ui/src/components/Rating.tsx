@@ -1,3 +1,4 @@
+"use client";
 import { getGame } from "@/providers/PlayScore/PlayScoreProvider";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";

@@ -5,7 +5,6 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route"; // Ensure corr
 
 export default async function SignupPage() {
   const session = await getServerSession(authOptions);
-  console.log("Session:", session);
 
   // If user is already logged in, redirect to homepage
   if (session) {

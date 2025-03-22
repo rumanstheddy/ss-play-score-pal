@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import PlayScoreForm from "./PlayScoreForm";
 import PlayScoreItem from "./PlayScoreItem"; // Assuming you have a separate ReviewItem component

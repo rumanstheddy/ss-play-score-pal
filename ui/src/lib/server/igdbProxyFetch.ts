@@ -14,7 +14,7 @@ export const igdbProxyFetch = async (path: string, body: any) => {
     body: JSON.stringify(body),
   });
 
-  const { POST: proxyHandler } = await import("@/app/api/igdb/route");
+  const { POST: proxyHandler } = await import("@/app/api/route");
 
   // Call the proxy handler and convert the response to JSON
   const response = await proxyHandler(request);
