@@ -22,7 +22,9 @@ export async function fetchGameData(gameId: string) {
     fields: gameQFields,
     filters: gameQFilter,
   });
+
   const game = gameData[0];
+  // console.log("GAMEDATA: ", gameData);
 
   const genres = game?.genres ?? [];
   const genreQFilter = [`id = (${genres.join(",")})`];
@@ -81,15 +83,15 @@ export async function fetchGameData(gameId: string) {
       fields: ["game", "name", "video_id"],
       filters: [`game = ${gameId}`],
     }),
-    fetchFromApi("game_modes", {
+    game?.game_modes && fetchFromApi("game_modes", {
       fields: ["name"],
       filters: [`id = (${game?.game_modes?.join(",")})`],
     }),
-    fetchFromApi("player_perspectives", {
+    game?.player_perspectives && fetchFromApi("player_perspectives", {
       fields: ["name"],
       filters: [`id = (${game?.player_perspectives?.join(",")})`],
     }),
-    fetchFromApi("themes", {
+    game?.themes && fetchFromApi("themes", {
       fields: ["name"],
       filters: [`id = (${game?.themes?.join(",")})`],
     }),

@@ -21,8 +21,7 @@ export async function fetchFromApi(endpoint: string, body: any) {
 
   // Check if the response is OK
   if (!response.ok) {
-    console.error("Response error:", response);
-    console.error(`${endpoint}`);
+    // console.error("Response error:", response);
     throw new Error(`Failed to fetch ${endpoint}`);
   }
 

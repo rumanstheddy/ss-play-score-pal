@@ -13,6 +13,8 @@ export const POST = async (req: NextRequest) => {
   const query = buildQuery({ fields, limit, search, filters, sort });
   const url = `${process.env.NEXT_PUBLIC_GAMES_API_BASE_URL}/${path}`;
 
+  // console.log("PATH", path, "QUERY", query);
+
   try {
     const response = await fetch(url, {
       method: "POST",
