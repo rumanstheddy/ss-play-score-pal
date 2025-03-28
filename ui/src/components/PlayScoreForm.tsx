@@ -20,6 +20,14 @@ type Review = {
   isRecommended: string;
   rating: number;
   review: string;
+  user: User;
+};
+
+type User = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  userType: string;
 };
 interface ReviewFormProps {
   title?: string;
@@ -98,7 +106,13 @@ export default function PlayScoreForm({
           }),
     onSuccess: () => {
       // Refetch the reviews list after submission
-      queryClient.invalidateQueries({ queryKey: ["playScores", gameId] });
+      queryClient.invalidateQueries({
+        queryKey: ["game", gameId],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["playScores", gameId],
+      });
       setTextareaValue("");
       setRating(null);
       setRecommendation(null);

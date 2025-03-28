@@ -103,6 +103,6 @@ module.exports = `
 
     createGame(game: GameInput!): Game
     updateGame(igdbID: String!, game: GameInput): UpdateAcknowledgement
-    }
+  }
     `;
 // calculateRatings: String

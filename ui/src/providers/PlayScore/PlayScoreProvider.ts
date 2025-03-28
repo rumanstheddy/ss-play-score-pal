@@ -166,6 +166,25 @@ export const updatePlayScore = async <T>({
   return await res.json();
 };
 
+export const deletePlayScore = async <T>({
+  fields,
+  parameters,
+  variables,
+}: Partial<GqlQueryArgs<T>>) => {
+  const query = buildGqlQuery({
+    isQuery: false,
+    fields,
+    name: "DeletePlayScore",
+    functionName: "deletePlayScore",
+    parameters,
+    variables,
+  });
+
+  const res = await fetchData(query, variables);
+
+  return await res.json();
+};
+
 export const getUser = async <T>({
   fields,
   parameters,

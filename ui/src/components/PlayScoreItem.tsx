@@ -9,6 +9,7 @@ import {
   CalendarPlus,
   CalendarCog,
   BadgeCheck,
+  Loader2,
 } from "lucide-react"; // Import Lucide icons
 
 interface ReviewItemProps {
@@ -26,6 +27,8 @@ interface ReviewItemProps {
   ) => void;
   isEditing: boolean;
   userType: string;
+  deletePlayScore: (userId: string) => void;
+  isDeletePending: boolean;
 }
 
 type Recommendation = {
@@ -46,6 +49,8 @@ export default function PlayScoreItem({
   shouldEdit,
   isEditing,
   userType,
+  deletePlayScore,
+  isDeletePending,
 }: ReviewItemProps): React.ReactElement {
   const createdAtDate = new Date(Number(createdAt)).toLocaleDateString();
   const updatedAtDate = updatedAt
@@ -159,7 +164,9 @@ export default function PlayScoreItem({
             type="button"
             variant="outline"
             className="hover:border bg-red-600 hover:bg-red-900 hover:text-white"
+            onClick={() => deletePlayScore(_id)}
           >
+            {isDeletePending ? <Loader2 className="animate-spin" /> : ""}
             Delete
           </Button>
         </div>

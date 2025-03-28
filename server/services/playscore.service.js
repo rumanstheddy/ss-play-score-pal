@@ -7,18 +7,31 @@ const userModel = require("../models/user/user.model");
 const calculateAverageRating = async (gameId, session, userType) => {
   const playScores = await playScoreModel.find({ gameId }).session(session);
 
+  // console.log("userType", userType);
+  // console.log(playScores);
+
   const userPlayScores = await Promise.all(
     playScores.map(async (playScore) => {
-      const user = await userModel.findById(playScore.userId).session(session);
+      const user = await userModel
+        .findOne({ _id: playScore.userId })
+        .session(session);
       return user && user.userType === userType ? playScore : null;
     })
   );
 
+  // console.log(userPlayScores);
+
   const validPlayScores = userPlayScores.filter((ps) => ps !== null);
+
+  // console.log(validPlayScores);
 
   if (validPlayScores.length === 0) return 0;
 
+  // console.log(userType === "CRITIC" ? validPlayScores : "");
   const totalRating = validPlayScores.reduce((sum, ps) => sum + ps.rating, 0);
+  // console.log(
+  //   userType === "CRITIC" ? totalRating / validPlayScores.length : ""
+  // );
   return totalRating / validPlayScores.length;
 };
 
@@ -49,9 +62,13 @@ const createPlayScore = async (playScore) => {
     }
 
     // Create the PlayScore
-    const newPlayScore = await playScoreModel.create(playScore, { session });
+    const newPlayScore = await playScoreModel.create([playScore], { session });
 
-    const userType = await userModel.findById(playScore.userId);
+    const user = await userModel.findById(playScore.userId);
+
+    // console.log("user", user);
+
+    const { userType } = user;
 
     // Calculate and update the average user rating for the game
     const averageRating = await calculateAverageRating(
@@ -60,6 +77,9 @@ const createPlayScore = async (playScore) => {
       userType
     );
 
+    // console.log("averageRating", averageRating);
+
+    // TODO: Fix the db updates to playscores
     const newRating = {
       [`${userType === "USER" ? "user" : "critic"}Rating`]: averageRating,
     };
@@ -75,6 +95,7 @@ const createPlayScore = async (playScore) => {
     return newPlayScore[0];
   } catch (error) {
     // Abort the transaction on error
+    console.log(error);
     await session.abortTransaction();
     session.endSession();
     throw error;
@@ -112,7 +133,15 @@ const updatePlayScore = async (psId, playScore) => {
       throw new Error("PlayScore not found.");
     }
 
-    const userType = await userModel.findById(playScore.userId);
+    // console.log("updatedPlayScore", updatedPlayScore);
+    // console.log("userId", updatedPlayScore.userId);
+
+    const user = await userModel.findById(updatedPlayScore.userId);
+
+    // console.log("playScore.userId ", playScore.userId);
+    // console.log("user", user);
+
+    const { userType } = user;
 
     // Calculate and update the average user rating for the game
     const averageRating = await calculateAverageRating(
@@ -120,6 +149,8 @@ const updatePlayScore = async (psId, playScore) => {
       session,
       userType
     );
+
+    // console.log("averageRating", averageRating);
 
     const newRating = {
       [`${userType === "USER" ? "user" : "critic"}Rating`]: averageRating,
@@ -140,6 +171,7 @@ const updatePlayScore = async (psId, playScore) => {
     return result;
   } catch (error) {
     // Abort the transaction on error
+    console.log(error);
     await session.abortTransaction();
     session.endSession();
     throw error;
@@ -156,11 +188,17 @@ const deletePlayScore = async (id) => {
       throw new Error(`No playscore found with Id: ${id}`);
     }
 
+    // console.log("playScore", playScore);
+
     const result = await playScoreModel
       .deleteOne({ _id: id }, { session })
       .session(session);
 
-    const userType = await userModel.findById(playScore.userId);
+    const user = await userModel.findById(playScore.userId);
+
+    // console.log("user", user);
+
+    const { userType } = user;
 
     // Calculate and update the average user rating for the game
     const averageRating = await calculateAverageRating(
@@ -184,6 +222,7 @@ const deletePlayScore = async (id) => {
     return result;
   } catch (error) {
     // Abort the transaction on error
+    console.log(error);
     await session.abortTransaction();
     session.endSession();
     throw error;
