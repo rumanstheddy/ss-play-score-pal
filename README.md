@@ -2,8 +2,6 @@
 
 Welcome to Playscore Pal - a platform for rating, reviewing, and recommending game entries. This project aims to provide a community-driven space where users can share their insights and opinions on various games.
 
-**Note: This project is currently a work in progress.
-
 ## Tech Stack
 
 - **Frontend**: [Next.js](https://nextjs.org/)
